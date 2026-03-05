@@ -1,0 +1,28 @@
+import mysql from 'mysql2/promise';
+import 'dotenv/config';
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT || '3306'),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0,
+});
+
+// 测试数据库连接
+export async function testConnection(): Promise<boolean> {
+  try {
+    const connection = await pool.getConnection();
+    connection.release();
+    return true;
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    return false;
+  }
+}
+
+export { pool };
