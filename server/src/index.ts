@@ -3,15 +3,16 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { testConnection } from './db/index.js';
 import router from './routes/index.js';
+import loginRouter from './routes/login.js';
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
-
+// route
 app.use('/api', router);
-
+app.use('/v1', loginRouter);
 // Express 全局错误处理中间件
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   // 1. 处理 JWT Token 验证失败（401 未授权）
