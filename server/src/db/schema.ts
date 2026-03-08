@@ -1,4 +1,4 @@
-import { mysqlTable, serial, varchar, text, timestamp, longtext, int, boolean } from 'drizzle-orm/mysql-core';
+import { mysqlTable, serial, varchar, text, timestamp, longtext, int, boolean, index } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
 
 // 用户表
@@ -10,7 +10,9 @@ export const users = mysqlTable('users', {
   avatar: longtext('avatar'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+}, (users) => ({
+  emailIdx: index('email_idx').on(users.email),
+}));
 
 // 简历表
 export const resumes = mysqlTable('resumes', {
@@ -26,7 +28,7 @@ export const resumes = mysqlTable('resumes', {
 // 邮箱配置表
 export const emailConfigs = mysqlTable('email_configs', {
   id: serial('id').primaryKey(),
-  userId: int('user_id').notNull().references(() => users.id),
+  userId: serial('user_id').notNull().references(() => users.id),
   email: varchar('email', { length: 255 }).notNull(), // QQ 邮箱地址（明文）
   authCode: varchar('auth_code', { length: 500 }).notNull(), // 16位授权码（AES加密后存储）
   imapHost: varchar('imap_host', { length: 100 }).default('imap.qq.com'), // IMAP 服务器
