@@ -1,11 +1,4 @@
-import { useEffect, useState } from "react";
-
-
-
-interface HealthData {
-    message: string;
-    version: string;
-}
+改封装toast组件
 
 export default function Layout() {
 

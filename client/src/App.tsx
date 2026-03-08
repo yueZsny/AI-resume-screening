@@ -1,17 +1,12 @@
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
-import { Toaster } from "sonner";
+import { ToastContainer } from "./components/Toast";
 
 function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          className: "text-sm",
-        }}
-      />
+      <ToastContainer />
     </>
   );
 }

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { login, register } from "../../api/login";
 import { useLoginStore } from "../../store/Login";
+import toast from "../../components/Toast";
 
 interface LoginForm {
   email: string;
@@ -31,11 +32,14 @@ export default function AuthPage() {
     try {
       const res = await login(data);
       storeLogin(res);
-      console.log("登录成功:", res);
-      // 跳转首页
-      window.location.href = "/";
+      toast.success("登录成功");
+      // 延迟跳转，让 toast 有时间显示
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "登录失败");
+      const message = err instanceof Error ? err.message : "登录失败";
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -44,25 +48,26 @@ export default function AuthPage() {
   const onRegister = async (data: RegisterForm) => {
     setError("");
     if (data.password !== data.confirmPassword) {
-      setError("两次密码输入不一致");
+      toast.error("两次密码输入不一致");
       return;
     }
     setIsLoading(true);
-        try {
+    try {
       await register({
         username: data.username,
         email: data.email,
         password: data.password,
-            });
-      alert("注册成功，请登录！");
+      });
+      toast.success("注册成功，请登录！");
       setIsLogin(true);
       registerForm.reset();
-        } catch (err) {
-      setError(err instanceof Error ? err.message : "注册失败");
-        } finally {
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "注册失败";
+      toast.error(message);
+    } finally {
       setIsLoading(false);
-        }
-    };
+    }
+  };
 
     return (
     <div className="min-h-screen flex">
