@@ -4,13 +4,13 @@ import {
   Users, 
   FileText, 
   Settings, 
-  LogOut,
   Menu,
   X,
   Briefcase
 } from "lucide-react";
 import { useState } from "react";
 import { useLoginStore } from "../store/Login";
+import { UserInfo } from "../components/UserInfo";
 
 /** 菜单项类型 */
 interface MenuItem {
@@ -31,12 +31,7 @@ const menuItems: MenuItem[] = [
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const { user, logout } = useLoginStore();
-
-  const handleLogout = () => {
-    logout();
-    window.location.href = "/";
-  };
+  const { user } = useLoginStore();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -62,25 +57,7 @@ export default function Layout() {
           </div>
 
           {/* 右侧 - 用户信息 */}
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-3">
-              <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-slate-600">
-                  {user?.username?.charAt(0).toUpperCase() || "U"}
-                </span>
-              </div>
-              <span className="text-sm text-gray-700">
-                {user?.username || "用户"}
-              </span>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="hidden sm:inline">退出</span>
-            </button>
-          </div>
+          <UserInfo username={user?.username} />
         </div>
       </header>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { login, register } from "../../api/login";
@@ -21,7 +21,22 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login: storeLogin } = useLoginStore();
+  const { login: storeLogin, token } = useLoginStore();
+
+  // 反向守卫：已登录则跳转到后台
+  useEffect(() => {
+    if (token) {
+      window.location.href = "/app";
+    }
+  }, [token]);
+
+  // 检测是否从路由守卫重定向过来
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("redirect") === "unauthorized") {
+      toast.error("请先登录后再访问");
+    }
+  }, []);
 
   const loginForm = useForm<LoginForm>();
   const registerForm = useForm<RegisterForm>();

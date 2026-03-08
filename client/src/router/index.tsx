@@ -1,8 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Layout from "../layout/layout";
 import NotFound from "../pages/NotFound";
 import { PageLoader } from "../components/PageLoader";
+import { useLoginStore } from "../store/Login";
 
 // 懒加载页面组件
 const Login = lazy(() => import("../pages/login/Login"));
@@ -11,6 +12,15 @@ const Resumes = lazy(() => import("../pages/resumes/Resumes"));
 const Candidates = lazy(() => import("../pages/candidates/Candidates"));
 const Jobs = lazy(() => import("../pages/jobs/Jobs"));
 const Settings = lazy(() => import("../pages/settings/Settings"));
+
+// 路由守卫：检查是否已登录
+const requireAuth = () => {
+  const token = useLoginStore.getState().token;
+  if (!token) {
+    throw redirect("/?redirect=unauthorized");
+  }
+  return null;
+};
 
 const router = createBrowserRouter([
   {
@@ -23,6 +33,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/app",
+    loader: requireAuth,
     element: <Layout />,
     children: [
       {
