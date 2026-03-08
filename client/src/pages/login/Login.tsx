@@ -33,10 +33,7 @@ export default function AuthPage() {
       const res = await login(data);
       storeLogin(res);
       toast.success("登录成功");
-      // 延迟跳转，让 toast 有时间显示
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 500);
+      window.location.href = "/app";
     } catch (err) {
       const message = err instanceof Error ? err.message : "登录失败";
       toast.error(message);

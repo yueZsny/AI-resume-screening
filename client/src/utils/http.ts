@@ -40,6 +40,8 @@ request.interceptors.response.use(
     async (err: AxiosError) => {
         const originalRequest = err.config as InternalAxiosRequestConfig & { _retry?: boolean };
         
+        // 优先使用后端返回的错误信息
+        const backendMessage = err.response?.data?.message || err.message;
         let errorMsg = "网络异常，请稍后重试";
 
         // 401：token过期，尝试刷新token
@@ -62,26 +64,34 @@ request.interceptors.response.use(
                     // 刷新失败，清除登录状态
                     errorMsg = "登录已过期，请重新登录";
                     logout();
-                    window.location.href = "/login";
+                    window.location.href = "/";
                 }
             } else {
                 // 没有 refreshToken，直接跳转登录页
                 errorMsg = "登录已过期，请重新登录";
                 logout();
-                window.location.href = "/login";
+                window.location.href = "/";
             }
         }
         // 403：权限不足
         else if (err.response?.status === 403) {
-            errorMsg = "暂无权限访问该资源";
+            errorMsg = backendMessage || "暂无权限访问该资源";
+        }
+        // 4xx：其他客户端错误
+        else if (err.response && err.response.status >= 400 && err.response.status < 500) {
+            errorMsg = backendMessage || "请求错误";
         }
         // 5xx：服务器错误
         else if (err.response && err.response.status >= 500) {
-            errorMsg = "服务器内部错误，请稍后重试";
+            errorMsg = backendMessage || "服务器内部错误，请稍后重试";
         }
         // 超时错误
         else if (err.code === "ECONNABORTED") {
             errorMsg = "请求超时，请检查网络";
+        }
+        // 网络错误
+        else if (!err.response) {
+            errorMsg = "网络异常，请检查网络连接";
         }
 
         console.error("请求错误：", errorMsg);
