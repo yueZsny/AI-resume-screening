@@ -1,4 +1,4 @@
-import { mysqlTable, serial, varchar, text, timestamp } from 'drizzle-orm/mysql-core';
+import { mysqlTable, serial, varchar, text, timestamp,longtext } from 'drizzle-orm/mysql-core';
 
 // 用户表
 export const users = mysqlTable('users', {
@@ -6,7 +6,7 @@ export const users = mysqlTable('users', {
   username: varchar('username', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull().unique(),
   password: varchar('password', { length: 255 }).notNull(),
-  avatar: text('avatar'),
+  avatar: longtext('avatar'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
