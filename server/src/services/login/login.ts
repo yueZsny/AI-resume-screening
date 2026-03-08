@@ -22,7 +22,7 @@ interface LoginResult {
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'your-refresh-secret-key';
-const REFRESH_EXPIRES_IN = '30d';
+const REFRESH_EXPIRES_IN = process.env.REFRESH_EXPIRES_IN || '30d';
 
 // 生成 Token
 function generateToken(payload: object): string {

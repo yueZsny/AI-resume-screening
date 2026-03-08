@@ -1,8 +1,19 @@
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
+import { Toaster } from "sonner";
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          className: "text-sm",
+        }}
+      />
+    </>
+  );
 }
 
 export default App;
