@@ -17,13 +17,21 @@ export const users = mysqlTable('users', {
 // 简历表
 export const resumes = mysqlTable('resumes', {
   id: serial('id').primaryKey(),
+  userId: int('user_id').notNull().references(() => users.id), // 关联用户
   name: varchar('name', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }),
   phone: varchar('phone', { length: 50 }),
   resumeFile: varchar('resume_file', { length: 500 }),
+  originalFileName: varchar('original_file_name', { length: 500 }), // 原始文件名
+  fileType: varchar('file_type', { length: 20 }), // 文件类型: pdf, docx, doc
+  fileSize: int('file_size'), // 文件大小（字节）
   summary: text('summary'),
+  parsedContent: longtext('parsed_content'), // 解析后的文本内容
   createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+}, (resumes) => ({
+  userIdIdx: index('resume_user_id_idx').on(resumes.userId),
+  emailIdx: index('resume_email_idx').on(resumes.email),
+}));
 
 // 邮箱配置表
 export const emailConfigs = mysqlTable('email_configs', {
@@ -58,6 +66,14 @@ export const emailTemplates = mysqlTable('email_templates', {
 export const usersRelations = relations(users, ({ many }) => ({
   emailConfigs: many(emailConfigs),
   emailTemplates: many(emailTemplates),
+  resumes: many(resumes),
+}));
+
+export const resumesRelations = relations(resumes, ({ one }) => ({
+  user: one(users, {
+    fields: [resumes.userId],
+    references: [users.id],
+  }),
 }));
 
 export const emailConfigsRelations = relations(emailConfigs, ({ one }) => ({
