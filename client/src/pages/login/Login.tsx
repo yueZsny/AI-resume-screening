@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Loader2 } from "lucide-react";
 import { login, register } from "../../api/login";
 import { useLoginStore } from "../../store/Login";
 import toast from "../../components/Toast";
+import { LoginForm, RegisterForm } from "../../components/login";
 
-interface LoginForm {
+interface LoginFormData {
   email: string;
   password: string;
 }
 
-interface RegisterForm {
+interface RegisterFormData {
   username: string;
   email: string;
   password: string;
@@ -38,10 +38,9 @@ export default function AuthPage() {
     }
   }, []);
 
-  const loginForm = useForm<LoginForm>();
-  const registerForm = useForm<RegisterForm>();
+  const registerForm = useForm<RegisterFormData>();
 
-  const onLogin = async (data: LoginForm) => {
+  const onLogin = async (data: LoginFormData) => {
     setError("");
     setIsLoading(true);
     try {
@@ -57,12 +56,8 @@ export default function AuthPage() {
     }
   };
 
-  const onRegister = async (data: RegisterForm) => {
+  const onRegister = async (data: RegisterFormData) => {
     setError("");
-    if (data.password !== data.confirmPassword) {
-      toast.error("两次密码输入不一致");
-      return;
-    }
     setIsLoading(true);
     try {
       await register({
@@ -81,7 +76,7 @@ export default function AuthPage() {
     }
   };
 
-    return (
+  return (
     <div className="min-h-screen flex">
       {/* 左侧装饰 */}
       <div className="hidden lg:flex lg:w-1/2 bg-slate-900 flex-col justify-between p-12">
@@ -110,149 +105,20 @@ export default function AuthPage() {
             <p className="mt-2 text-gray-500">
               {isLogin ? "请登录您的账户" : "开始使用 AI 简历筛选"}
             </p>
-            </div>
+          </div>
 
           {isLogin ? (
-            /* 登录表单 */
-            <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">邮箱</label>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  {...loginForm.register("email", { 
-                    required: "请输入邮箱",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "请输入有效的邮箱地址"
-                    }
-                  })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
-                />
-                {loginForm.formState.errors.email && (
-                  <p className="mt-1 text-sm text-red-500">{loginForm.formState.errors.email.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">密码</label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  {...loginForm.register("password", { 
-                    required: "请输入密码",
-                    minLength: { value: 6, message: "密码至少6位" }
-                  })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
-                />
-                {loginForm.formState.errors.password && (
-                  <p className="mt-1 text-sm text-red-500">{loginForm.formState.errors.password.message}</p>
-                )}
-              </div>
-
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    处理中...
-                  </span>
-                ) : (
-                  "登录"
-                )}
-              </button>
-            </form>
+            <LoginForm
+              onSubmit={onLogin}
+              isLoading={isLoading}
+              error={error}
+            />
           ) : (
-            /* 注册表单 */
-            <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">用户名</label>
-            <input
-                type="text"
-                placeholder="请输入用户名"
-                  {...registerForm.register("username", { 
-                    required: "请输入用户名",
-                    minLength: { value: 2, message: "用户名至少2位" }
-                  })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
-                />
-                {registerForm.formState.errors.username && (
-                  <p className="mt-1 text-sm text-red-500">{registerForm.formState.errors.username.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">邮箱</label>
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  {...registerForm.register("email", { 
-                    required: "请输入邮箱",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "请输入有效的邮箱地址"
-                    }
-                  })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
-                />
-                {registerForm.formState.errors.email && (
-                  <p className="mt-1 text-sm text-red-500">{registerForm.formState.errors.email.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">密码</label>
-                <input
-                  type="password"
-                  placeholder="至少6位"
-                  {...registerForm.register("password", { 
-                    required: "请输入密码",
-                    minLength: { value: 6, message: "密码至少6位" }
-                  })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
+            <RegisterForm
+              onSubmit={onRegister}
+              isLoading={isLoading}
+              error={error}
             />
-                {registerForm.formState.errors.password && (
-                  <p className="mt-1 text-sm text-red-500">{registerForm.formState.errors.password.message}</p>
-                )}
-        </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">确认密码</label>
-            <input
-                type="password"
-                  placeholder="再次输入密码"
-                  {...registerForm.register("confirmPassword", { 
-                    required: "请再次输入密码"
-                  })}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
-            />
-                {registerForm.formState.errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-500">{registerForm.formState.errors.confirmPassword.message}</p>
-                )}
-        </div>
-
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-
-        <button
-            type="submit"
-                disabled={isLoading}
-                className="w-full py-2.5 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-                {isLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    处理中...
-                  </span>
-                ) : (
-                  "注册"
-                )}
-        </button>
-    </form>
           )}
 
           {/* 切换 */}
@@ -262,7 +128,7 @@ export default function AuthPage() {
                 还没有账户?{" "}
                 <button
                   type="button"
-                  onClick={() => { setIsLogin(false); setError(""); loginForm.reset(); }}
+                  onClick={() => { setIsLogin(false); setError(""); }}
                   className="text-slate-900 font-medium hover:underline"
                 >
                   注册
