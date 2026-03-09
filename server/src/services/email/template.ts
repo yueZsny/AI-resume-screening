@@ -2,22 +2,16 @@ import { db } from '../../db/index.js';
 import { emailTemplates, emailConfigs, users } from '../../db/schema.js';
 import { eq, and } from 'drizzle-orm';
 import nodemailer from 'nodemailer';
+import type {
+  EmailTemplateInput,
+  EmailTemplateResponse,
+  SendEmailInput,
+  SendEmailResult,
+  EmailRecipient,
+} from '../../types/email-template.js';
 
-export interface EmailTemplateInput {
-  name: string;
-  subject: string;
-  body: string;
-}
-
-export interface EmailTemplateResponse {
-  id: number;
-  userId: number;
-  name: string;
-  subject: string;
-  body: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// 重新导出类型供外部使用
+export type { EmailTemplateInput, EmailTemplateResponse, SendEmailInput, SendEmailResult, EmailRecipient };
 
 // 获取用户的邮件模板列表
 export async function getEmailTemplates(userId: number): Promise<EmailTemplateResponse[]> {
@@ -175,21 +169,6 @@ export async function getEmailConfigById(
   return config || null;
 }
 
-// 发送邮件接口
-export interface SendEmailInput {
-  candidateIds: number[];
-  subject: string;
-  body: string;
-  fromEmailId: number;
-}
-
-export interface SendEmailResult {
-  success: boolean;
-  message: string;
-  sentCount: number;
-  failedCount: number;
-}
-
 // 变量替换函数
 function replaceVariables(text: string, variables: Record<string, string>): string {
   let result = text;
@@ -197,14 +176,6 @@ function replaceVariables(text: string, variables: Record<string, string>): stri
     result = result.replace(new RegExp(`{{${key}}}`, 'g'), value);
   }
   return result;
-}
-
-// 收件人类型
-export interface EmailRecipient {
-  id: number;
-  username: string;
-  email: string;
-  avatar: string | null;
 }
 
 // 获取收件人列表（从 users 表）

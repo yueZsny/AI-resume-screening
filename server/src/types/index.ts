@@ -13,3 +13,7 @@ export interface ApiRequest extends Request {
     role: string;
   };
 }
+
+// 导出邮件模板相关类型
+export * from './email-template.js';
+export * from './setting.js';
