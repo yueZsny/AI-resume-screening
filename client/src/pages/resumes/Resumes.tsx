@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Upload, FileText, Trash2, X, Loader2 } from 'lucide-react';
-import { getResumes, uploadResume, deleteResume } from '../../api/resume';
+import { Upload, FileText, Trash2, X, Loader2, Eye } from 'lucide-react';
+import { getResumes, uploadResume, deleteResume, getResume } from '../../api/resume';
 import type { Resume } from '../../types/resume';
+import { formatFileSize, formatDate } from '../../utils/format';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '../../components/Drawer';
 
 export default function Resumes() {
   const [resumes, setResumes] = useState<Resume[]>([]);
@@ -10,6 +12,8 @@ export default function Resumes() {
   const [uploading, setUploading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [viewResume, setViewResume] = useState<Resume | null>(null);
+  const [viewLoading, setViewLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 加载简历列表
@@ -89,21 +93,18 @@ export default function Resumes() {
     }
   };
 
-  // 格式化文件大小
-  const formatFileSize = (bytes: number | null) => {
-    if (!bytes) return '-';
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-  };
-
-  // 格式化日期
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
+  // 查看简历详情
+  const handleView = async (id: number) => {
+    setViewLoading(true);
+    try {
+      const data = await getResume(id);
+      setViewResume(data);
+    } catch (error) {
+      console.error('获取简历详情失败:', error);
+      toast.error('获取简历详情失败');
+    } finally {
+      setViewLoading(false);
+    }
   };
 
   return (
@@ -155,6 +156,14 @@ export default function Resumes() {
                   </div>
                 </div>
                 <button
+                  aria-label="查看简历"
+                  onClick={() => handleView(resume.id)}
+                  className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                >
+                  <Eye size={18} />
+                </button>
+                <button
+                  aria-label="删除简历"
                   onClick={() => handleDelete(resume.id)}
                   className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                 >
@@ -244,6 +253,65 @@ export default function Resumes() {
           </div>
         </div>
       )}
+
+      {/* 查看简历详情抽屉 */}
+      <Drawer open={!!viewResume} onOpenChange={(open) => !open && setViewResume(null)}>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>简历详情</DrawerTitle>
+          </DrawerHeader>
+          <div className="mt-4">
+          {viewLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="animate-spin text-gray-400" size={32} />
+            </div>
+          ) : viewResume ? (
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-500">姓名</label>
+              <p className="mt-1 text-gray-900">{viewResume.name}</p>
+            </div>
+            {viewResume.email && (
+              <div>
+                <label className="text-sm font-medium text-gray-500">邮箱</label>
+                <p className="mt-1 text-gray-900">{viewResume.email}</p>
+              </div>
+            )}
+            {viewResume.phone && (
+              <div>
+                <label className="text-sm font-medium text-gray-500">电话</label>
+                <p className="mt-1 text-gray-900">{viewResume.phone}</p>
+              </div>
+            )}
+            <div>
+              <label className="text-sm font-medium text-gray-500">文件信息</label>
+              <p className="mt-1 text-gray-900">
+                {viewResume.originalFileName} ({formatFileSize(viewResume.fileSize)})
+              </p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-500">上传时间</label>
+              <p className="mt-1 text-gray-900">{formatDate(viewResume.createdAt)}</p>
+            </div>
+            {viewResume.summary && (
+              <div>
+                <label className="text-sm font-medium text-gray-500">AI 解析摘要</label>
+                <p className="mt-1 text-gray-900 whitespace-pre-wrap">{viewResume.summary}</p>
+              </div>
+            )}
+            {viewResume.parsedContent && (
+              <div>
+                <label className="text-sm font-medium text-gray-500">完整解析内容</label>
+                <div className="mt-1 text-gray-900 whitespace-pre-wrap text-sm leading-relaxed">
+                  {viewResume.parsedContent}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : null}
+        </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
