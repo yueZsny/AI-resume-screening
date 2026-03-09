@@ -28,7 +28,14 @@ router.post('/resume/upload', upload.single('file'), async (req: Request, res: R
 
     const file = req.file;
     // 解码文件名（处理浏览器对中文文件名的 URL 编码）
-    const originalFileName = decodeURIComponent(file.originalname);
+    let originalFileName = file.originalname;
+    try {
+      // 尝试解码，可能已经被浏览器解码过了
+      originalFileName = decodeURIComponent(file.originalname);
+    } catch (e) {
+      // 如果解码失败，直接使用原始文件名
+      console.log('文件名解码失败，使用原始文件名:', file.originalname);
+    }
     const fileType = getFileType(originalFileName);
     const fileSize = file.size;
     const filePath = file.path;

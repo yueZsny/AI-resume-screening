@@ -127,17 +127,23 @@ export async function fetchEmailsWithAttachments(
   try {
     return await new Promise((resolve, reject) => {
       // 打开收件箱
-      imap.openBox('INBOX', false, async (err, box) => {
+      imap.openBox('INBOX', false, async (err: Error | null, box: any) => {
         if (err) {
           imap.end();
           return reject(err);
         }
 
-        // 构建搜索条件
-        const searchCriteria: any[] = ['ALL', ['SINCE', since || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)]]; // 默认获取最近7天的邮件
+        // 构建搜索条件 - 默认获取最近7天的邮件
+        const sinceDate = since || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        // 格式化日期为 IMAP 所需的格式 (如: "9-Mar-2026")
+        const formatDateForImap = (date: Date) => {
+          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()}`;
+        };
+        const searchCriteria: any[] = ['ALL', ['SINCE', formatDateForImap(sinceDate)]];
         
         // 搜索邮件
-        imap.search(searchCriteria, async (err, results) => {
+        imap.search(searchCriteria, async (err: Error | null, results: number[]) => {
           if (err) {
             imap.end();
             return reject(err);
@@ -165,11 +171,18 @@ export async function fetchEmailsWithAttachments(
             hasResume: boolean;
             attachments: string[];
           }> = [];
+          
+          // 追踪所有待完成的异步操作
+          let pendingOperations = 0;
+          const operationComplete = () => {
+            pendingOperations--;
+          };
 
-          fetch.on('message', (msg) => {
+          fetch.on('message', (msg: any) => {
             let emailData: EmailMessage | null = null;
+            pendingOperations++; // 开始处理邮件
 
-            msg.on('body', async (stream) => {
+            msg.on('body', async (stream: any) => {
               try {
                 const parsed = await simpleParser(stream);
                 
@@ -232,54 +245,66 @@ export async function fetchEmailsWithAttachments(
                 }
               } catch (parseErr) {
                 console.error('解析邮件失败:', parseErr);
+              } finally {
+                operationComplete(); // 标记处理完成
               }
             });
 
-            msg.once('error', (msgErr) => {
+            msg.once('error', (msgErr: Error) => {
               console.error('处理邮件消息失败:', msgErr);
             });
           });
 
-          fetch.once('error', (fetchErr) => {
+          fetch.once('error', (fetchErr: Error) => {
             imap.end();
             reject(fetchErr);
           });
 
           fetch.once('end', () => {
-            // 打印所有邮件列表汇总
-            console.log('\n========== 邮件列表汇总 ==========');
-            console.log(`共搜索到 ${allEmails.length} 封邮件，其中 ${emails.length} 封包含简历附件\n`);
-            
-            // 打印所有邮件列表
-            allEmails.forEach((email, idx) => {
-              const resumeTag = email.hasResume ? '📎 有简历' : '  无简历';
-              console.log(`[${idx + 1}] 发件人: ${email.from}`);
-              console.log(`    主题: ${email.subject}`);
-              console.log(`    日期: ${email.date.toLocaleString()}`);
-              console.log(`    状态: ${resumeTag}`);
-              if (email.attachments.length > 0) {
-                console.log(`    附件: ${email.attachments.join(', ')}`);
+            // 等待所有邮件处理完成
+            const checkAndResolve = () => {
+              if (pendingOperations === 0) {
+                // 打印所有邮件列表汇总
+                console.log('\n========== 邮件列表汇总 ==========');
+                console.log(`共搜索到 ${allEmails.length} 封邮件，其中 ${emails.length} 封包含简历附件\n`);
+                
+                // 打印所有邮件列表
+                allEmails.forEach((email, idx) => {
+                  const resumeTag = email.hasResume ? '📎 有简历' : '  无简历';
+                  console.log(`[${idx + 1}] 发件人: ${email.from}`);
+                  console.log(`    主题: ${email.subject}`);
+                  console.log(`    日期: ${email.date.toLocaleString()}`);
+                  console.log(`    状态: ${resumeTag}`);
+                  if (email.attachments.length > 0) {
+                    console.log(`    附件: ${email.attachments.join(', ')}`);
+                  }
+                  console.log('----------------------------------------');
+                });
+                
+                console.log('=======================================\n');
+                
+                // 单独打印包含简历的邮件列表（原有功能）
+                if (emails.length > 0) {
+                  console.log('\n========== 简历附件列表 ==========');
+                  emails.forEach((email, idx) => {
+                    console.log(`[${idx + 1}] 发件人: ${email.from}`);
+                    console.log(`    主题: ${email.subject}`);
+                    console.log(`    日期: ${email.date.toLocaleString()}`);
+                    console.log(`    附件: ${email.attachments.map(a => a.filename).join(', ')}`);
+                    console.log('----------------------------------------');
+                  });
+                  console.log('=======================================\n');
+                }
+                
+                imap.end();
+                resolve(emails);
+              } else {
+                // 还有未完成的操作，等待一下再检查
+                setTimeout(checkAndResolve, 100);
               }
-              console.log('----------------------------------------');
-            });
+            };
             
-            console.log('=======================================\n');
-            
-            // 单独打印包含简历的邮件列表（原有功能）
-            if (emails.length > 0) {
-              console.log('\n========== 简历附件列表 ==========');
-              emails.forEach((email, idx) => {
-                console.log(`[${idx + 1}] 发件人: ${email.from}`);
-                console.log(`    主题: ${email.subject}`);
-                console.log(`    日期: ${email.date.toLocaleString()}`);
-                console.log(`    附件: ${email.attachments.map(a => a.filename).join(', ')}`);
-                console.log('----------------------------------------');
-              });
-              console.log('=======================================\n');
-            }
-            
-            imap.end();
-            resolve(emails);
+            checkAndResolve();
           });
         });
       });
@@ -308,9 +333,17 @@ export function saveAttachmentToResume(
     fs.mkdirSync(uploadDir, { recursive: true });
   }
 
+  // 解码文件名（处理 URL 编码的中文文件名）
+  let decodedFilename = filename;
+  try {
+    decodedFilename = decodeURIComponent(filename);
+  } catch (e) {
+    console.log('文件名解码失败，使用原始文件名:', filename);
+  }
+
   // 生成唯一文件名
-  const ext = path.extname(filename);
-  const baseName = path.basename(filename, ext);
+  const ext = path.extname(decodedFilename);
+  const baseName = path.basename(decodedFilename, ext);
   const timestamp = Date.now();
   const uniqueFilename = `${baseName}_${timestamp}${ext}`;
   const filePath = path.join(uploadDir, uniqueFilename);
@@ -320,7 +353,7 @@ export function saveAttachmentToResume(
 
   return {
     filePath,
-    originalFileName: filename,
+    originalFileName: decodedFilename,
   };
 }
 
