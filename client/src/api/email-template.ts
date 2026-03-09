@@ -38,7 +38,8 @@ export const sendEmails = async (data: SendEmailData): Promise<SendEmailResult> 
     return instance.post('/v1/emails/send', data);
 };
 
-// 获取收件人列表
-export const getEmailRecipients = async (): Promise<EmailRecipient[]> => {
-    return instance.get('/v1/email-recipients');
+// 获取收件人列表（支持按状态筛选）
+export const getEmailRecipients = async (status?: 'pending' | 'passed' | 'rejected'): Promise<EmailRecipient[]> => {
+    const params = status ? { status } : {};
+    return instance.get('/v1/email-recipients', { params });
 };

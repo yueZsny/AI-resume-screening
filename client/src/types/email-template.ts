@@ -38,10 +38,13 @@ export interface SendEmailResult {
   failedCount: number;
 }
 
-// 收件人类型
+// 收件人类型（从简历表获取）
 export interface EmailRecipient {
   id: number;
-  username: string;
-  email: string;
-  avatar: string | null;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  status: 'pending' | 'passed' | 'rejected';
+  resumeFile: string | null;
+  originalFileName: string | null;
 }

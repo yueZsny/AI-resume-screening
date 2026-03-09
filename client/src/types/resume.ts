@@ -10,6 +10,7 @@ export interface Resume {
   fileSize: number | null;
   summary: string | null;
   parsedContent: string | null;
+  status: 'pending' | 'rejected' | 'passed';
   createdAt: string;
 }
 
@@ -19,4 +20,17 @@ export interface UploadResumeParams {
   name?: string;
   email?: string;
   phone?: string;
+}
+
+// 从邮箱导入简历参数
+export interface ImportFromEmailParams {
+  configId: number;
+  since?: string; // ISO 日期字符串
+  limit?: number;
+}
+
+// 从邮箱导入简历结果
+export interface ImportFromEmailResult {
+  imported: number;
+  resumes: Resume[];
 }

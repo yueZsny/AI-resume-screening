@@ -1,20 +1,9 @@
 import instance from "../utils/http";
-import type { Resume, UploadResumeParams } from "../types/resume";
+import type { Resume, UploadResumeParams, ImportFromEmailParams, ImportFromEmailResult } from "../types/resume";
 
 /**
  * 从邮箱导入简历
  */
-export interface ImportFromEmailParams {
-  configId: number;
-  since?: string; // ISO 日期字符串
-  limit?: number;
-}
-
-export interface ImportFromEmailResult {
-  imported: number;
-  resumes: Resume[];
-}
-
 export const importResumesFromEmail = async (params: ImportFromEmailParams): Promise<ImportFromEmailResult> => {
   return instance.post('/v1/resume/import-from-email', params);
 };

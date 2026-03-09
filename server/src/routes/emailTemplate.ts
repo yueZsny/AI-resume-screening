@@ -165,10 +165,18 @@ router.delete('/email-templates/:id', authenticate, async (req: Request, res: Re
 
 // ============ 发送邮件相关接口 ============
 
-// 获取收件人列表
+// 获取收件人列表（支持按状态筛选）
 router.get('/email-recipients', authenticate, async (req: Request, res: Response) => {
   try {
-    const recipients = await getEmailRecipients();
+    const { status } = req.query;
+    
+    // 验证 status 参数
+    let statusFilter: 'pending' | 'passed' | 'rejected' | undefined;
+    if (status && ['pending', 'passed', 'rejected'].includes(status as string)) {
+      statusFilter = status as 'pending' | 'passed' | 'rejected';
+    }
+    
+    const recipients = await getEmailRecipients(statusFilter);
     
     res.status(200).json({
       code: 200,

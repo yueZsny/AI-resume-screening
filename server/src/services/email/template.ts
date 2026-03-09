@@ -1,6 +1,6 @@
 import { db } from '../../db/index.js';
-import { emailTemplates, emailConfigs, users } from '../../db/schema.js';
-import { eq, and } from 'drizzle-orm';
+import { emailTemplates, emailConfigs, users, resumes } from '../../db/schema.js';
+import { eq, and, desc } from 'drizzle-orm';
 import nodemailer from 'nodemailer';
 import type {
   EmailTemplateInput,
@@ -178,18 +178,33 @@ function replaceVariables(text: string, variables: Record<string, string>): stri
   return result;
 }
 
-// 获取收件人列表（从 users 表）
-export async function getEmailRecipients(): Promise<EmailRecipient[]> {
-  const rows = await db
+// 获取收件人列表（从 resumes 表，可按状态筛选）
+export async function getEmailRecipients(status?: 'pending' | 'passed' | 'rejected'): Promise<EmailRecipient[]> {
+  let query = db
     .select({
-      id: users.id,
-      username: users.username,
-      email: users.email,
-      avatar: users.avatar,
+      id: resumes.id,
+      name: resumes.name,
+      email: resumes.email,
+      phone: resumes.phone,
+      status: resumes.status,
+      resumeFile: resumes.resumeFile,
+      originalFileName: resumes.originalFileName,
     })
-    .from(users);
+    .from(resumes)
+    .$dynamic();
 
-  return rows;
+  // 如果有状态筛选条件
+  if (status) {
+    query = query.where(eq(resumes.status, status));
+  }
+
+  const rows = await query.orderBy(desc(resumes.createdAt));
+  
+  // 确保 status 类型正确
+  return rows.map(row => ({
+    ...row,
+    status: row.status as 'pending' | 'passed' | 'rejected',
+  }));
 }
 
 // 发送邮件
@@ -249,10 +264,15 @@ export async function sendEmails(
   // 逐个发送邮件
   for (const candidate of targetCandidates) {
     try {
+      if (!candidate.email) {
+        failedCount++;
+        continue;
+      }
+      
       const variables = {
-        name: candidate.username || candidate.email,
+        name: candidate.name,
         email: candidate.email,
-        phone: '',
+        phone: candidate.phone || '',
         position: '应聘职位',
       };
 
