@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
 import { testConnection } from './db/index.js';
 
 import loginRouter from './routes/login.js';
@@ -13,6 +14,10 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// 静态文件服务 - 提供简历文件访问
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
 // route
 
 app.use('/v1', loginRouter);

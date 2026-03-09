@@ -62,11 +62,28 @@ export const emailTemplates = mysqlTable('email_templates', {
   userIdIdx: index('email_template_user_id_idx').on(emailTemplates.userId),
 }));
 
+// AI 配置表
+export const aiConfigs = mysqlTable('ai_configs', {
+  id: serial('id').primaryKey(),
+  userId: int('user_id').notNull().references(() => users.id),
+  name: varchar('name', { length: 100 }).notNull().default('默认配置'), // 配置名称
+  model: varchar('model', { length: 100 }).notNull().default('gpt-4o'), // AI 模型
+  apiUrl: varchar('api_url', { length: 500 }).notNull().default('https://api.openai.com/v1'), // API 地址
+  apiKey: varchar('api_key', { length: 500 }), // API Key（AES加密存储）
+  prompt: longtext('prompt'), // AI 提示词
+  isDefault: boolean('is_default').default(false), // 是否为默认配置
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (aiConfigs) => ({
+  userIdIdx: index('ai_config_user_id_idx').on(aiConfigs.userId),
+}));
+
 // 表关系定义
 export const usersRelations = relations(users, ({ many }) => ({
   emailConfigs: many(emailConfigs),
   emailTemplates: many(emailTemplates),
   resumes: many(resumes),
+  aiConfigs: many(aiConfigs),
 }));
 
 export const resumesRelations = relations(resumes, ({ one }) => ({
@@ -90,6 +107,13 @@ export const emailTemplatesRelations = relations(emailTemplates, ({ one }) => ({
   }),
 }));
 
+export const aiConfigsRelations = relations(aiConfigs, ({ one }) => ({
+  user: one(users, {
+    fields: [aiConfigs.userId],
+    references: [users.id],
+  }),
+}));
+
 // 导出类型
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -99,3 +123,5 @@ export type EmailConfig = typeof emailConfigs.$inferSelect;
 export type NewEmailConfig = typeof emailConfigs.$inferInsert;
 export type EmailTemplate = typeof emailTemplates.$inferSelect;
 export type NewEmailTemplate = typeof emailTemplates.$inferInsert;
+export type AiConfig = typeof aiConfigs.$inferSelect;
+export type NewAiConfig = typeof aiConfigs.$inferInsert;

@@ -1,5 +1,6 @@
 import { EmailConfigList } from "../../components/setting/email";
 import { ProfileSettings } from "../../components/setting/profile";
+import { AiSettings } from "../../components/setting/ai";
 
 export default function Settings() {
   return (
@@ -10,6 +11,9 @@ export default function Settings() {
       <div className="mt-8 space-y-6">
         {/* 个人信息 */}
         <ProfileSettings />
+
+        {/* AI 配置 */}
+        <AiSettings />
 
         {/* 邮箱配置 */}
         <EmailConfigList />

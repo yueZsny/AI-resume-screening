@@ -22,7 +22,8 @@ router.post('/resume/upload', upload.single('file'), async (req: Request, res: R
     }
 
     const file = req.file;
-    const originalFileName = file.originalname;
+    // 解码文件名（处理浏览器对中文文件名的 URL 编码）
+    const originalFileName = decodeURIComponent(file.originalname);
     const fileType = getFileType(originalFileName);
     const fileSize = file.size;
     const filePath = file.path;
@@ -68,7 +69,6 @@ router.post('/resume/upload', upload.single('file'), async (req: Request, res: R
       originalFileName,
       fileType,
       fileSize,
-      summary: parseResult.content.substring(0, 500), // 取前500字符作为摘要
       parsedContent: parseResult.content
     });
 

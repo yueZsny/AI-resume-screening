@@ -10,6 +10,7 @@ import {
   deleteEmailConfig,
   testEmailConfig,
 } from '../services/setting/email.js';
+import { getAiConfig, getAiConfigs, getAiConfigById, createAiConfig, updateAiConfigFull, deleteAiConfig, testAiConfig } from '../services/setting/ai.js';
 
 const router: RouterType = Router();
 
@@ -232,6 +233,174 @@ router.post('/emails/:id/test', authenticate, async (req: Request, res: Response
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : '测试邮箱配置失败';
+    res.status(400).json({
+      code: 400,
+      message,
+    });
+  }
+});
+
+// ============ AI 配置相关接口 ============
+
+// 获取 AI 配置列表
+router.get('/ai/list', authenticate, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const configs = await getAiConfigs(userId);
+    
+    res.status(200).json({
+      code: 200,
+      data: configs,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '获取 AI 配置列表失败';
+    res.status(400).json({
+      code: 400,
+      message,
+    });
+  }
+});
+
+// 获取默认 AI 配置
+router.get('/ai', authenticate, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const config = await getAiConfig(userId);
+    
+    res.status(200).json({
+      code: 200,
+      data: config,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '获取 AI 配置失败';
+    res.status(400).json({
+      code: 400,
+      message,
+    });
+  }
+});
+
+// 创建 AI 配置
+router.post('/ai', authenticate, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const { name, model, apiUrl, apiKey, prompt, isDefault } = req.body;
+    
+    if (!name) {
+      return res.status(400).json({
+        code: 400,
+        message: '请输入配置名称',
+      });
+    }
+    
+    const config = await createAiConfig(userId, {
+      name,
+      model,
+      apiUrl,
+      apiKey,
+      prompt,
+      isDefault,
+    });
+    
+    res.status(200).json({
+      code: 200,
+      data: config,
+      message: '创建成功',
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '创建 AI 配置失败';
+    res.status(400).json({
+      code: 400,
+      message,
+    });
+  }
+});
+
+// 测试 AI 配置
+router.post('/ai/test', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { model, apiUrl, apiKey, task } = req.body;
+    
+    if (!model || !apiUrl || !apiKey) {
+      return res.status(400).json({
+        code: 400,
+        message: '请提供 model、apiUrl 和 apiKey',
+      });
+    }
+    
+    const result = await testAiConfig({ model, apiUrl, apiKey, task });
+    
+    res.status(200).json({
+      code: result.success ? 200 : 400,
+      data: result,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '测试 AI 配置失败';
+    res.status(400).json({
+      code: 400,
+      message,
+    });
+  }
+});
+
+// 更新 AI 配置
+router.put('/ai/:id', authenticate, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const configId = parseInt(req.params.id);
+    const { name, model, apiUrl, apiKey, prompt, isDefault } = req.body;
+    
+    const config = await updateAiConfigFull(userId, configId, {
+      name,
+      model,
+      apiUrl,
+      apiKey,
+      prompt,
+      isDefault,
+    });
+    
+    if (!config) {
+      return res.status(404).json({
+        code: 404,
+        message: '配置不存在',
+      });
+    }
+    
+    res.status(200).json({
+      code: 200,
+      data: config,
+      message: '更新成功',
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '更新 AI 配置失败';
+    res.status(400).json({
+      code: 400,
+      message,
+    });
+  }
+});
+
+// 删除 AI 配置
+router.delete('/ai/:id', authenticate, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const configId = parseInt(req.params.id);
+    
+    const success = await deleteAiConfig(userId, configId);
+    
+    if (!success) {
+      return res.status(404).json({
+        code: 404,
+        message: '配置不存在',
+      });
+    }
+    
+    res.status(200).json({
+      code: 200,
+      message: '删除成功',
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : '删除 AI 配置失败';
     res.status(400).json({
       code: 400,
       message,

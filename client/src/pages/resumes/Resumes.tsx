@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import { Upload, FileText, Trash2, X, Loader2, Eye } from 'lucide-react';
+import { Upload, FileText, Trash2, X, Loader2, Eye, File, ExternalLink } from 'lucide-react';
 import { getResumes, uploadResume, deleteResume, getResume } from '../../api/resume';
 import type { Resume } from '../../types/resume';
 import { formatFileSize, formatDate } from '../../utils/format';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '../../components/Drawer';
+import { Modal } from '../../components/Modal';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
 export default function Resumes() {
   const [resumes, setResumes] = useState<Resume[]>([]);
@@ -14,6 +17,7 @@ export default function Resumes() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [viewResume, setViewResume] = useState<Resume | null>(null);
   const [viewLoading, setViewLoading] = useState(false);
+  const [pdfPreview, setPdfPreview] = useState<{ url: string; fileName: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 加载简历列表
@@ -256,62 +260,122 @@ export default function Resumes() {
 
       {/* 查看简历详情抽屉 */}
       <Drawer open={!!viewResume} onOpenChange={(open) => !open && setViewResume(null)}>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>简历详情</DrawerTitle>
+        <DrawerContent className="w-full max-w-2xl">
+          <DrawerHeader className="border-b pb-4">
+            <DrawerTitle className="text-xl">简历详情</DrawerTitle>
           </DrawerHeader>
-          <div className="mt-4">
-          {viewLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="animate-spin text-gray-400" size={32} />
-            </div>
-          ) : viewResume ? (
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-500">姓名</label>
-              <p className="mt-1 text-gray-900">{viewResume.name}</p>
-            </div>
-            {viewResume.email && (
-              <div>
-                <label className="text-sm font-medium text-gray-500">邮箱</label>
-                <p className="mt-1 text-gray-900">{viewResume.email}</p>
+          <div className="flex-1 overflow-y-auto py-6">
+            {viewLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="animate-spin text-gray-400" size={32} />
               </div>
-            )}
-            {viewResume.phone && (
-              <div>
-                <label className="text-sm font-medium text-gray-500">电话</label>
-                <p className="mt-1 text-gray-900">{viewResume.phone}</p>
-              </div>
-            )}
-            <div>
-              <label className="text-sm font-medium text-gray-500">文件信息</label>
-              <p className="mt-1 text-gray-900">
-                {viewResume.originalFileName} ({formatFileSize(viewResume.fileSize)})
-              </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-500">上传时间</label>
-              <p className="mt-1 text-gray-900">{formatDate(viewResume.createdAt)}</p>
-            </div>
-            {viewResume.summary && (
-              <div>
-                <label className="text-sm font-medium text-gray-500">AI 解析摘要</label>
-                <p className="mt-1 text-gray-900 whitespace-pre-wrap">{viewResume.summary}</p>
-              </div>
-            )}
-            {viewResume.parsedContent && (
-              <div>
-                <label className="text-sm font-medium text-gray-500">完整解析内容</label>
-                <div className="mt-1 text-gray-900 whitespace-pre-wrap text-sm leading-relaxed">
-                  {viewResume.parsedContent}
+            ) : viewResume ? (
+              <div className="px-6 space-y-6">
+                {/* 头部信息区域 */}
+                <div className="bg-linear-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3">{viewResume.name}</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    {viewResume.phone && (
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <span className="font-medium text-gray-500">电话:</span>
+                        <span>{viewResume.phone}</span>
+                      </div>
+                    )}
+                    {viewResume.email && (
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <span className="font-medium text-gray-500">邮箱:</span>
+                        <span className="truncate">{viewResume.email}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* 查看原文件按钮 */}
+                  {viewResume.resumeFile && (
+                    <div className="mt-4 pt-4 border-t border-blue-100">
+                      <button
+                        onClick={() => {
+                          // 从完整路径中提取相对路径 (uploads/resumes/xxx.pdf)
+                          const fullPath = viewResume.resumeFile || '';
+                          const relativePath = fullPath.replace(/^.*[\\/]uploads[\\/]/, 'uploads/').replace(/\\/g, '/');
+                          const fileUrl = `${API_BASE_URL}/${relativePath}`;
+                          setPdfPreview({ url: fileUrl, fileName: viewResume.originalFileName || '简历' });
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        <Eye size={16} />
+                        查看原文件
+                      </button>
+                    </div>
+                  )}
                 </div>
+
+                {/* 元信息 */}
+                <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <File size={14} />
+                    <span>{viewResume.originalFileName}</span>
+                    <span className="text-gray-400">({formatFileSize(viewResume.fileSize)})</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>上传于 {formatDate(viewResume.createdAt)}</span>
+                  </div>
+                </div>
+
+                {/* 简历完整内容 */}
+                {viewResume.parsedContent && (
+                  <div className="bg-white rounded-xl border border-gray-200 p-5">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b">简历内容</h3>
+                    <div className="text-gray-700 whitespace-pre-wrap text-sm leading-7">
+                      {viewResume.parsedContent}
+                    </div>
+                  </div>
+                )}
+
+                {/* 摘要（备用显示） */}
+                {viewResume.summary && !viewResume.parsedContent && (
+                  <div className="bg-white rounded-xl border border-gray-200 p-5">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b">AI 解析摘要</h3>
+                    <p className="text-gray-700 whitespace-pre-wrap text-sm leading-7">
+                      {viewResume.summary}
+                    </p>
+                  </div>
+                )}
               </div>
+            ) : (
+              <p className="text-gray-500 text-center py-8">无法加载简历详情</p>
             )}
           </div>
-        ) : null}
-        </div>
         </DrawerContent>
       </Drawer>
+
+      {/* PDF 预览模态框 */}
+      <Modal
+        isOpen={!!pdfPreview}
+        onClose={() => setPdfPreview(null)}
+        title={pdfPreview?.fileName}
+        size="xl"
+      >
+        <div className="h-[70vh]">
+          <iframe
+            src={pdfPreview?.url}
+            className="w-full h-full border-0"
+            title="PDF Preview"
+          />
+        </div>
+        {pdfPreview && (
+          <div className="mt-4 flex justify-center">
+            <a
+              href={pdfPreview.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            >
+              <ExternalLink size={16} />
+              在新窗口打开
+            </a>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

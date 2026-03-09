@@ -15,6 +15,7 @@ export default defineConfig({
     password: process.env.DB_PASSWORD || '123456', // 数据库密码（必填，改回你的实际密码）
     database: process.env.DB_NAME || 'ai_resume_db', // 数据库名（需提前创建好）
     port: Number(process.env.DB_PORT) || 3306, // MySQL 默认端口 3306（可选）
+    charset: 'utf8mb4', // 设置字符集为 utf8mb4 以支持中文
   },
   // 可选：开启调试模式，方便排查连接问题
   verbose: true,
