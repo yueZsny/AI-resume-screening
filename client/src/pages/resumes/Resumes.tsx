@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { Upload, FileText, Trash2, X, Loader2 } from 'lucide-react';
-import { getResumes, uploadResume, deleteResume, type Resume } from '../../api/resume';
+import { getResumes, uploadResume, deleteResume } from '../../api/resume';
+import type { Resume } from '../../types/resume';
 
 export default function Resumes() {
   const [resumes, setResumes] = useState<Resume[]>([]);
