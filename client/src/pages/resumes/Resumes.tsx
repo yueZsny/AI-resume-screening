@@ -148,8 +148,11 @@ export default function Resumes() {
     try {
       const data = await getAiConfigs();
       setAiConfigs(data);
-      // 默认选择第一个配置
-      if (data.length > 0) {
+      // 默认选择标记为默认的配置
+      const defaultConfig = data.find(config => config.isDefault);
+      if (defaultConfig) {
+        setSelectedAiConfigId(defaultConfig.id);
+      } else if (data.length > 0) {
         setSelectedAiConfigId(data[0].id);
       }
     } catch (error) {
