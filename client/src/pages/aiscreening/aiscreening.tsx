@@ -4,14 +4,11 @@ import {
   FileText,
   Sparkles,
   ChevronRight,
-  CheckCircle,
-  XCircle,
-  Clock,
+  X,
   Send,
   Briefcase,
   User,
   MessageSquare,
-  Star,
   Settings,
 } from "lucide-react";
 import { getResumes } from "../../api/resume";
@@ -43,13 +40,6 @@ const recommendationColors = {
   pending: "bg-yellow-500",
 };
 
-// 推荐结果标签
-const recommendationLabels = {
-  pass: "推荐通过",
-  reject: "建议淘汰",
-  pending: "待定",
-};
-
 const mapRecommendationToStatus = (
   recommendation: "pass" | "reject" | "pending",
 ): Resume["status"] => {
@@ -78,6 +68,7 @@ export default function Jobs() {
   );
   const [jobRequirements, setJobRequirements] = useState("");
   const [screeningAll, setScreeningAll] = useState(false);
+  const [jobConfigModalOpen, setJobConfigModalOpen] = useState(false);
   const [aiConfigs, setAiConfigs] = useState<AiConfig[]>([]);
   const [selectedAiConfigId, setSelectedAiConfigId] = useState<number | null>(
     null,
@@ -89,6 +80,23 @@ export default function Jobs() {
     loadResumes();
     loadAiConfigs();
   }, []);
+
+  useEffect(() => {
+    if (!jobConfigModalOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setJobConfigModalOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [jobConfigModalOpen]);
 
   const loadAiConfigs = async () => {
     try {
@@ -307,98 +315,140 @@ export default function Jobs() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* 顶部标题区域 */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">AI 简历筛选</h1>
-        <p className="mt-1 text-gray-500">使用 AI 智能筛选匹配岗位要求的简历</p>
+      {/* 岗位要求/AI 配置（弹窗）入口按钮 */}
+      <div className="mb-4 flex justify-end">
+        <button
+          type="button"
+          onClick={() => setJobConfigModalOpen(true)}
+          className="px-3 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg shadow-sm hover:bg-gray-50 transition-colors inline-flex items-center gap-2"
+        >
+          <Settings className="w-4 h-4 text-gray-500" />
+          打开配置
+        </button>
       </div>
 
-      {/* 岗位要求输入区域 */}
-      <div className="mb-6 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
-        <div className="flex items-start gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Briefcase className="inline-block w-4 h-4 mr-1" />
-                  岗位要求
-                </label>
-                <textarea
-                  value={jobRequirements}
-                  onChange={(e) => setJobRequirements(e.target.value)}
-                  placeholder="请输入岗位要求，例如：需要3年以上前端开发经验，熟悉React、Vue框架..."
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
-                  rows={3}
-                />
+      {jobConfigModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="岗位要求与 AI 配置"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setJobConfigModalOpen(false);
+          }}
+        >
+          <div className="absolute inset-0 bg-black/40" />
+
+          <div className="relative w-full max-w-3xl bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden">
+            <div className="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+              <div className="flex items-center gap-2 min-w-0">
+                <Briefcase className="w-4 h-4 text-gray-500" />
+                <p className="font-medium text-gray-900 truncate">
+                  岗位要求与 AI 配置
+                </p>
               </div>
-              <div className="w-64">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Settings className="inline-block w-4 h-4 mr-1" />
-                  AI 配置
-                </label>
-                {loadingAiConfigs ? (
-                  <div className="flex items-center justify-center h-10 bg-gray-50 rounded-lg">
-                    <Loader2 className="animate-spin w-4 h-4 text-gray-400" />
+              <button
+                type="button"
+                onClick={() => setJobConfigModalOpen(false)}
+                className="p-2 rounded-lg hover:bg-gray-100 text-gray-600"
+                title="关闭"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_16rem] md:items-start">
+                <div className="min-w-0">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    岗位要求
+                  </label>
+                  <textarea
+                    value={jobRequirements}
+                    onChange={(e) => setJobRequirements(e.target.value)}
+                    placeholder="请输入岗位要求，例如：需要3年以上前端开发经验，熟悉React、Vue框架..."
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    rows={6}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <div className="min-w-0">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      AI 配置
+                    </label>
+                    {loadingAiConfigs ? (
+                      <div className="flex items-center justify-center h-10 bg-gray-50 rounded-lg">
+                        <Loader2 className="animate-spin w-4 h-4 text-gray-400" />
+                      </div>
+                    ) : aiConfigs.length === 0 ? (
+                      <div className="h-10 flex items-center justify-center bg-gray-50 rounded-lg text-sm text-gray-500">
+                        暂无AI配置
+                      </div>
+                    ) : (
+                      <select
+                        title="选择AI配置"
+                        value={selectedAiConfigId ?? ""}
+                        onChange={(e) => {
+                          const configId = Number(e.target.value);
+                          setSelectedAiConfigId(configId);
+                          // 自动填充岗位要求
+                          const selectedConfig = aiConfigs.find(
+                            (c) => c.id === configId,
+                          );
+                          if (selectedConfig?.prompt) {
+                            setJobRequirements(selectedConfig.prompt);
+                          }
+                        }}
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                      >
+                        {aiConfigs
+                          .filter((config) => config.id !== null)
+                          .map((config) => (
+                            <option key={config.id} value={config.id!}>
+                              {config.name} ({config.model})
+                            </option>
+                          ))}
+                      </select>
+                    )}
                   </div>
-                ) : aiConfigs.length === 0 ? (
-                  <div className="h-10 flex items-center justify-center bg-gray-50 rounded-lg text-sm text-gray-500">
-                    暂无AI配置
-                  </div>
-                ) : (
-                  <select
-                    title="选择AI配置"
-                    value={selectedAiConfigId ?? ""}
-                    onChange={(e) => {
-                      const configId = Number(e.target.value);
-                      setSelectedAiConfigId(configId);
-                      // 自动填充岗位要求
-                      const selectedConfig = aiConfigs.find(
-                        (c) => c.id === configId,
-                      );
-                      if (selectedConfig?.prompt) {
-                        setJobRequirements(selectedConfig.prompt);
-                      }
-                    }}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+
+                  <button
+                    onClick={handleBatchScreen}
+                    disabled={
+                      screeningAll ||
+                      resumes.length === 0 ||
+                      !selectedAiConfigId ||
+                      !jobRequirements.trim()
+                    }
+                    className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                   >
-                    {aiConfigs
-                      .filter((config) => config.id !== null)
-                      .map((config) => (
-                        <option key={config.id} value={config.id!}>
-                          {config.name} ({config.model})
-                        </option>
-                      ))}
-                  </select>
-                )}
+                    {screeningAll ? (
+                      <Loader2 className="animate-spin w-4 h-4" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    批量筛选全部
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setJobConfigModalOpen(false)}
+                    className="w-full px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    关闭
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-2 pt-7">
-            <button
-              onClick={handleBatchScreen}
-              disabled={
-                screeningAll ||
-                resumes.length === 0 ||
-                !selectedAiConfigId ||
-                !jobRequirements.trim()
-              }
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
-            >
-              {screeningAll ? (
-                <Loader2 className="animate-spin w-4 h-4" />
-              ) : (
-                <Sparkles className="w-4 h-4" />
-              )}
-              批量筛选全部
-            </button>
-          </div>
         </div>
-      </div>
+      )}
 
       {/* 主内容区域 - 左右分栏 */}
       <div className="flex-1 flex gap-6 min-h-0">
         {/* 左侧：简历列表 */}
-        <div className="w-1/2 flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="w-1/3 flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
             <h2 className="font-semibold text-gray-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-gray-500" />
@@ -485,7 +535,7 @@ export default function Jobs() {
         </div>
 
         {/* 右侧：AI 筛选结果 */}
-        <div className="w-1/2 flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="w-2/3 flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
           <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
             <h2 className="font-semibold text-gray-900 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-purple-500" />
@@ -561,82 +611,6 @@ export default function Jobs() {
                 {/* AI 筛选结果 */}
                 {selectedResult ? (
                   <>
-                    {/* 推荐结果卡片 */}
-                    <div
-                      className={`rounded-xl p-5 text-white ${
-                        selectedResult.recommendation === "pass"
-                          ? "bg-linear-to-r from-green-500 to-emerald-600"
-                          : selectedResult.recommendation === "reject"
-                            ? "bg-linear-to-r from-red-500 to-rose-600"
-                            : "bg-linear-to-r from-yellow-500 to-orange-500"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          {selectedResult.recommendation === "pass" ? (
-                            <CheckCircle className="w-8 h-8" />
-                          ) : selectedResult.recommendation === "reject" ? (
-                            <XCircle className="w-8 h-8" />
-                          ) : (
-                            <Clock className="w-8 h-8" />
-                          )}
-                          <div>
-                            <p className="text-lg font-semibold">
-                              {
-                                recommendationLabels[
-                                  selectedResult.recommendation
-                                ]
-                              }
-                            </p>
-                            <p className="text-white/80 text-sm">AI 推荐结果</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-4xl font-bold">
-                            {selectedResult.score}
-                          </p>
-                          <p className="text-white/80 text-sm">综合评分</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 评分详情 */}
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="bg-gray-50 rounded-lg p-4 text-center">
-                        <div className="flex items-center justify-center mb-2">
-                          <Star className="w-5 h-5 text-yellow-500" />
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {selectedResult.score}
-                        </p>
-                        <p className="text-sm text-gray-500">综合评分</p>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-4 text-center">
-                        <div className="flex items-center justify-center mb-2">
-                          <CheckCircle className="w-5 h-5 text-green-500" />
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {selectedResult.recommendation === "pass"
-                            ? "推荐"
-                            : selectedResult.recommendation === "reject"
-                              ? "淘汰"
-                              : "待定"}
-                        </p>
-                        <p className="text-sm text-gray-500">推荐结果</p>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-4 text-center">
-                        <div className="flex items-center justify-center mb-2">
-                          <MessageSquare className="w-5 h-5 text-blue-500" />
-                        </div>
-                        <p className="text-2xl font-bold text-gray-900">
-                          {selectedResult.reasoning.length > 20
-                            ? "已生成"
-                            : "待生成"}
-                        </p>
-                        <p className="text-sm text-gray-500">评估详情</p>
-                      </div>
-                    </div>
-
                     {/* 评估理由 */}
                     <div className="bg-gray-50 rounded-xl p-4">
                       <h3 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
@@ -683,7 +657,6 @@ export default function Jobs() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
