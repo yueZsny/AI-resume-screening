@@ -1,19 +1,32 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
+import { login } from "../../api/login";
+import { useLoginStore } from "../../store/Login";
+import toast from "../Toast";
 
 interface LoginFormData {
   email: string;
   password: string;
 }
 
-interface LoginFormProps {
-  onSubmit: (data: LoginFormData) => Promise<void>;
-  isLoading: boolean;
-  error: string;
-}
-
-export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
+export function LoginForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<LoginFormData>();
+  const { login: storeLogin } = useLoginStore();
+
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true);
+    try {
+      storeLogin(await login(data));
+      toast.success("登录成功");
+      window.location.href = "/app";
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "登录失败");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -24,10 +37,7 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
           placeholder="your@email.com"
           {...form.register("email", {
             required: "请输入邮箱",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "请输入有效的邮箱地址"
-            }
+            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "请输入有效的邮箱地址" }
           })}
           className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
         />
@@ -51,8 +61,6 @@ export function LoginForm({ onSubmit, isLoading, error }: LoginFormProps) {
           <p className="mt-1 text-sm text-red-500">{form.formState.errors.password.message}</p>
         )}
       </div>
-
-      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <button
         type="submit"

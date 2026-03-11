@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
+import { register as registerApi } from "../../api/login";
+import toast from "../Toast";
 
 interface RegisterFormData {
   username: string;
@@ -8,14 +11,23 @@ interface RegisterFormData {
   confirmPassword: string;
 }
 
-interface RegisterFormProps {
-  onSubmit: (data: RegisterFormData) => Promise<void>;
-  isLoading: boolean;
-  error: string;
-}
-
-export function RegisterForm({ onSubmit, isLoading, error }: RegisterFormProps) {
+export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<RegisterFormData>();
+
+  const onSubmit = async (data: RegisterFormData) => {
+    setIsLoading(true);
+    try {
+      await registerApi({ username: data.username, email: data.email, password: data.password });
+      toast.success("注册成功，请登录！");
+      onSuccess?.();
+      form.reset();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "注册失败");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = (data: RegisterFormData) => {
     if (data.password !== data.confirmPassword) {
@@ -32,15 +44,10 @@ export function RegisterForm({ onSubmit, isLoading, error }: RegisterFormProps) 
         <input
           type="text"
           placeholder="请输入用户名"
-          {...form.register("username", {
-            required: "请输入用户名",
-            minLength: { value: 2, message: "用户名至少2位" }
-          })}
+          {...form.register("username", { required: "请输入用户名", minLength: { value: 2, message: "用户名至少2位" } })}
           className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
         />
-        {form.formState.errors.username && (
-          <p className="mt-1 text-sm text-red-500">{form.formState.errors.username.message}</p>
-        )}
+        {form.formState.errors.username && <p className="mt-1 text-sm text-red-500">{form.formState.errors.username.message}</p>}
       </div>
 
       <div>
@@ -48,18 +55,10 @@ export function RegisterForm({ onSubmit, isLoading, error }: RegisterFormProps) 
         <input
           type="email"
           placeholder="your@email.com"
-          {...form.register("email", {
-            required: "请输入邮箱",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "请输入有效的邮箱地址"
-            }
-          })}
+          {...form.register("email", { required: "请输入邮箱", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "请输入有效的邮箱地址" } })}
           className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
         />
-        {form.formState.errors.email && (
-          <p className="mt-1 text-sm text-red-500">{form.formState.errors.email.message}</p>
-        )}
+        {form.formState.errors.email && <p className="mt-1 text-sm text-red-500">{form.formState.errors.email.message}</p>}
       </div>
 
       <div>
@@ -67,15 +66,10 @@ export function RegisterForm({ onSubmit, isLoading, error }: RegisterFormProps) 
         <input
           type="password"
           placeholder="••••••••"
-          {...form.register("password", {
-            required: "请输入密码",
-            minLength: { value: 6, message: "密码至少6位" }
-          })}
+          {...form.register("password", { required: "请输入密码", minLength: { value: 6, message: "密码至少6位" } })}
           className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
         />
-        {form.formState.errors.password && (
-          <p className="mt-1 text-sm text-red-500">{form.formState.errors.password.message}</p>
-        )}
+        {form.formState.errors.password && <p className="mt-1 text-sm text-red-500">{form.formState.errors.password.message}</p>}
       </div>
 
       <div>
@@ -83,17 +77,11 @@ export function RegisterForm({ onSubmit, isLoading, error }: RegisterFormProps) 
         <input
           type="password"
           placeholder="再次输入密码"
-          {...form.register("confirmPassword", {
-            required: "请再次输入密码"
-          })}
+          {...form.register("confirmPassword", { required: "请再次输入密码" })}
           className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
         />
-        {form.formState.errors.confirmPassword && (
-          <p className="mt-1 text-sm text-red-500">{form.formState.errors.confirmPassword.message}</p>
-        )}
+        {form.formState.errors.confirmPassword && <p className="mt-1 text-sm text-red-500">{form.formState.errors.confirmPassword.message}</p>}
       </div>
-
-      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <button
         type="submit"
