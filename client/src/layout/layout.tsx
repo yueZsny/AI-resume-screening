@@ -1,11 +1,11 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Settings,
   Briefcase,
-  Mail
+  Mail,
 } from "lucide-react";
 import { useLoginStore } from "../store/Login";
 import { UserInfo } from "../components/UserInfo";
@@ -19,12 +19,32 @@ interface MenuItem {
 
 /** 菜单配置 */
 const menuItems: MenuItem[] = [
-  { path: "/app", label: "仪表盘", icon: <LayoutDashboard className="w-5 h-5" /> },
-  { path: "/app/resumes", label: "简历管理", icon: <FileText className="w-5 h-5" /> },
-  { path: "/app/candidates", label: "候选人", icon: <Users className="w-5 h-5" /> },
-  { path: "/app/aiscreening", label: "AI简历筛选", icon: <Briefcase className="w-5 h-5" /> },
-  { path: "/app/emails", label: "邮件群发", icon: <Mail className="w-5 h-5" /> },
-  { path: "/app/settings", label: "设置", icon: <Settings className="w-5 h-5" /> },
+  {
+    path: "/app",
+    label: "仪表盘",
+    icon: <LayoutDashboard className="w-5 h-5" />,
+  },
+  {
+    path: "/app/resumes",
+    label: "简历管理",
+    icon: <FileText className="w-5 h-5" />,
+  },
+
+  {
+    path: "/app/aiscreening",
+    label: "AI简历筛选",
+    icon: <Briefcase className="w-5 h-5" />,
+  },
+  {
+    path: "/app/emails",
+    label: "邮件群发",
+    icon: <Mail className="w-5 h-5" />,
+  },
+  {
+    path: "/app/settings",
+    label: "设置",
+    icon: <Settings className="w-5 h-5" />,
+  },
 ];
 
 export default function Layout() {
@@ -36,7 +56,10 @@ export default function Layout() {
       {/* 顶部横向导航栏 */}
       <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-40">
         <div className="h-16 grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 lg:px-6">
-          <Link to="/app" className="flex items-center gap-2 justify-self-start shrink-0 whitespace-nowrap">
+          <Link
+            to="/app"
+            className="flex items-center gap-2 justify-self-start shrink-0 whitespace-nowrap"
+          >
             <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">AI</span>
             </div>
@@ -55,9 +78,10 @@ export default function Layout() {
                     to={item.path}
                     className={`
                       flex items-center gap-2 px-3 py-2 rounded-lg transition-colors whitespace-nowrap
-                      ${isActive 
-                        ? "bg-slate-900 text-white" 
-                        : "text-gray-600 hover:bg-gray-100"
+                      ${
+                        isActive
+                          ? "bg-slate-900 text-white"
+                          : "text-gray-600 hover:bg-gray-100"
                       }
                     `}
                   >
