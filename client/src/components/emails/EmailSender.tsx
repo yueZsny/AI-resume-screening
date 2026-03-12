@@ -16,6 +16,7 @@ import {
   getEmailRecipients,
 } from "../../api/email-template";
 import { getEmailConfigs } from "../../api/email";
+import { logActivity } from "../../api/dashboard";
 import type { EmailTemplate, EmailRecipient } from "../../types/email-template";
 import type { EmailConfig } from "../../types/email";
 
@@ -187,6 +188,10 @@ export function EmailSender({
         body: sendForm.body,
         fromEmailId: sendForm.fromEmailId,
       });
+      await logActivity({
+        type: "interview",
+        description: `发送邮件给 ${sendForm.candidateIds.length} 位候选人`,
+      });
       alert(result.message);
       // 重置表单
       setSendForm((prev) => ({
@@ -320,10 +325,10 @@ export function EmailSender({
           </div>
         </div>
 
-        {/* 右侧：收件人选择 */}
-        <div className="xl:col-span-5 space-y-6">
-          {/* 收件人选择卡片 */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* 右侧：收件人选择（固定高度，底部发送按钮始终可见） */}
+        <div className="xl:col-span-5 xl:sticky xl:top-6 xl:max-h-[calc(100vh-3rem)] xl:flex xl:flex-col">
+          {/* 收件人选择卡片（占据剩余空间，内部列表可滚动） */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden xl:flex-1 xl:min-h-0 xl:flex xl:flex-col">
             {/* 头部 */}
             <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-white">
               <div className="flex items-center justify-between">
@@ -347,7 +352,7 @@ export function EmailSender({
               </div>
             </div>
 
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 xl:flex-1 xl:min-h-0 xl:flex xl:flex-col xl:overflow-hidden">
               {/* 搜索框 */}
               <div className="relative">
                 <Search
@@ -396,17 +401,17 @@ export function EmailSender({
                 )}
               </div>
 
-              {/* 收件人列表：固定高度以便内层 overflow-y-auto 生效 */}
-              <div className="border border-slate-200 rounded-xl bg-slate-50 h-[320px] flex flex-col overflow-hidden">
+              {/* 收件人列表：占据剩余空间，内部可滚动 */}
+              <div className="border border-slate-200 rounded-xl bg-slate-50 xl:flex-1 xl:min-h-0 xl:overflow-y-auto min-h-[200px]">
                 {filteredRecipients.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-10 flex-1">
+                  <div className="flex flex-col items-center justify-center py-10">
                     <User className="text-slate-300 mb-3" size={40} />
                     <p className="text-sm text-slate-500 font-medium">
                       {searchQuery ? "没有匹配的收件人" : "暂无收件人数据"}
                     </p>
                   </div>
                 ) : (
-                  <div className="flex-1 min-h-0 overflow-y-auto p-2 space-y-1 [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300">
+                  <div className="p-2 space-y-1">
                     {/* 全选按钮 */}
                     <div className="sticky top-0 bg-slate-50 pb-2 border-b border-slate-200 mb-2 px-2">
                       <button
@@ -504,8 +509,8 @@ export function EmailSender({
             </div>
           </div>
 
-          {/* 操作按钮 */}
-          <div className="flex gap-3">
+          {/* 操作按钮：固定在右侧栏底部，滚动时始终可见 */}
+          <div className="flex gap-3 xl:flex-shrink-0 xl:pt-4 xl:bg-white xl:rounded-b-2xl">
             <button
               onClick={handleSend}
               disabled={

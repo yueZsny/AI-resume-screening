@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { Upload, Mail, Search, Filter } from 'lucide-react';
 import { getResumes, uploadResume, deleteResume, getResume, importResumesFromEmail } from '../../api/resume';
 import { getEmailConfigs } from '../../api/email';
+import { logActivity } from '../../api/dashboard';
 import type { Resume } from '../../types/resume';
 import type { EmailConfig } from '../../types/email';
 import {
@@ -121,6 +122,10 @@ export default function Resumes() {
       const result = await importResumesFromEmail({
         configId: selectedConfigId,
       });
+      await logActivity({
+        type: 'upload',
+        description: `从邮箱导入 ${result.imported} 份简历`,
+      });
       toast.success(`成功导入 ${result.imported} 份简历`);
       setShowImportModal(false);
       setSelectedConfigId(null);
@@ -160,10 +165,11 @@ export default function Resumes() {
 
     setUploading(true);
     try {
-      await uploadResume({
+      const data = await uploadResume({
         file: selectedFile,
         name: selectedFile.name.replace(/\.(pdf|docx|doc)$/i, ''),
       });
+      await logActivity({ type: 'upload', resumeId: data.id, resumeName: data.name });
       toast.success('上传成功');
       setShowModal(false);
       setSelectedFile(null);

@@ -21,6 +21,7 @@ import {
   getAiConfigs,
   updateAiConfig,
 } from "../../api/ai";
+import { logActivity } from "../../api/dashboard";
 import type { Resume } from "../../types/resume";
 import type { AiConfig } from "../../types/ai";
 
@@ -232,11 +233,27 @@ export default function Jobs() {
     resumeId: number,
     status: "pending" | "passed" | "rejected",
   ) => {
+    const resume = resumes.find((r) => r.id === resumeId);
     try {
       await updateResumeStatus(resumeId, status);
       setResumes((prev) =>
         prev.map((r) => (r.id === resumeId ? { ...r, status } : r)),
       );
+      if (status === "passed") {
+        await logActivity({
+          type: "pass",
+          resumeId,
+          resumeName: resume?.name ?? undefined,
+          description: "通过初筛",
+        });
+      } else if (status === "rejected") {
+        await logActivity({
+          type: "reject",
+          resumeId,
+          resumeName: resume?.name ?? undefined,
+          description: "未通过筛选",
+        });
+      }
     } catch (error) {
       console.error("更新状态失败:", error);
     }
@@ -284,6 +301,13 @@ export default function Jobs() {
         const newMap = new Map(prev);
         newMap.set(resumeId, { ...result, resumeId, resume });
         return newMap;
+      });
+
+      await logActivity({
+        type: "screening",
+        resumeId,
+        resumeName: resume?.name ?? undefined,
+        description: result.reasoning ?? undefined,
       });
 
       await loadResumes();
@@ -365,6 +389,20 @@ export default function Jobs() {
         });
         return newMap;
       });
+
+      await Promise.all(
+        results
+          .filter((item) => item.success && item.result)
+          .map((item) => {
+            const r = resumes.find((res) => res.id === item.resumeId);
+            return logActivity({
+              type: "screening",
+              resumeId: item.resumeId,
+              resumeName: r?.name ?? undefined,
+              description: item.result!.reasoning ?? undefined,
+            });
+          }),
+      );
 
       await loadResumes();
 
