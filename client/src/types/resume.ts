@@ -10,6 +10,7 @@ export interface Resume {
   fileSize: number | null;
   summary: string | null;
   parsedContent: string | null;
+  score: number | null; // AI 筛选评分 (0-100)，来自后端
   status: 'pending' | 'rejected' | 'passed';
   createdAt: string;
 }

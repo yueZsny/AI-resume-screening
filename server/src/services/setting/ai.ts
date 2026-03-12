@@ -536,6 +536,7 @@ ${resume.parsedContent}
       .update(resumes)
       .set({
         summary: result.reasoning,
+        score: result.score,
         status,
       })
       .where(

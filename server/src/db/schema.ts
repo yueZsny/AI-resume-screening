@@ -27,6 +27,7 @@ export const resumes = mysqlTable('resumes', {
   fileSize: int('file_size'), // 文件大小（字节）
   summary: text('summary'),
   parsedContent: longtext('parsed_content'), // 解析后的文本内容
+  score: int('score'), // AI 筛选评分 (0-100)
   status: varchar('status', { length: 20 }).default('pending').notNull(), // 简历状态: pending(待筛选), rejected(拒绝), passed(通过)
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (resumes) => ({
