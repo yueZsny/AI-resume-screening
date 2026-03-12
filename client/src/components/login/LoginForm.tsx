@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { login } from "../../api/login";
 import { useLoginStore } from "../../store/Login";
-import toast from "../Toast";
+import toast from "../../utils/toast";
 
 interface LoginFormData {
   email: string;

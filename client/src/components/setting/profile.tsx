@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { getProfile, updateProfile } from "../../api/profile";
 import { User, Mail, Pencil, Save, X, Camera } from "lucide-react";
-import toast from "../Toast";
+import toast from "../../utils/toast";
 import { useLoginStore } from "../../store/Login";
 
 export function ProfileSettings() {

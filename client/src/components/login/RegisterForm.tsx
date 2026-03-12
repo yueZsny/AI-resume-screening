@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { register as registerApi } from "../../api/login";
-import toast from "../Toast";
+import toast from "../../utils/toast";
 
 interface RegisterFormData {
   username: string;

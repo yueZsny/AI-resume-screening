@@ -5,7 +5,7 @@ import type { Resume, UploadResumeParams, ImportFromEmailParams, ImportFromEmail
  * 从邮箱导入简历
  */
 export const importResumesFromEmail = async (params: ImportFromEmailParams): Promise<ImportFromEmailResult> => {
-  return instance.post('/v1/resume/import-from-email', params);
+  return instance.post("/v1/resume/import-from-email", params);
 };
 
 /**
@@ -18,9 +18,9 @@ export const uploadResume = async (params: UploadResumeParams): Promise<Resume> 
   if (params.email) formData.append('email', params.email);
   if (params.phone) formData.append('phone', params.phone);
 
-  return instance.post('/v1/resume/upload', formData, {
+  return instance.post("/v1/resume/upload", formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
   });
 };
@@ -29,7 +29,7 @@ export const uploadResume = async (params: UploadResumeParams): Promise<Resume> 
  * 获取简历列表
  */
 export const getResumes = async (): Promise<Resume[]> => {
-  return instance.get('/v1/resumes');
+  return instance.get("/v1/resumes");
 };
 
 /**
@@ -57,5 +57,5 @@ export const updateResumeStatus = async (id: number, status: 'pending' | 'passed
  * 批量更新简历状态
  */
 export const batchUpdateResumeStatus = async (ids: number[], status: 'pending' | 'passed' | 'rejected'): Promise<void> => {
-  return instance.post('/v1/resume/batch-status', { ids, status });
+  return instance.post("/v1/resume/batch-status", { ids, status });
 };

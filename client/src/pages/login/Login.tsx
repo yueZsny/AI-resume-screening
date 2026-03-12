@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLoginStore } from "../../store/Login";
-import toast from "../../components/Toast";
+import toast from "../../utils/toast";
 import { LoginForm, RegisterForm } from "../../components/login";
 
 export default function AuthPage() {

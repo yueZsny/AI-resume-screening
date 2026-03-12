@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAiConfigs, createAiConfig, updateAiConfig, deleteAiConfig, testAiConfig } from "../../api/ai";
 import type { AiConfig, UpdateAiConfigData, CreateAiConfigData } from "../../types/ai";
 import { Bot, Save, X, Pencil, Globe, Key, FileText, Plus, Trash2, Star, StarOff, Loader2 } from "lucide-react";
-import toast from "../Toast";
+import toast from "../../utils/toast";
 
 // 常用的 AI 模型选项（仅供参考）
 const AI_MODELS = [
