@@ -1,5 +1,5 @@
 import instance from "../utils/http";
-import type { Activity, DashboardStats, LogActivityParams } from "../types/dashboard";
+import type { DashboardStats, LogActivityParams } from "../types/dashboard";
 
 /**
  * 获取 Dashboard 统计数据

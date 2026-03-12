@@ -84,7 +84,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
         setSelectedTemplate(pageTemplates[0]);
       }
     }
-  }, [currentPage]);
+  }, [currentPage, templates, selectedTemplate]);
 
   // 打开弹窗
   const openModal = (template?: EmailTemplate) => {
@@ -156,7 +156,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
       {/* 顶部标题区 */}
       <div className="shrink-0 flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200">
+          <div className="w-12 h-12 bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-200">
             <Mail className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -166,7 +166,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
         </div>
         <button
           onClick={() => openModal()}
-          className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all flex items-center gap-2 font-medium shadow-lg shadow-indigo-200"
+          className="px-5 py-2.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all flex items-center gap-2 font-medium shadow-lg shadow-indigo-200"
         >
           <Plus className="w-5 h-5" />
           新建模板
@@ -182,7 +182,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
         </div>
       ) : templates.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-16 text-center">
-          <div className="w-20 h-20 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 bg-linear-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-6">
             <Mail className="w-10 h-10 text-slate-400" />
           </div>
           <h3 className="text-lg font-semibold text-slate-900 mb-2">暂无邮件模板</h3>
@@ -191,7 +191,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
           </p>
           <button
             onClick={() => openModal()}
-            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all inline-flex items-center gap-2 font-medium"
+            className="px-6 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all inline-flex items-center gap-2 font-medium"
           >
             <Plus className="w-5 h-5" />
             创建第一个模板
@@ -219,7 +219,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
                       selectedTemplate?.id === template.id
                         ? "bg-indigo-500"
-                        : "bg-gradient-to-br from-indigo-50 to-purple-50"
+                        : "bg-linear-to-br from-indigo-50 to-purple-50"
                     }`}>
                       <FileText className={`w-5 h-5 ${selectedTemplate?.id === template.id ? "text-white" : "text-indigo-600"}`} />
                     </div>
@@ -348,7 +348,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
             <button
               type="submit"
               form="template-form"
-              className="px-5 py-2.5 text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all font-medium shadow-lg shadow-indigo-200"
+              className="px-5 py-2.5 text-white bg-linear-to-r from-indigo-600 to-purple-600 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all font-medium shadow-lg shadow-indigo-200"
             >
               保存模板
             </button>
@@ -402,7 +402,7 @@ export function EmailTemplateList({ onRefresh, onUseTemplate }: EmailTemplateLis
           </div>
           
           {/* 变量提示 */}
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-100">
+          <div className="bg-linear-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-100">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wide">变量说明</span>
               <span className="text-xs text-slate-400">点击上方输入框使用</span>

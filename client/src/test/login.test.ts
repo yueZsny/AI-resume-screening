@@ -3,7 +3,7 @@
  * 运行方式：cd client && npx tsx src/test/login.test.ts
  */
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -24,13 +24,14 @@ async function testLogin() {
     console.log("返回数据:", JSON.stringify(res.data, null, 2));
 
     return res.data;
-  } catch (err: any) {
-    if (err.response) {
+  } catch (err) {
+    const axiosError = err as AxiosError<{ message: string }>;
+    if (axiosError.response) {
       console.log("❌ 登录失败:");
-      console.log("  状态码:", err.response.status);
-      console.log("  错误信息:", err.response.data.message);
+      console.log("  状态码:", axiosError.response.status);
+      console.log("  错误信息:", axiosError.response.data.message);
     } else {
-      console.log("❌ 请求失败:", err.message);
+      console.log("❌ 请求失败:", axiosError.message);
     }
     return null;
   }
@@ -51,13 +52,14 @@ async function testRegister() {
     console.log("✅ 注册成功！");
     console.log("返回数据:", JSON.stringify(res.data, null, 2));
     return res.data;
-  } catch (err: any) {
-    if (err.response) {
+  } catch (err) {
+    const axiosError = err as AxiosError<{ message: string }>;
+    if (axiosError.response) {
       console.log("❌ 注册失败:");
-      console.log("  状态码:", err.response.status);
-      console.log("  错误信息:", err.response.data.message);
+      console.log("  状态码:", axiosError.response.status);
+      console.log("  错误信息:", axiosError.response.data.message);
     } else {
-      console.log("❌ 请求失败:", err.message);
+      console.log("❌ 请求失败:", axiosError.message);
     }
     return null;
   }
@@ -74,13 +76,14 @@ async function testRefreshToken(refreshToken: string) {
     console.log("✅ Token 刷新成功！");
     console.log("返回数据:", JSON.stringify(res.data, null, 2));
     return res.data;
-  } catch (err: any) {
-    if (err.response) {
+  } catch (err) {
+    const axiosError = err as AxiosError<{ message: string }>;
+    if (axiosError.response) {
       console.log("❌ Token 刷新失败:");
-      console.log("  状态码:", err.response.status);
-      console.log("  错误信息:", err.response.data.message);
+      console.log("  状态码:", axiosError.response.status);
+      console.log("  错误信息:", axiosError.response.data.message);
     } else {
-      console.log("❌ 请求失败:", err.message);
+      console.log("❌ 请求失败:", axiosError.message);
     }
     return null;
   }

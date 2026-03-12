@@ -53,7 +53,7 @@ export function ResumeList({ resumes, loading, onView, onDelete }: ResumeListPro
         >
           <div className="flex items-start gap-4">
             {/* 文件图标 */}
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+            <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
               <FileText className="text-white" size={24} />
             </div>
 

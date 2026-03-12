@@ -70,11 +70,11 @@ function WelcomeSection({ todayCount, total, passed }: { todayCount: number; tot
   const passRate = total > 0 ? Math.round((passed / total) * 100) : 0;
   return (
     <>
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
+      <div className="bg-linear-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white">
         <h1 className="text-2xl font-bold mb-2">欢迎回来！</h1>
         <p className="text-indigo-100">今天有 {todayCount} 份新简历待处理</p>
       </div>
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 border border-gray-200">
+      <div className="bg-linear-to-r from-gray-50 to-gray-100 rounded-2xl p-4 border border-gray-200">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-indigo-100 text-indigo-600 rounded-lg"><Bot className="w-5 h-5" /></div>
           <div>

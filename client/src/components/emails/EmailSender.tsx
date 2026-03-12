@@ -78,32 +78,35 @@ export function EmailSender({
     }
   };
 
-  // 加载数据
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const [templatesData, configsData] = await Promise.all([
-        getEmailTemplates(),
-        getEmailConfigs(),
-      ]);
-      setTemplates(templatesData);
-      setEmailConfigs(configsData);
-      await loadRecipients();
-      // 设置默认发件邮箱
-      const defaultConfig =
-        configsData.find((c) => c.isDefault) || configsData[0];
-      if (defaultConfig) {
-        setSendForm((prev) => ({ ...prev, fromEmailId: defaultConfig.id }));
-      }
-    } catch (error) {
-      console.error("加载数据失败:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    let cancelled = false;
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const [templatesData, configsData] = await Promise.all([
+          getEmailTemplates(),
+          getEmailConfigs(),
+        ]);
+        if (cancelled) return;
+        setTemplates(templatesData);
+        setEmailConfigs(configsData);
+        await loadRecipients();
+        // 设置默认发件邮箱
+        const defaultConfig =
+          configsData.find((c) => c.isDefault) || configsData[0];
+        if (defaultConfig) {
+          setSendForm((prev) => ({ ...prev, fromEmailId: defaultConfig.id }));
+        }
+      } catch (error) {
+        if (!cancelled) console.error("加载数据失败:", error);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
     loadData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // 从「邮件模板」页带过来的模板：加载完成后自动选中并填充
@@ -226,7 +229,7 @@ export function EmailSender({
         {/* 左侧：邮件内容编辑 */}
         <div className="xl:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           {/* 头部 */}
-          <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-indigo-50 to-white">
+          <div className="px-6 py-4 border-b border-slate-100 bg-linear-to-r from-indigo-50 to-white">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
                 <Mail className="w-5 h-5 text-indigo-600" />
@@ -250,6 +253,7 @@ export function EmailSender({
                 value={sendForm.templateId}
                 onChange={(e) => handleSelectTemplate(Number(e.target.value))}
                 className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
+                aria-label="选择邮件模板"
               >
                 <option value={0}>-- 选择模板 --</option>
                 {templates.map((template) => (
@@ -274,6 +278,7 @@ export function EmailSender({
                   })
                 }
                 className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
+                aria-label="选择发件邮箱"
                 required
               >
                 <option value={0}>-- 选择发件邮箱 --</option>
@@ -329,7 +334,7 @@ export function EmailSender({
           {/* 收件人选择卡片（占据剩余空间，内部列表可滚动） */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden xl:flex-1 xl:min-h-0 xl:flex xl:flex-col">
             {/* 头部 */}
-            <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-white">
+            <div className="px-6 py-4 border-b border-slate-100 bg-linear-to-r from-emerald-50 to-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
@@ -496,7 +501,7 @@ export function EmailSender({
                           {r.resumeFile && (
                             <FileText
                               size={14}
-                              className="text-slate-400 flex-shrink-0"
+                              className="text-slate-400 shrink-0"
                             />
                           )}
                         </label>
@@ -509,7 +514,7 @@ export function EmailSender({
           </div>
 
           {/* 操作按钮：固定在右侧栏底部，滚动时始终可见 */}
-          <div className="flex gap-3 xl:flex-shrink-0 xl:pt-4 xl:bg-white xl:rounded-b-2xl">
+          <div className="flex gap-3 xl:shrink-0 xl:pt-4 xl:bg-white xl:rounded-b-2xl">
             <button
               onClick={handleSend}
               disabled={
@@ -517,7 +522,7 @@ export function EmailSender({
                 emailConfigs.length === 0 ||
                 sendForm.candidateIds.length === 0
               }
-              className="flex-1 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 font-medium shadow-lg shadow-indigo-200"
+              className="flex-1 py-3.5 bg-linear-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 font-medium shadow-lg shadow-indigo-200"
             >
               {sending ? (
                 <>
