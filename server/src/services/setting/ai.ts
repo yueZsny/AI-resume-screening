@@ -450,22 +450,25 @@ export async function screenResumeWithAi(
   if (!resume) {
     return { success: false, error: "简历不存在" };
   }
-  // console.log("config.prompt", config.prompt);
-  // console.log("jobRequirements", jobRequirements);
-  // console.log("resume.parsedContent", resume.parsedContent);
-  const prompt = `你是招聘筛选助手。
+  // 提示词模板中的占位符替换为实际内容，便于模型与用户自定义说明一致
+  const promptTemplate = (config.prompt || "").trim();
+  const resolvedPrompt = promptTemplate
+    .replace(/\{job_requirements\}/g, jobRequirements)
+    .replace(/\{resume_content\}/g, resume.parsedContent || "");
+
+  const prompt = `你是招聘筛选助手。请**严格依据**下面「岗位要求」和「筛选标准」评估候选人，并在 reasoning 中**明确结合这些要求**说明匹配或不足的原因，不要只做通用评价。
 
 岗位要求：
 ${jobRequirements}
 
-筛选标准（提示词）：
-${config.prompt}
+筛选标准（你的评估维度与侧重点）：
+${resolvedPrompt || "(无额外筛选标准，请主要依据岗位要求评估)"}
 
 候选人简历内容：
 ${resume.parsedContent}
 
 请严格只输出 JSON（不要输出 Markdown/代码块/多余文字），格式如下：
-{"recommendation":"pass|reject|pending","score":0-100,"reasoning":"一句话到三句话说明原因"}`;
+{"recommendation":"pass|reject|pending","score":0-100,"reasoning":"针对上述岗位要求与筛选标准，逐条或分点说明该候选人的匹配情况、符合项与不符合项，以及给分与推荐理由"}`;
   console.log("model:", config.model);
   // 调用 AI API
   const url = config.apiUrl.replace(/\/$/, "");
