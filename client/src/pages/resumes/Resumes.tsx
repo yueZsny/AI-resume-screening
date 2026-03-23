@@ -1,20 +1,26 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { toast } from 'sonner';
-import { Upload, Mail, Search, Filter } from 'lucide-react';
-import { getResumes, uploadResume, deleteResume, getResume, importResumesFromEmail } from '../../api/resume';
-import { getEmailConfigs } from '../../api/email';
-import { logActivity } from '../../api/dashboard';
-import type { Resume } from '../../types/resume';
-import type { EmailConfig } from '../../types/email';
+import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
+import { Upload, Mail, Search, Filter } from "lucide-react";
+import {
+  getResumes,
+  uploadResume,
+  deleteResume,
+  getResume,
+  importResumesFromEmail,
+} from "../../api/resume";
+import { getEmailConfigs } from "../../api/email";
+import { logActivity } from "../../api/dashboard";
+import type { Resume } from "../../types/resume";
+import type { EmailConfig } from "../../types/email";
 import {
   ResumeList,
   ResumeModal,
   ResumeDetailDrawer,
   PdfPreviewModal,
-} from '../../components/resumes';
+} from "../../components/resumes";
 
-type ResumeStatus = 'all' | 'pending' | 'passed' | 'rejected';
+type ResumeStatus = "all" | "pending" | "passed" | "rejected";
 
 export default function Resumes() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,20 +31,23 @@ export default function Resumes() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [viewResume, setViewResume] = useState<Resume | null>(null);
   const [viewLoading, setViewLoading] = useState(false);
-  const [pdfPreview, setPdfPreview] = useState<{ url: string; fileName: string } | null>(null);
+  const [pdfPreview, setPdfPreview] = useState<{
+    url: string;
+    fileName: string;
+  } | null>(null);
 
   // 根据 URL 参数自动打开上传弹窗
   useEffect(() => {
-    if (searchParams.get('action') === 'upload') {
+    if (searchParams.get("action") === "upload") {
       setShowModal(true);
-      searchParams.delete('action');
+      searchParams.delete("action");
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);
 
   // 筛选和搜索状态
-  const [statusFilter, setStatusFilter] = useState<ResumeStatus>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<ResumeStatus>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // 从邮箱导入相关状态
   const [showImportModal, setShowImportModal] = useState(false);
@@ -54,8 +63,8 @@ export default function Resumes() {
       const data = await getResumes();
       setResumes(data);
     } catch (error) {
-      console.error('加载简历失败:', error);
-      toast.error('加载简历失败');
+      console.error("加载简历失败:", error);
+      toast.error("加载简历失败");
     } finally {
       setLoading(false);
     }
@@ -69,7 +78,7 @@ export default function Resumes() {
   const filteredResumes = useMemo(() => {
     return resumes.filter((resume) => {
       // 状态筛选
-      if (statusFilter !== 'all' && resume.status !== statusFilter) {
+      if (statusFilter !== "all" && resume.status !== statusFilter) {
         return false;
       }
       // 搜索筛选
@@ -90,9 +99,9 @@ export default function Resumes() {
   const stats = useMemo(() => {
     return {
       all: resumes.length,
-      pending: resumes.filter((r) => r.status === 'pending').length,
-      passed: resumes.filter((r) => r.status === 'passed').length,
-      rejected: resumes.filter((r) => r.status === 'rejected').length,
+      pending: resumes.filter((r) => r.status === "pending").length,
+      passed: resumes.filter((r) => r.status === "passed").length,
+      rejected: resumes.filter((r) => r.status === "rejected").length,
     };
   }, [resumes]);
 
@@ -107,8 +116,8 @@ export default function Resumes() {
         setSelectedConfigId(data[0].id);
       }
     } catch (error) {
-      console.error('加载邮箱配置失败:', error);
-      toast.error('加载邮箱配置失败');
+      console.error("加载邮箱配置失败:", error);
+      toast.error("加载邮箱配置失败");
     } finally {
       setLoadingConfigs(false);
     }
@@ -123,7 +132,7 @@ export default function Resumes() {
   // 从邮箱导入简历
   const handleImportFromEmail = async () => {
     if (!selectedConfigId) {
-      toast.error('请选择邮箱配置');
+      toast.error("请选择邮箱配置");
       return;
     }
 
@@ -133,7 +142,7 @@ export default function Resumes() {
         configId: selectedConfigId,
       });
       await logActivity({
-        type: 'upload',
+        type: "upload",
         description: `从邮箱导入 ${result.imported} 份简历`,
       });
       toast.success(`成功导入 ${result.imported} 份简历`);
@@ -141,8 +150,8 @@ export default function Resumes() {
       setSelectedConfigId(null);
       loadResumes();
     } catch (error) {
-      console.error('从邮箱导入失败:', error);
-      toast.error('从邮箱导入失败');
+      console.error("从邮箱导入失败:", error);
+      toast.error("从邮箱导入失败");
     } finally {
       setImporting(false);
     }
@@ -154,13 +163,17 @@ export default function Resumes() {
       setSelectedFile(null);
       return;
     }
-    const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+    const validTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/msword",
+    ];
     if (!validTypes.includes(file.type)) {
-      toast.error('只支持 PDF、Word 文档');
+      toast.error("只支持 PDF、Word 文档");
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('文件大小不能超过 10MB');
+      toast.error("文件大小不能超过 10MB");
       return;
     }
     setSelectedFile(file);
@@ -169,7 +182,7 @@ export default function Resumes() {
   // 上传简历
   const handleUpload = async () => {
     if (!selectedFile) {
-      toast.error('请选择文件');
+      toast.error("请选择文件");
       return;
     }
 
@@ -177,32 +190,42 @@ export default function Resumes() {
     try {
       const data = await uploadResume({
         file: selectedFile,
-        name: selectedFile.name.replace(/\.(pdf|docx|doc)$/i, ''),
+        name: selectedFile.name.replace(/\.(pdf|docx|doc)$/i, ""),
       });
-      await logActivity({ type: 'upload', resumeId: data.id, resumeName: data.name });
-      toast.success('上传成功');
+      await logActivity({
+        type: "upload",
+        resumeId: data.id,
+        resumeName: data.name,
+      });
+      toast.success("上传成功");
       setShowModal(false);
       setSelectedFile(null);
       loadResumes();
     } catch (error) {
-      console.error('上传失败:', error);
-      toast.error('上传失败');
+      console.error("上传失败:", error);
+      toast.error("上传失败");
     } finally {
       setUploading(false);
     }
   };
 
   // 删除简历
-  const handleDelete = async (id: number) => {
-    if (!confirm('确定要删除这份简历吗？')) return;
+  const handleDelete = async (id: number, name: string) => {
+    if (!confirm("确定要删除这份简历吗？")) return;
 
     try {
       await deleteResume(id);
-      toast.success('删除成功');
+      await logActivity({
+        type: "reject",
+        resumeId: id,
+        resumeName: name,
+        description: "删除了简历",
+      });
+      toast.success("删除成功");
       loadResumes();
     } catch (error) {
-      console.error('删除失败:', error);
-      toast.error('删除失败');
+      console.error("删除失败:", error);
+      toast.error("删除失败");
     }
   };
 
@@ -213,8 +236,8 @@ export default function Resumes() {
       const data = await getResume(id);
       setViewResume(data);
     } catch (error) {
-      console.error('获取简历详情失败:', error);
-      toast.error('获取简历详情失败');
+      console.error("获取简历详情失败:", error);
+      toast.error("获取简历详情失败");
     } finally {
       setViewLoading(false);
     }
@@ -228,55 +251,64 @@ export default function Resumes() {
       {/* 统计卡片 */}
       <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
         <button
-          onClick={() => setStatusFilter('all')}
+          onClick={() => setStatusFilter("all")}
           className={`p-4 rounded-xl border-2 transition-all text-left ${
-            statusFilter === 'all'
-              ? 'border-slate-800 bg-slate-50'
-              : 'border-slate-200 bg-white hover:border-slate-300'
+            statusFilter === "all"
+              ? "border-slate-800 bg-slate-50"
+              : "border-slate-200 bg-white hover:border-slate-300"
           }`}
         >
           <p className="text-sm text-slate-500">全部简历</p>
           <p className="text-2xl font-bold text-slate-900 mt-1">{stats.all}</p>
         </button>
         <button
-          onClick={() => setStatusFilter('pending')}
+          onClick={() => setStatusFilter("pending")}
           className={`p-4 rounded-xl border-2 transition-all text-left ${
-            statusFilter === 'pending'
-              ? 'border-yellow-500 bg-yellow-50'
-              : 'border-slate-200 bg-white hover:border-slate-300'
+            statusFilter === "pending"
+              ? "border-yellow-500 bg-yellow-50"
+              : "border-slate-200 bg-white hover:border-slate-300"
           }`}
         >
           <p className="text-sm text-slate-500">待筛选</p>
-          <p className="text-2xl font-bold text-yellow-600 mt-1">{stats.pending}</p>
+          <p className="text-2xl font-bold text-yellow-600 mt-1">
+            {stats.pending}
+          </p>
         </button>
         <button
-          onClick={() => setStatusFilter('passed')}
+          onClick={() => setStatusFilter("passed")}
           className={`p-4 rounded-xl border-2 transition-all text-left ${
-            statusFilter === 'passed'
-              ? 'border-green-500 bg-green-50'
-              : 'border-slate-200 bg-white hover:border-slate-300'
+            statusFilter === "passed"
+              ? "border-green-500 bg-green-50"
+              : "border-slate-200 bg-white hover:border-slate-300"
           }`}
         >
           <p className="text-sm text-slate-500">已通过</p>
-          <p className="text-2xl font-bold text-green-600 mt-1">{stats.passed}</p>
+          <p className="text-2xl font-bold text-green-600 mt-1">
+            {stats.passed}
+          </p>
         </button>
         <button
-          onClick={() => setStatusFilter('rejected')}
+          onClick={() => setStatusFilter("rejected")}
           className={`p-4 rounded-xl border-2 transition-all text-left ${
-            statusFilter === 'rejected'
-              ? 'border-red-500 bg-red-50'
-              : 'border-slate-200 bg-white hover:border-slate-300'
+            statusFilter === "rejected"
+              ? "border-red-500 bg-red-50"
+              : "border-slate-200 bg-white hover:border-slate-300"
           }`}
         >
           <p className="text-sm text-slate-500">已拒绝</p>
-          <p className="text-2xl font-bold text-red-600 mt-1">{stats.rejected}</p>
+          <p className="text-2xl font-bold text-red-600 mt-1">
+            {stats.rejected}
+          </p>
         </button>
       </div>
 
       {/* 搜索栏 */}
       <div className="mt-4 flex items-center gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            size={18}
+          />
           <input
             type="text"
             placeholder="搜索简历姓名、邮箱、 phone 或内容..."
@@ -293,10 +325,8 @@ export default function Resumes() {
             <Filter size={18} className="text-slate-400" />
             <span className="text-sm text-slate-600">
               共 {filteredResumes.length} 份简历
-              {statusFilter !== 'all' && (
-                <span className="ml-1">
-                  (筛选自 {resumes.length} 份)
-                </span>
+              {statusFilter !== "all" && (
+                <span className="ml-1">(筛选自 {resumes.length} 份)</span>
               )}
             </span>
           </div>
@@ -371,7 +401,6 @@ export default function Resumes() {
         onImport={handleImportFromEmail}
         importing={importing}
       />
-
     </div>
   );
 }

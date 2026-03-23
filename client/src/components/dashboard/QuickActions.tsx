@@ -39,9 +39,9 @@ export function QuickActions() {
             <Link
               key={`${action.to}-${action.label}`}
               to={action.to}
-              className="group flex flex-col items-center gap-2 rounded-2xl border border-zinc-100/90 bg-zinc-50/40 px-2 py-3.5 text-center no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200/60 hover:bg-white hover:shadow-md hover:shadow-indigo-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/25"
+              className="group flex flex-col items-center gap-2 rounded-2xl border border-zinc-100/90 bg-zinc-50/40 px-2 py-3.5 text-center no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-200/60 hover:bg-white hover:shadow-md hover:shadow-sky-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/25"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-indigo-600 shadow-sm ring-1 ring-zinc-200/60 transition-transform duration-200 group-hover:scale-105 group-hover:text-indigo-700">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-sky-600 shadow-sm ring-1 ring-zinc-200/60 transition-transform duration-200 group-hover:scale-105 group-hover:text-sky-700">
                 <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
               </span>
               <span className="line-clamp-2 text-[11px] font-medium leading-tight text-zinc-600 group-hover:text-zinc-900">

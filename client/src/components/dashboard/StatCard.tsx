@@ -5,8 +5,8 @@ const METRICS = [
   {
     field: "total" as const,
     icon: FileText,
-    accent: "text-indigo-600",
-    iconBg: "bg-indigo-500/10",
+    accent: "text-sky-600",
+    iconBg: "bg-sky-500/10",
     desc: "全部简历",
   },
   {

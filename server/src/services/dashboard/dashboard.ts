@@ -1,6 +1,7 @@
 import { db } from "../../db/index.js";
 import { resumes, activities } from "../../db/schema.js";
 import { eq, sql, desc } from "drizzle-orm";
+import type { Activity } from "../../db/schema.js";
 
 export interface DashboardStats {
   total: number;
@@ -133,4 +134,43 @@ export async function createActivity(params: {
     resumeName: params.resumeName || "",
     description: params.description || "",
   });
+}
+
+export interface ListActivitiesResult {
+  list: Activity[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+/**
+ * 分页查询当前用户的全部活动（不做去重，便于审计）
+ */
+export async function listActivities(
+  userId: number,
+  page: number,
+  pageSize: number,
+): Promise<ListActivitiesResult> {
+  const size = Math.min(100, Math.max(1, Math.floor(pageSize) || 30));
+  const p = Math.max(1, Math.floor(page) || 1);
+  const offset = (p - 1) * size;
+
+  const [totalResult] = await db
+    .select({
+      count: sql<number>`count(*)`,
+    })
+    .from(activities)
+    .where(eq(activities.userId, userId));
+
+  const total = Number(totalResult?.count ?? 0);
+
+  const list = await db
+    .select()
+    .from(activities)
+    .where(eq(activities.userId, userId))
+    .orderBy(desc(activities.createdAt))
+    .limit(size)
+    .offset(offset);
+
+  return { list, total, page: p, pageSize: size };
 }

@@ -125,7 +125,7 @@ export default function Dashboard() {
     <div className="relative min-h-full">
       {/* 页面弱氛围：与侧栏背景区分 */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(99,102,241,0.08),transparent)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(14,165,233,0.08),transparent)]"
         aria-hidden
       />
 
@@ -170,12 +170,7 @@ export default function Dashboard() {
             {loading ? (
               <SkeletonActivity />
             ) : (
-              <ActivityList
-                activities={stats.recentActivities}
-                onViewAll={() => {
-                  window.location.href = "/app/resumes";
-                }}
-              />
+              <ActivityList activities={stats.recentActivities} />
             )}
           </div>
         </section>

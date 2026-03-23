@@ -47,7 +47,7 @@ export default function Layout() {
                 className="flex min-w-0 flex-1 items-center gap-3 no-underline"
                 title="简历筛选"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-linear-to-br from-[#667eea] to-[#764ba2] text-white shadow-[0_2px_8px_rgba(102,126,234,0.35)]">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] text-white shadow-[0_2px_8px_rgba(14,165,233,0.35)]">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                     <path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor" opacity="0.9"/>
                     <path d="M2 17l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" opacity="0.6"/>
@@ -63,7 +63,7 @@ export default function Layout() {
                 onClick={() => setExpanded(false)}
                 title="收起侧栏"
                 aria-label="收起侧边栏"
-                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#667eea]/25 focus-visible:ring-offset-2"
+                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/25 focus-visible:ring-offset-2"
               >
                 <PanelLeftClose className="h-[18px] w-[18px]" strokeWidth={2} aria-hidden />
               </button>
@@ -84,7 +84,7 @@ export default function Layout() {
                 onClick={() => setExpanded(true)}
                 title="展开侧栏"
                 aria-label="展开侧边栏"
-                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#667eea]/25 focus-visible:ring-offset-2"
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/25 focus-visible:ring-offset-2"
               >
                 <PanelLeftOpen className="h-[17px] w-[17px]" strokeWidth={2} aria-hidden />
               </button>
@@ -109,7 +109,7 @@ export default function Layout() {
                   ${expanded ? "gap-3 px-3.5 py-2.5" : "justify-center px-2 py-2.5"}
                   ${
                     isActive
-                      ? "bg-linear-to-r from-[rgba(102,126,234,0.1)] to-[rgba(118,75,162,0.1)] text-[#667eea]"
+                      ? "bg-linear-to-r from-[rgba(14,165,233,0.1)] to-[rgba(59,130,246,0.1)] text-[#0ea5e9]"
                       : "text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#374151]"
                   }
                 `}

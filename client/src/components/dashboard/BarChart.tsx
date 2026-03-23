@@ -38,7 +38,7 @@ const CustomTooltip = ({
   return (
     <div className="rounded-xl border border-zinc-200/90 bg-white/95 px-3.5 py-2.5 text-sm shadow-lg shadow-zinc-900/10 backdrop-blur-sm">
       <p className="text-xs font-medium text-zinc-500">{label}</p>
-      <p className="text-base font-semibold tabular-nums text-indigo-600">
+      <p className="text-base font-semibold tabular-nums text-sky-600">
         {payload[0].value}{" "}
         <span className="text-xs font-normal text-zinc-400">份</span>
       </p>
@@ -84,8 +84,8 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
               >
                 <defs>
                   <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#818cf8" stopOpacity={1} />
-                    <stop offset="100%" stopColor="#6366f1" stopOpacity={0.85} />
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#0ea5e9" stopOpacity={0.85} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -110,7 +110,7 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
                 />
                 <Tooltip
                   content={<CustomTooltip />}
-                  cursor={{ fill: "rgba(99, 102, 241, 0.08)" }}
+                  cursor={{ fill: "rgba(14, 165, 233, 0.08)" }}
                 />
                 <Bar
                   dataKey="count"

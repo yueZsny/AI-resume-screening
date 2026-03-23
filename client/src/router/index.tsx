@@ -8,6 +8,7 @@ import { useLoginStore } from "../store/Login";
 // 懒加载页面组件
 const Login = lazy(() => import("../pages/login/Login"));
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
+const Activities = lazy(() => import("../pages/activities/Activities"));
 const Resumes = lazy(() => import("../pages/resumes/Resumes"));
 
 const Aiscreening = lazy(() => import("../pages/aiscreening/aiscreening"));
@@ -42,6 +43,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Dashboard />
+          </Suspense>
+        ),
+      },
+      {
+        path: "activities",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <Activities />
           </Suspense>
         ),
       },

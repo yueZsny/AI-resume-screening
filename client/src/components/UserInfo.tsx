@@ -64,12 +64,12 @@ export function UserInfo({ username: propsUsername, compact = false }: UserInfoP
         `}
       >
         {/* Avatar with gradient ring */}
-        <div className="w-9 h-9 rounded-full p-[2px] bg-linear-to-br from-[#667eea] to-[#764ba2] shrink-0">
+        <div className="w-9 h-9 rounded-full p-[2px] bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] shrink-0">
           <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
             {displayAvatar ? (
               <img src={displayAvatar} alt="" aria-hidden className="w-full h-full object-cover" />
             ) : (
-              <span className="text-[13px] font-semibold bg-linear-to-br from-[#667eea] to-[#764ba2] bg-clip-text text-transparent">
+              <span className="text-[13px] font-semibold bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent">
                 {displayUsername.charAt(0).toUpperCase()}
               </span>
             )}

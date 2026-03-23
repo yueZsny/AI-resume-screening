@@ -6,7 +6,7 @@ interface ResumeListProps {
   resumes: Resume[];
   loading: boolean;
   onView: (id: number) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: number, name: string) => void;
 }
 
 // 状态颜色映射
@@ -116,7 +116,7 @@ export function ResumeList({ resumes, loading, onView, onDelete }: ResumeListPro
               </button>
               <button
                 aria-label="删除简历"
-                onClick={() => onDelete(resume.id)}
+                onClick={() => onDelete(resume.id, resume.name)}
                 className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                 title="删除"
               >

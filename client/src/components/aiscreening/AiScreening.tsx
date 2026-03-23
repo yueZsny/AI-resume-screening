@@ -641,9 +641,13 @@ export function AiScreening() {
                         </p>
                       </div>
                       <div className="shrink-0 flex flex-col items-end gap-1">
-                        {((resume.score != null) || screeningResults.get(resume.id)) && (
+                        {(resume.score != null ||
+                          screeningResults.get(resume.id)) && (
                           <span className="px-1.5 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-700">
-                            {(resume.score ?? screeningResults.get(resume.id)?.score) ?? 0}%
+                            {resume.score ??
+                              screeningResults.get(resume.id)?.score ??
+                              0}
+                            %
                           </span>
                         )}
                         <span
