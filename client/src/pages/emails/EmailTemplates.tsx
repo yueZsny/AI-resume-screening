@@ -39,14 +39,14 @@ export default function EmailTemplates() {
   ];
 
   return (
-    <div className="relative min-h-full">
+    <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
       {/* 页面弱氛围背景 */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(14,165,233,0.07),transparent)]"
         aria-hidden
       />
 
-      <div className="mx-auto max-w-[1360px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1360px] flex-1 flex-col px-4 pb-6 pt-6 sm:px-6 lg:px-8">
         {/* 页面头部：标题在左，分段控件靠右 */}
         <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -179,8 +179,14 @@ export default function EmailTemplates() {
           </section>
         )}
 
-        {/* 内容区域 */}
-        <div className="min-h-0">
+        {/* 内容区域：发送页占满剩余高度，避免整页再出现外层滚动条 */}
+        <div
+          className={
+            activeTab === "send"
+              ? "flex min-h-0 flex-1 flex-col overflow-hidden"
+              : "min-h-0 flex-1"
+          }
+        >
           {activeTab === "templates" && (
             <EmailTemplateList onUseTemplate={handleUseTemplate} />
           )}

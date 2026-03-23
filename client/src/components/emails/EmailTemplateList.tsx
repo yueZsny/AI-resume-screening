@@ -29,6 +29,11 @@ import {
 
 const PAGE_SIZE = 9;
 
+/** 名称与主题一致时不在卡片上重复展示两段相同长文 */
+function isSameNameAndSubject(name: string, subject: string) {
+  return name.trim() === subject.trim();
+}
+
 interface EmailTemplateListProps {
   onRefresh?: () => void;
   onUseTemplate?: (template: EmailTemplate) => void;
@@ -64,14 +69,16 @@ export function EmailTemplateList({
   const [loading, setLoading] = useState(false);
   const [selectedTemplate, setSelectedTemplate] =
     useState<EmailTemplate | null>(null);
-  const [previewTemplate, setPreviewTemplate] =
-    useState<EmailTemplate | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<EmailTemplate | null>(
+    null,
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
   // 模板弹窗状态
   const [showModal, setShowModal] = useState(false);
-  const [editingTemplate, setEditingTemplate] =
-    useState<EmailTemplate | null>(null);
+  const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(
+    null,
+  );
   const [formData, setFormData] = useState<CreateEmailTemplateData>({
     name: "",
     subject: "",
@@ -300,19 +307,23 @@ export function EmailTemplateList({
                       >
                         <Mail
                           className={`h-[18px] w-[18px] ${
-                            isSelected
-                              ? "text-white"
-                              : "text-zinc-500"
+                            isSelected ? "text-white" : "text-zinc-500"
                           }`}
                           strokeWidth={1.5}
                         />
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="truncate text-sm font-semibold tracking-tight text-zinc-900">
+                      <div className="min-w-0 flex-1 overflow-hidden pr-1">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
+                          模板名称
+                        </p>
+                        <h3 className="line-clamp-2 break-words text-left text-sm font-semibold leading-snug tracking-tight text-zinc-900">
                           {template.name}
                         </h3>
                         <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-zinc-400">
-                          <Clock className="h-3 w-3 shrink-0" strokeWidth={1.5} />
+                          <Clock
+                            className="h-3 w-3 shrink-0"
+                            strokeWidth={1.5}
+                          />
                           {formatDate(template.createdAt)}
                         </div>
                       </div>
@@ -350,14 +361,20 @@ export function EmailTemplateList({
                     </div>
                   </div>
 
-                  {/* 主题行 */}
+                  {/* 主题行（与模板名称相同时不重复展示长文案） */}
                   <div className="mb-3">
                     <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-400">
                       邮件主题
                     </p>
-                    <p className="mt-1 truncate text-sm text-zinc-700 font-medium">
-                      {template.subject}
-                    </p>
+                    {isSameNameAndSubject(template.name, template.subject) ? (
+                      <p className="mt-1 text-sm text-zinc-400">
+                        与模板名称相同
+                      </p>
+                    ) : (
+                      <p className="mt-1 line-clamp-2 break-words text-sm font-medium text-zinc-700">
+                        {template.subject}
+                      </p>
+                    )}
                   </div>
 
                   {/* 底部操作 */}
@@ -452,10 +469,13 @@ export function EmailTemplateList({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-500/10 ring-1 ring-sky-200/80">
-                  <Eye className="h-[16px] w-[16px] text-sky-600" strokeWidth={1.75} />
+                  <Eye
+                    className="h-[16px] w-[16px] text-sky-600"
+                    strokeWidth={1.75}
+                  />
                 </div>
-                <div>
-                  <h2 className="text-sm font-semibold tracking-tight text-zinc-900">
+                <div className="min-w-0">
+                  <h2 className="line-clamp-2 break-words text-sm font-semibold tracking-tight text-zinc-900">
                     {previewTemplate.name}
                   </h2>
                   <p className="text-xs text-zinc-500">模板预览</p>
@@ -510,7 +530,7 @@ export function EmailTemplateList({
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-sky-600/80 mb-1.5">
                   模板名称
                 </p>
-                <p className="truncate text-sm font-semibold text-zinc-900">
+                <p className="line-clamp-3 break-words text-sm font-semibold text-zinc-900">
                   {previewTemplate.name}
                 </p>
               </div>
@@ -527,7 +547,8 @@ export function EmailTemplateList({
                   最近更新
                 </p>
                 <p className="text-sm font-medium text-zinc-700">
-                  {formatDate(previewTemplate.updatedAt) ?? formatDate(previewTemplate.createdAt)}
+                  {formatDate(previewTemplate.updatedAt) ??
+                    formatDate(previewTemplate.createdAt)}
                 </p>
               </div>
             </div>
@@ -537,13 +558,22 @@ export function EmailTemplateList({
               <label className="text-[10px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
                 邮件主题
               </label>
-              <div className="mt-2 flex items-center gap-3 rounded-xl border border-sky-100/90 bg-white px-4 py-3 shadow-sm ring-1 ring-inset ring-sky-100/60">
+              <div className="mt-2 flex min-w-0 items-center gap-3 rounded-xl border border-sky-100/90 bg-white px-4 py-3 shadow-sm ring-1 ring-inset ring-sky-100/60">
                 <AtSign
                   className="h-4 w-4 shrink-0 text-sky-500"
                   strokeWidth={1.75}
                 />
-                <p className="text-sm font-medium text-zinc-900">
-                  {previewTemplate.subject}
+                <p className="min-w-0 text-sm font-medium text-zinc-900">
+                  {isSameNameAndSubject(
+                    previewTemplate.name,
+                    previewTemplate.subject,
+                  ) ? (
+                    <span className="text-zinc-400">与模板名称相同</span>
+                  ) : (
+                    <span className="line-clamp-3 break-words">
+                      {previewTemplate.subject}
+                    </span>
+                  )}
                 </p>
               </div>
             </div>

@@ -29,7 +29,7 @@ export default function Layout() {
   );
 
   return (
-    <div className="flex min-h-screen bg-[var(--app-page-bg,#f8f9fc)]">
+    <div className="flex h-screen min-h-0 overflow-hidden bg-[var(--app-page-bg,#f8f9fc)]">
       {/* Sidebar */}
       <aside
         className={`
@@ -130,7 +130,7 @@ export default function Layout() {
       {/* Main Content */}
       <main
         className={`
-          flex-1 min-h-screen flex flex-col
+          flex min-h-0 flex-1 flex-col overflow-y-auto
           transition-[margin] duration-200 ease-out
           ${expanded ? "ml-60" : "ml-[72px]"}
         `}
