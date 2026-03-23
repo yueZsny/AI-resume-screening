@@ -198,18 +198,18 @@ router.get(
   authenticate,
   async (req: Request, res: Response) => {
     try {
+      const userId = Number((req as any).user.id);
       const { status } = req.query;
 
-      // 验证 status 参数
-      let statusFilter: "pending" | "passed" | "rejected" | undefined;
+      let statusFilter: "pending" | "passed" | "rejected" | "sent" | undefined;
       if (
         status &&
-        ["pending", "passed", "rejected"].includes(status as string)
+        ["pending", "passed", "rejected", "sent"].includes(status as string)
       ) {
-        statusFilter = status as "pending" | "passed" | "rejected";
+        statusFilter = status as "pending" | "passed" | "rejected" | "sent";
       }
 
-      const recipients = await getEmailRecipients(statusFilter);
+      const recipients = await getEmailRecipients(userId, statusFilter);
 
       res.status(200).json({
         code: 200,

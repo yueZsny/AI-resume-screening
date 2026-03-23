@@ -49,4 +49,6 @@ export interface EmailRecipient {
   status: 'pending' | 'passed' | 'rejected';
   resumeFile: string | null;
   originalFileName: string | null;
+  /** 后端写入：最近一次群发邮件发送成功的时间（ISO 字符串） */
+  lastEmailSentAt?: string | null;
 }

@@ -28,26 +28,18 @@ import type { EmailConfig } from "../../types/email";
 const CARD =
   "overflow-hidden rounded-3xl border border-zinc-200/70 bg-white shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] ring-1 ring-zinc-950/[0.03]";
 
+/** 列表行状态：简洁字牌（无圆点、无描边，靠浅色底区分） */
 const STATUS_META = {
   pending: {
-    bg: "bg-amber-50",
-    border: "border-amber-200",
-    text: "text-amber-700",
-    dot: "bg-amber-400",
+    pill: "bg-amber-500/[0.14] text-amber-950/80",
     label: "待筛选",
   },
   passed: {
-    bg: "bg-emerald-50",
-    border: "border-emerald-200",
-    text: "text-emerald-700",
-    dot: "bg-emerald-500",
+    pill: "bg-emerald-500/[0.14] text-emerald-950/80",
     label: "已通过",
   },
   rejected: {
-    bg: "bg-red-50",
-    border: "border-red-200",
-    text: "text-red-700",
-    dot: "bg-red-500",
+    pill: "bg-red-500/[0.14] text-red-950/80",
     label: "已拒绝",
   },
 } as const;
@@ -57,7 +49,7 @@ const STATUS_FILTERS = [
   { value: "pending" as const, label: "待筛选" },
   { value: "passed" as const, label: "已通过" },
   { value: "rejected" as const, label: "已拒绝" },
-  /** 本会话内已成功投递的候选人 */
+  /** 后端 last_email_sent_at 有值：曾群发邮件成功 */
   { value: "sent" as const, label: "发送成功" },
 ];
 
@@ -77,6 +69,10 @@ type SendForm = {
 };
 
 type StatusFilter = (typeof STATUS_FILTERS)[number]["value"];
+
+function hasPersistedEmailSent(r: EmailRecipient): boolean {
+  return r.lastEmailSentAt != null && String(r.lastEmailSentAt).length > 0;
+}
 
 // ─── 子组件 ──────────────────────────────────────────────────────────────
 
@@ -139,14 +135,17 @@ function RecipientRow({
   recipient,
   checked,
   onToggle,
-  sent,
 }: {
   recipient: EmailRecipient;
   checked: boolean;
   onToggle: () => void;
-  sent: boolean;
 }) {
   const meta = STATUS_META[recipient.status] ?? STATUS_META.pending;
+  const emailSent = hasPersistedEmailSent(recipient);
+  const emailSentTitle =
+    emailSent && recipient.lastEmailSentAt
+      ? `已群发邮件成功（${new Date(recipient.lastEmailSentAt).toLocaleString("zh-CN")}）`
+      : "已群发邮件成功";
   return (
     <label
       className={`group flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2.5 transition-all duration-150 sm:gap-3 ${
@@ -175,17 +174,15 @@ function RecipientRow({
             {recipient.name}
           </span>
           <span
-            className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${meta.bg} ${meta.border} ${meta.text}`}
+            className={`inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-[11px] font-medium leading-tight tracking-tight ${meta.pill}`}
           >
-            <span className={`h-1.5 w-1.5 rounded-full ${meta.dot}`} />
             {meta.label}
           </span>
-          {sent && (
+          {emailSent && (
             <span
-              className="inline-flex shrink-0 items-center gap-1 rounded-full border border-teal-200 bg-teal-50 px-2 py-0.5 text-[10px] font-semibold text-teal-700"
-              title="本会话已成功投递"
+              className="inline-flex shrink-0 items-center rounded-md bg-teal-500/[0.14] px-2 py-0.5 text-[11px] font-medium leading-tight tracking-tight text-teal-950/80"
+              title={emailSentTitle}
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-teal-500" />
               已发送
             </span>
           )}
@@ -325,8 +322,6 @@ export function EmailSender({
   const [sending, setSending] = useState(false);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  /** 本会话内已发送成功的候选人 ID */
-  const [sentIds, setSentIds] = useState<Set<number>>(() => new Set());
 
   const [sendForm, setSendForm] = useState<SendForm>({
     templateId: 0,
@@ -393,13 +388,13 @@ export function EmailSender({
     pending: recipients.filter((r) => r.status === "pending").length,
     passed: recipients.filter((r) => r.status === "passed").length,
     rejected: recipients.filter((r) => r.status === "rejected").length,
-    sent: recipients.filter((r) => sentIds.has(r.id)).length,
+    sent: recipients.filter((r) => hasPersistedEmailSent(r)).length,
   };
 
   const filteredRecipients = recipients
     .filter((r) => {
       if (statusFilter === "all") return true;
-      if (statusFilter === "sent") return sentIds.has(r.id);
+      if (statusFilter === "sent") return hasPersistedEmailSent(r);
       return r.status === statusFilter;
     })
     .filter((r) => {
@@ -481,20 +476,6 @@ export function EmailSender({
         description: `发送邮件给 ${result.sentCount} 位候选人`,
       });
 
-      const succeeded = result.successfulCandidateIds?.length
-        ? result.successfulCandidateIds
-        : result.failedCount === 0 && result.sentCount > 0
-          ? batch
-          : [];
-
-      if (succeeded.length) {
-        setSentIds((prev) => {
-          const next = new Set(prev);
-          succeeded.forEach((id) => next.add(id));
-          return next;
-        });
-      }
-
       toast.success(result.success ? result.message : `发送完成：成功 ${result.sentCount} 封`);
       setSendForm((p) => ({
         ...p,
@@ -503,6 +484,7 @@ export function EmailSender({
         body: "",
         templateId: 0,
       }));
+      await loadRecipients();
       onRefresh?.();
     } catch (err) {
       console.error("发送失败:", err);
@@ -747,7 +729,7 @@ export function EmailSender({
                   {searchQuery
                     ? "更换关键词或筛选条件"
                     : statusFilter === "sent"
-                      ? "本会话成功发送后，候选人会出现在此列表"
+                      ? "群发邮件发送成功后会计入此处，刷新页面仍会保留"
                       : "在简历管理中导入候选人"}
                 </p>
               </div>
@@ -785,7 +767,6 @@ export function EmailSender({
                       key={r.id}
                       recipient={r}
                       checked={sendForm.candidateIds.includes(r.id)}
-                      sent={sentIds.has(r.id)}
                       onToggle={() =>
                         setSendForm((p) => ({
                           ...p,

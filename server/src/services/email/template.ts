@@ -1,6 +1,6 @@
 import { db } from '../../db/index.js';
 import { emailTemplates, emailConfigs, users, resumes } from '../../db/schema.js';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, isNotNull, inArray } from 'drizzle-orm';
 import nodemailer from 'nodemailer';
 import type {
   EmailTemplateInput,
@@ -178,9 +178,27 @@ function replaceVariables(text: string, variables: Record<string, string>): stri
   return result;
 }
 
-// 获取收件人列表（从 resumes 表，可按状态筛选）
-export async function getEmailRecipients(status?: 'pending' | 'passed' | 'rejected'): Promise<EmailRecipient[]> {
-  let query = db
+export type RecipientStatusFilter =
+  | 'pending'
+  | 'passed'
+  | 'rejected'
+  | 'sent';
+
+// 获取收件人列表（从 resumes 表，仅当前用户；可按筛选状态）
+export async function getEmailRecipients(
+  userId: number,
+  status?: RecipientStatusFilter
+): Promise<EmailRecipient[]> {
+  const base = and(eq(resumes.userId, userId));
+
+  const whereClause =
+    status === 'sent'
+      ? and(base, isNotNull(resumes.lastEmailSentAt))
+      : status
+        ? and(base, eq(resumes.status, status))
+        : base;
+
+  const rows = await db
     .select({
       id: resumes.id,
       name: resumes.name,
@@ -189,19 +207,13 @@ export async function getEmailRecipients(status?: 'pending' | 'passed' | 'reject
       status: resumes.status,
       resumeFile: resumes.resumeFile,
       originalFileName: resumes.originalFileName,
+      lastEmailSentAt: resumes.lastEmailSentAt,
     })
     .from(resumes)
-    .$dynamic();
+    .where(whereClause)
+    .orderBy(desc(resumes.createdAt));
 
-  // 如果有状态筛选条件
-  if (status) {
-    query = query.where(eq(resumes.status, status));
-  }
-
-  const rows = await query.orderBy(desc(resumes.createdAt));
-  
-  // 确保 status 类型正确
-  return rows.map(row => ({
+  return rows.map((row) => ({
     ...row,
     status: row.status as 'pending' | 'passed' | 'rejected',
   }));
@@ -222,8 +234,7 @@ export async function sendEmails(
     throw new Error('邮箱配置不存在，请检查是否选择了正确的发件邮箱');
   }
 
-  // 从 users 表获取收件人列表
-  const allRecipients = await getEmailRecipients();
+  const allRecipients = await getEmailRecipients(userId);
 
   // 过滤需要发送的收件人
   const targetCandidates = allRecipients.filter(c => data.candidateIds.includes(c.id));
@@ -295,6 +306,16 @@ export async function sendEmails(
       console.error(`发送邮件给 ${candidate.email} 失败:`, error);
       failedCount++;
     }
+  }
+
+  if (successfulCandidateIds.length > 0) {
+    const now = new Date();
+    await db
+      .update(resumes)
+      .set({ lastEmailSentAt: now })
+      .where(
+        and(eq(resumes.userId, userId), inArray(resumes.id, successfulCandidateIds)),
+      );
   }
 
   return {

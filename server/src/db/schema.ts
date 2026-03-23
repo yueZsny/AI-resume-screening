@@ -47,6 +47,8 @@ export const resumes = mysqlTable(
     parsedContent: longtext("parsed_content"), // 解析后的文本内容
     score: int("score"), // AI 筛选评分 (0-100)
     status: varchar("status", { length: 20 }).default("pending").notNull(), // 简历状态: pending(待筛选), rejected(拒绝), passed(通过)
+    /** 最近一次群发邮件发送成功的时间（用于「已发送」筛选与统计） */
+    lastEmailSentAt: timestamp("last_email_sent_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (resumes) => ({
