@@ -21,6 +21,7 @@ export interface DashboardStats {
   rejected: number;
   todayCount: number;
   recentActivities: Activity[];
+  weeklyData: { day: string; count: number }[];
 }
 
 /**
