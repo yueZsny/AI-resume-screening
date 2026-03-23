@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { login } from "../../api/login";
@@ -17,7 +18,10 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
-  const form = useForm<LoginFormData>({ defaultValues: { email: "", password: "" } });
+  const navigate = useNavigate();
+  const form = useForm<LoginFormData>({
+    defaultValues: { email: "", password: "" },
+  });
   const { reset } = form;
   const { login: storeLogin } = useLoginStore();
 
@@ -40,7 +44,7 @@ export function LoginForm() {
         localStorage.removeItem(EMAIL_KEY);
       }
       toast.success("登录成功");
-      window.location.href = "/app";
+      navigate("/app");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "登录失败");
     } finally {
@@ -61,9 +65,12 @@ export function LoginForm() {
           placeholder="请输入邮箱"
           {...form.register("email", {
             required: "请输入邮箱",
-            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "请输入有效的邮箱地址" },
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "请输入有效的邮箱地址",
+            },
           })}
-          className="auth-input-field input-field"
+          className="auth-input-field"
         />
         {form.formState.errors.email && (
           <p className="err-text">{form.formState.errors.email.message}</p>
@@ -84,7 +91,7 @@ export function LoginForm() {
               required: "请输入密码",
               minLength: { value: 6, message: "密码至少6位" },
             })}
-            className="auth-input-field auth-input-with-icon input-field"
+            className="auth-input-field auth-input-with-icon"
           />
           <button
             type="button"

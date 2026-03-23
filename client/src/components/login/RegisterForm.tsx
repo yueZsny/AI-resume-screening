@@ -54,7 +54,7 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
             required: "请输入用户名",
             minLength: { value: 2, message: "用户名至少2位" },
           })}
-          className="auth-input-field input-field"
+          className="auth-input-field"
         />
         {form.formState.errors.username && (
           <p className="err-text">{form.formState.errors.username.message}</p>
@@ -72,9 +72,12 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
           placeholder="请输入邮箱"
           {...form.register("email", {
             required: "请输入邮箱",
-            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "请输入有效的邮箱地址" },
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "请输入有效的邮箱地址",
+            },
           })}
-          className="auth-input-field input-field"
+          className="auth-input-field"
         />
         {form.formState.errors.email && (
           <p className="err-text">{form.formState.errors.email.message}</p>
@@ -95,7 +98,7 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
               required: "请输入密码",
               minLength: { value: 6, message: "密码至少6位" },
             })}
-            className="auth-input-field auth-input-with-icon input-field"
+            className="auth-input-field auth-input-with-icon"
           />
           <button
             type="button"
@@ -122,8 +125,10 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
             type={showConfirm ? "text" : "password"}
             autoComplete="new-password"
             placeholder="再次输入密码"
-            {...form.register("confirmPassword", { required: "请再次输入密码" })}
-            className="auth-input-field auth-input-with-icon input-field"
+            {...form.register("confirmPassword", {
+              required: "请再次输入密码",
+            })}
+            className="auth-input-field auth-input-with-icon"
           />
           <button
             type="button"
@@ -136,7 +141,9 @@ export function RegisterForm({ onSuccess }: { onSuccess?: () => void }) {
           </button>
         </div>
         {form.formState.errors.confirmPassword && (
-          <p className="err-text">{form.formState.errors.confirmPassword.message}</p>
+          <p className="err-text">
+            {form.formState.errors.confirmPassword.message}
+          </p>
         )}
       </div>
 

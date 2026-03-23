@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLoginStore } from "../../store/Login";
 import toast from "../../utils/toast";
 import { LoginForm, RegisterForm } from "../../components/login";
@@ -13,17 +14,19 @@ const FEATURES = [
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [key, setKey] = useState(0);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { token } = useLoginStore();
 
   useEffect(() => {
-    if (token) window.location.href = "/app";
-  }, [token]);
+    if (token) navigate("/app", { replace: true });
+  }, [token, navigate]);
 
   useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("redirect") === "unauthorized") {
+    if (searchParams.get("redirect") === "unauthorized") {
       toast.error("请先登录后再访问");
     }
-  }, []);
+  }, [searchParams]);
 
   const switchTab = (val: boolean) => {
     setIsLogin(val);
