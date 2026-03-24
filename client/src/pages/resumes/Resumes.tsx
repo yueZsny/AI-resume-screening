@@ -389,7 +389,7 @@ export default function Resumes() {
             aria-label="简历概览与操作"
             className="mb-5 grid grid-cols-1 gap-5 lg:mb-6 lg:grid-cols-12 lg:gap-6 lg:items-stretch"
           >
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-8">
               {loading ? (
                 <SkeletonPie />
               ) : (
@@ -401,7 +401,7 @@ export default function Resumes() {
                 />
               )}
             </div>
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-4">
               <div className="flex h-full flex-col rounded-3xl border border-zinc-200/70 bg-white p-5 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)]">
                 <div className="mb-auto space-y-1.5">
                   <h2 className="text-sm font-semibold tracking-tight text-zinc-900">

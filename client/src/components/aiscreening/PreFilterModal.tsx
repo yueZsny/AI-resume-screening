@@ -1,0 +1,231 @@
+import { useEffect } from "react";
+import { Filter, X } from "lucide-react";
+import type { PreFilterConfig } from "./preFilterUtils";
+import { getDefaultPreFilter } from "./preFilterUtils";
+
+export type PreFilterModalProps = {
+  open: boolean;
+  onClose: () => void;
+  config: PreFilterConfig;
+  onConfigChange: (config: PreFilterConfig) => void;
+  onApply: () => void;
+};
+
+export function PreFilterModal({
+  open,
+  onClose,
+  config,
+  onConfigChange,
+  onApply,
+}: PreFilterModalProps) {
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  const handleClear = () => {
+    onConfigChange(getDefaultPreFilter());
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="prefilter-modal-title"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
+        aria-hidden
+      />
+
+      <div className="relative flex max-h-[min(90vh,640px)] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-zinc-200/90 bg-white shadow-[0_25px_50px_-12px_rgba(15,23,42,0.25)] sm:rounded-2xl">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 bg-zinc-50/80 px-4 py-3.5 sm:px-5">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-md shadow-violet-600/25">
+              <Filter className="h-5 w-5" strokeWidth={2} />
+            </div>
+            <div className="min-w-0">
+              <h2
+                id="prefilter-modal-title"
+                className="truncate text-base font-semibold text-zinc-900"
+              >
+                自定义预筛选条件
+              </h2>
+              <p className="truncate text-xs text-zinc-500">
+                先按条件筛一遍，再进行 AI 筛选
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl p-2.5 text-zinc-500 transition-colors hover:bg-white hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2"
+            title="关闭"
+          >
+            <X className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
+          <div className="space-y-5">
+            <div>
+              <label
+                htmlFor="prefilter-keywords"
+                className="mb-2 block text-sm font-medium text-zinc-800"
+              >
+                关键词
+              </label>
+              <textarea
+                id="prefilter-keywords"
+                value={config.keywords}
+                onChange={(e) =>
+                  onConfigChange({ ...config, keywords: e.target.value })
+                }
+                placeholder="多个关键词用逗号、空格或换行分隔。例：React, 3年, 硕士"
+                rows={4}
+                className="w-full resize-y rounded-xl border border-zinc-200/90 bg-zinc-50/40 px-4 py-3 text-sm leading-relaxed text-zinc-900 placeholder:text-zinc-400 focus:border-violet-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-200/80"
+              />
+              <p className="mt-1.5 text-xs text-zinc-500">
+                在姓名、邮箱、简历内容、AI 摘要中搜索
+              </p>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-zinc-800">
+                关键词匹配
+              </label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    onConfigChange({ ...config, keywordMode: "or" })
+                  }
+                  className={`flex-1 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
+                    config.keywordMode === "or"
+                      ? "border-violet-300 bg-violet-50 text-violet-900 ring-1 ring-violet-200"
+                      : "border-zinc-200/90 bg-white text-zinc-600 hover:bg-zinc-50"
+                  }`}
+                >
+                  满足任一
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    onConfigChange({ ...config, keywordMode: "and" })
+                  }
+                  className={`flex-1 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
+                    config.keywordMode === "and"
+                      ? "border-violet-300 bg-violet-50 text-violet-900 ring-1 ring-violet-200"
+                      : "border-zinc-200/90 bg-white text-zinc-600 hover:bg-zinc-50"
+                  }`}
+                >
+                  全部满足
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="prefilter-minScore"
+                className="mb-2 block text-sm font-medium text-zinc-800"
+              >
+                最低匹配分
+              </label>
+              <input
+                id="prefilter-minScore"
+                type="number"
+                min={0}
+                max={100}
+                value={config.minScore ?? ""}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  onConfigChange({
+                    ...config,
+                    minScore: v === "" ? null : Math.min(100, Math.max(0, Number(v))),
+                  });
+                }}
+                placeholder="不填则不限制"
+                className="h-11 w-full rounded-xl border border-zinc-200/90 bg-white px-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-200/80"
+              />
+              <p className="mt-1 text-xs text-zinc-500">
+                仅对已有 AI 评分的简历生效
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label
+                  htmlFor="prefilter-dateFrom"
+                  className="mb-1.5 block text-xs font-medium text-zinc-600"
+                >
+                  导入时间起
+                </label>
+                <input
+                  id="prefilter-dateFrom"
+                  type="date"
+                  value={config.dateFrom}
+                  onChange={(e) =>
+                    onConfigChange({ ...config, dateFrom: e.target.value })
+                  }
+                  className="h-10 w-full rounded-xl border border-zinc-200/90 bg-white px-3 text-sm text-zinc-900 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-200/80"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="prefilter-dateTo"
+                  className="mb-1.5 block text-xs font-medium text-zinc-600"
+                >
+                  导入时间止
+                </label>
+                <input
+                  id="prefilter-dateTo"
+                  type="date"
+                  value={config.dateTo}
+                  onChange={(e) =>
+                    onConfigChange({ ...config, dateTo: e.target.value })
+                  }
+                  className="h-10 w-full rounded-xl border border-zinc-200/90 bg-white px-3 text-sm text-zinc-900 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-200/80"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex shrink-0 flex-wrap gap-2 border-t border-zinc-100 bg-zinc-50/90 px-4 py-3.5 sm:px-5">
+          <button
+            type="button"
+            onClick={handleClear}
+            className="rounded-xl border border-zinc-200/90 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+          >
+            清空
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onApply();
+              onClose();
+            }}
+            className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-violet-600/25 transition-colors hover:bg-violet-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2"
+          >
+            应用筛选
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
