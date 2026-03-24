@@ -1,0 +1,197 @@
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import {
+  getResumes,
+  deleteResume,
+  getResume,
+} from "../../api/resume";
+import { logActivity } from "../../api/dashboard";
+import type { Resume } from "../../types/resume";
+import {
+  ResumeList,
+  ResumeDetailDrawer,
+  PdfPreviewModal,
+} from "../../components/resumes";
+
+function SkeletonAllTable() {
+  return (
+    <div className="flex animate-pulse flex-col overflow-hidden rounded-3xl border border-zinc-200/70 bg-white">
+      <div className="border-b border-zinc-100 px-6 py-4">
+        <div className="h-4 w-28 rounded bg-zinc-100" />
+        <div className="mt-2 h-3 w-40 rounded bg-zinc-100" />
+      </div>
+      <div className="flex flex-1 flex-col gap-px">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-4 border-b border-zinc-100 bg-white px-6 py-4 last:border-b-0"
+          >
+            <div className="flex flex-1 items-center gap-3">
+              <div className="h-9 w-9 shrink-0 rounded-lg bg-zinc-100" />
+              <div className="h-3 w-28 rounded bg-zinc-100" />
+            </div>
+            <div className="h-5 w-16 rounded-full bg-zinc-100" />
+            <div className="h-3 w-40 rounded bg-zinc-100" />
+            <div className="ml-auto flex gap-2">
+              <div className="h-8 w-8 rounded-md bg-zinc-100" />
+              <div className="h-8 w-8 rounded-md bg-zinc-100" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function ResumesAll() {
+  const [resumes, setResumes] = useState<Resume[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [viewResume, setViewResume] = useState<Resume | null>(null);
+  const [viewLoading, setViewLoading] = useState(false);
+  const [pdfPreview, setPdfPreview] = useState<{
+    url: string;
+    fileName: string;
+  } | null>(null);
+
+  const loadResumes = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getResumes();
+      setResumes(data);
+    } catch (error) {
+      console.error("加载简历失败:", error);
+      toast.error("加载简历失败");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadResumes();
+  }, [loadResumes]);
+
+  const sortedResumes = useMemo(() => {
+    return [...resumes].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  }, [resumes]);
+
+  const handleDelete = async (id: number, name: string) => {
+    if (!confirm("确定要删除这份简历吗？")) return;
+
+    try {
+      await deleteResume(id);
+      await logActivity({
+        type: "reject",
+        resumeId: id,
+        resumeName: name,
+        description: "删除了简历",
+      });
+      toast.success("删除成功");
+      void loadResumes();
+    } catch (error) {
+      console.error("删除失败:", error);
+      toast.error("删除失败");
+    }
+  };
+
+  const handleView = async (id: number) => {
+    setViewLoading(true);
+    try {
+      const data = await getResume(id);
+      setViewResume(data);
+    } catch (error) {
+      console.error("获取简历详情失败:", error);
+      toast.error("获取简历详情失败");
+    } finally {
+      setViewLoading(false);
+    }
+  };
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("zh-CN", {
+    month: "long",
+    day: "numeric",
+    weekday: "long",
+  });
+
+  return (
+    <div className="relative min-h-full">
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(14,165,233,0.08),transparent)]"
+        aria-hidden
+      />
+
+      <div className="mx-auto max-w-[1360px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
+        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">
+              Resume Library
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-[1.75rem]">
+                全部简历
+              </h1>
+              <Link
+                to="/app/resumes"
+                className="text-sm font-semibold text-sky-600 no-underline transition-colors hover:text-sky-700"
+              >
+                ← 返回概览
+              </Link>
+            </div>
+            <p className="mt-1 text-sm text-zinc-500">
+              共 {resumes.length.toLocaleString()} 份，按导入时间从新到旧排列
+            </p>
+          </div>
+          <time
+            dateTime={now.toISOString()}
+            className="text-sm tabular-nums text-zinc-500"
+          >
+            {dateStr}
+          </time>
+        </header>
+
+        <section
+          className="overflow-hidden rounded-3xl border border-zinc-200/70 bg-white shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] ring-1 ring-zinc-950/3"
+          aria-label="全部简历列表"
+        >
+          <div className="border-b border-zinc-100/80 px-6 py-4">
+            <h2 className="text-base font-semibold tracking-tight text-zinc-900">
+              列表
+            </h2>
+            <p className="mt-0.5 text-xs text-zinc-500">
+              当前显示 {sortedResumes.length} 份
+            </p>
+          </div>
+
+          {loading ? (
+            <SkeletonAllTable />
+          ) : (
+            <ResumeList
+              resumes={sortedResumes}
+              loading={loading}
+              onView={handleView}
+              onDelete={handleDelete}
+            />
+          )}
+        </section>
+      </div>
+
+      <ResumeDetailDrawer
+        resume={viewResume}
+        loading={viewLoading}
+        onOpenChange={(open) => !open && setViewResume(null)}
+        onPreview={(url, fileName) => setPdfPreview({ url, fileName })}
+      />
+
+      <PdfPreviewModal
+        isOpen={!!pdfPreview}
+        onClose={() => setPdfPreview(null)}
+        url={pdfPreview?.url || null}
+        fileName={pdfPreview?.fileName || null}
+      />
+    </div>
+  );
+}

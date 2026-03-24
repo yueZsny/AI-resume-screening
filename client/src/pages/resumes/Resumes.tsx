@@ -1,18 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import {
-  Upload,
-  Mail,
-  Search,
-  Filter,
-  FileText,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  Inbox,
-  ArrowUpDown,
-} from "lucide-react";
+import { Upload, Mail } from "lucide-react";
 import {
   getResumes,
   uploadResume,
@@ -29,58 +18,69 @@ import {
   ResumeModal,
   ResumeDetailDrawer,
   PdfPreviewModal,
+  ResumeStatusPieChart,
 } from "../../components/resumes";
 
-type ResumeStatus = "all" | "pending" | "passed" | "rejected";
+const RECENT_IMPORT_LIMIT = 3;
 
-interface StatusTab {
-  key: ResumeStatus;
-  label: string;
-  icon: typeof Clock;
-  color: string;
-  bgGradient: string;
-  activeBg: string;
+// ============================================================================
+// Skeleton
+// ============================================================================
+
+function SkeletonPie() {
+  return (
+    <div className="flex min-h-[240px] animate-pulse flex-col overflow-hidden rounded-3xl border border-zinc-200/70 bg-white">
+      <div className="border-b border-zinc-100 px-6 py-4">
+        <div className="h-4 w-32 rounded bg-zinc-100" />
+        <div className="mt-2 h-3 w-48 rounded bg-zinc-100" />
+      </div>
+      <div className="m-4 flex flex-1 items-center justify-center">
+        <div className="h-40 w-40 rounded-full bg-zinc-100" />
+      </div>
+    </div>
+  );
 }
 
-const STATUS_TABS: StatusTab[] = [
-  {
-    key: "all",
-    label: "全部",
-    icon: Inbox,
-    color: "text-zinc-600",
-    bgGradient: "from-zinc-500 to-slate-500",
-    activeBg: "bg-zinc-900",
-  },
-  {
-    key: "pending",
-    label: "待筛选",
-    icon: Clock,
-    color: "text-amber-600",
-    bgGradient: "from-amber-500 to-orange-500",
-    activeBg: "bg-amber-500",
-  },
-  {
-    key: "passed",
-    label: "已通过",
-    icon: CheckCircle2,
-    color: "text-emerald-600",
-    bgGradient: "from-emerald-500 to-teal-500",
-    activeBg: "bg-emerald-500",
-  },
-  {
-    key: "rejected",
-    label: "已拒绝",
-    icon: XCircle,
-    color: "text-rose-600",
-    bgGradient: "from-rose-500 to-pink-500",
-    activeBg: "bg-rose-500",
-  },
-];
+function SkeletonTable() {
+  return (
+    <div className="flex animate-pulse flex-col overflow-hidden rounded-3xl border border-zinc-200/70 bg-white">
+      <div className="border-b border-zinc-100 px-6 py-4">
+        <div className="h-4 w-24 rounded bg-zinc-100" />
+        <div className="mt-2 h-3 w-32 rounded bg-zinc-100" />
+      </div>
+      <div className="flex flex-1 flex-col gap-px">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-4 border-b border-zinc-100 bg-white px-6 py-4 last:border-b-0"
+          >
+            <div className="flex items-center gap-3 flex-1">
+              <div className="h-9 w-9 shrink-0 rounded-lg bg-zinc-100" />
+              <div className="h-3 w-28 rounded bg-zinc-100" />
+            </div>
+            <div className="h-5 w-16 rounded-full bg-zinc-100" />
+            <div className="h-3 w-40 rounded bg-zinc-100" />
+            <div className="h-3 w-20 rounded bg-zinc-100" />
+            <div className="h-3 w-28 rounded bg-zinc-100" />
+            <div className="ml-auto flex gap-2">
+              <div className="h-8 w-8 rounded-md bg-zinc-100" />
+              <div className="h-8 w-8 rounded-md bg-zinc-100" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Main
+// ============================================================================
 
 export default function Resumes() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [resumes, setResumes] = useState<Resume[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -91,7 +91,6 @@ export default function Resumes() {
     fileName: string;
   } | null>(null);
 
-  // URL 参数自动打开上传弹窗
   useEffect(() => {
     if (searchParams.get("action") === "upload") {
       setShowModal(true);
@@ -100,19 +99,12 @@ export default function Resumes() {
     }
   }, [searchParams, setSearchParams]);
 
-  // 筛选和搜索状态
-  const [statusFilter, setStatusFilter] = useState<ResumeStatus>("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
-
-  // 从邮箱导入相关状态
   const [showImportModal, setShowImportModal] = useState(false);
   const [emailConfigs, setEmailConfigs] = useState<EmailConfig[]>([]);
   const [selectedConfigId, setSelectedConfigId] = useState<number | null>(null);
   const [importing, setImporting] = useState(false);
   const [loadingConfigs, setLoadingConfigs] = useState(false);
 
-  // 加载简历列表
   const loadResumes = useCallback(async () => {
     setLoading(true);
     try {
@@ -130,45 +122,37 @@ export default function Resumes() {
     void loadResumes();
   }, [loadResumes]);
 
-  // 筛选后的简历
-  const filteredResumes = useMemo(() => {
-    const result = resumes.filter((resume) => {
-      if (statusFilter !== "all" && resume.status !== statusFilter) {
-        return false;
-      }
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        return (
-          resume.name.toLowerCase().includes(query) ||
-          resume.email?.toLowerCase().includes(query) ||
-          resume.phone?.includes(query) ||
-          resume.summary?.toLowerCase().includes(query)
-        );
-      }
-      return true;
-    });
+  const [viewMode, setViewMode] = useState<"overview" | "all">("overview");
 
-    // 排序
-    result.sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-    });
+  const latestImportedResumes = useMemo(() => {
+    return [...resumes]
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      )
+      .slice(0, RECENT_IMPORT_LIMIT);
+  }, [resumes]);
 
-    return result;
-  }, [resumes, statusFilter, searchQuery, sortOrder]);
+  const allResumesSorted = useMemo(() => {
+    return [...resumes].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  }, [resumes]);
 
-  // 统计各状态数量
-  const stats = useMemo(() => {
-    return {
-      all: resumes.length,
+  const displayedResumes =
+    viewMode === "overview" ? latestImportedResumes : allResumesSorted;
+
+  const stats = useMemo(
+    () => ({
+      total: resumes.length,
       pending: resumes.filter((r) => r.status === "pending").length,
       passed: resumes.filter((r) => r.status === "passed").length,
       rejected: resumes.filter((r) => r.status === "rejected").length,
-    };
-  }, [resumes]);
+    }),
+    [resumes],
+  );
 
-  // 加载邮箱配置列表
   const loadEmailConfigs = async () => {
     setLoadingConfigs(true);
     try {
@@ -185,13 +169,11 @@ export default function Resumes() {
     }
   };
 
-  // 打开导入弹窗
   const handleOpenImportModal = async () => {
     setShowImportModal(true);
     await loadEmailConfigs();
   };
 
-  // 从邮箱导入简历
   const handleImportFromEmail = async () => {
     if (!selectedConfigId) {
       toast.error("请选择邮箱配置");
@@ -219,7 +201,6 @@ export default function Resumes() {
     }
   };
 
-  // 处理文件选择
   const handleFileChange = (file: File | null) => {
     if (!file) {
       setSelectedFile(null);
@@ -241,7 +222,6 @@ export default function Resumes() {
     setSelectedFile(file);
   };
 
-  // 上传简历
   const handleUpload = async () => {
     if (!selectedFile) {
       toast.error("请选择文件");
@@ -271,7 +251,6 @@ export default function Resumes() {
     }
   };
 
-  // 删除简历
   const handleDelete = async (id: number, name: string) => {
     if (!confirm("确定要删除这份简历吗？")) return;
 
@@ -291,7 +270,6 @@ export default function Resumes() {
     }
   };
 
-  // 查看简历详情
   const handleView = async (id: number) => {
     setViewLoading(true);
     try {
@@ -305,181 +283,153 @@ export default function Resumes() {
     }
   };
 
-  const activeTab = STATUS_TABS.find((t) => t.key === statusFilter) || STATUS_TABS[0];
+  const emptyAfterFilter = false;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-slate-50 to-blue-50/30 -m-6 p-6">
-      {/* 页面头部 */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 shadow-lg shadow-violet-500/25">
-            <FileText className="h-5 w-5 text-white" />
-          </div>
+    <div className="relative min-h-full">
+      {/* 径向氛围背景：与仪表盘一致 */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(14,165,233,0.08),transparent)]"
+        aria-hidden
+      />
+
+      <div className="mx-auto max-w-[1360px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
+        {/* 页头：与 Dashboard 完全对齐 */}
+        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">
+              Resume Management
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-[1.75rem]">
               简历管理
             </h1>
-            <p className="text-sm text-zinc-500">
-              智能筛选与管理候选人简历
-            </p>
           </div>
-        </div>
-      </div>
-
-      {/* 统计卡片 - 现代化设计 */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {STATUS_TABS.map((tab, index) => {
-          const Icon = tab.icon;
-          const count = stats[tab.key];
-          const isActive = statusFilter === tab.key;
-
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setStatusFilter(tab.key)}
-              className={`
-                relative overflow-hidden rounded-2xl border p-4 text-left transition-all duration-300
-                hover:-translate-y-0.5 hover:shadow-lg
-                ${
-                  isActive
-                    ? `border-transparent bg-gradient-to-br ${tab.bgGradient} text-white shadow-xl`
-                    : "border-zinc-200/80 bg-white/80 backdrop-blur-sm hover:border-zinc-300"
-                }
-              `}
-              style={{ animationDelay: `${index * 50}ms` }}
-            >
-              {/* 背景装饰 */}
-              <div
-                className={`
-                  absolute -right-6 -top-6 h-24 w-24 rounded-full opacity-10
-                  ${isActive ? "bg-white" : `bg-gradient-to-br ${tab.bgGradient}`}
-                `}
-              />
-
-              <div className="relative">
-                <div
-                  className={`
-                    mb-3 flex h-10 w-10 items-center justify-center rounded-xl
-                    ${
-                      isActive
-                        ? "bg-white/20 text-white"
-                        : `bg-gradient-to-br ${tab.bgGradient} text-white shadow-md`
-                    }
-                  `}
-                >
-                  <Icon className="h-5 w-5" />
-                </div>
-
-                <p
-                  className={`
-                    text-3xl font-bold tracking-tight mb-1
-                    ${isActive ? "text-white" : "text-zinc-900"}
-                  `}
-                >
-                  {count}
-                </p>
-                <p
-                  className={`
-                    text-sm font-medium
-                    ${isActive ? "text-white/80" : tab.color}
-                  `}
-                >
-                  {tab.label}
-                </p>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* 筛选和搜索栏 */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-zinc-200/80 p-4 mb-6 shadow-sm">
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* 搜索框 */}
-          <div className="relative flex-1">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="搜索姓名、邮箱或内容..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-11 pl-11 pr-4 bg-zinc-50/80 border border-zinc-200 rounded-xl text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all"
-            />
-          </div>
-
-          {/* 排序切换 */}
-          <button
-            onClick={() =>
-              setSortOrder((prev) => (prev === "newest" ? "oldest" : "newest"))
-            }
-            className="flex items-center justify-center gap-2 h-11 px-4 border border-zinc-200 rounded-xl text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-all"
-          >
-            <ArrowUpDown className="h-4 w-4" />
-            {sortOrder === "newest" ? "最新优先" : "最早优先"}
-          </button>
-
-          {/* 操作按钮 */}
-          <div className="flex gap-2">
-            <button
-              onClick={handleOpenImportModal}
-              className="flex items-center gap-2 h-11 px-5 bg-white border border-zinc-200 rounded-xl text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 transition-all"
-            >
-              <Mail className="h-4 w-4" />
-              邮箱导入
-            </button>
-            <button
-              onClick={() => setShowModal(true)}
-              className="flex items-center gap-2 h-11 px-5 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-violet-500/25 hover:shadow-xl hover:shadow-violet-500/30 hover:brightness-105 transition-all"
-            >
-              <Upload className="h-4 w-4" />
-              上传简历
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 内容区域 */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-zinc-200/80 shadow-sm overflow-hidden">
-        {/* 列表头部 */}
-        <div className="px-5 py-4 border-b border-zinc-100/80 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-zinc-400" />
-            <span className="text-sm font-medium text-zinc-600">
-              共 {filteredResumes.length} 份简历
-              {statusFilter !== "all" && (
-                <span className="text-zinc-400 ml-1.5">
-                  · 筛选自 {resumes.length} 份
-                </span>
-              )}
-            </span>
-          </div>
-          {activeTab.key !== "all" && (
+          <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center sm:justify-end">
             <div
-              className={`
-                flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium
-                ${activeTab.key === "pending" ? "bg-amber-50 text-amber-600" : ""}
-                ${activeTab.key === "passed" ? "bg-emerald-50 text-emerald-600" : ""}
-                ${activeTab.key === "rejected" ? "bg-rose-50 text-rose-600" : ""}
-              `}
+              className="inline-flex rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-1"
+              role="group"
+              aria-label="切换视图"
             >
-              <activeTab.icon className="h-3.5 w-3.5" />
-              {activeTab.label}
+              <button
+                type="button"
+                onClick={() => setViewMode("overview")}
+                className={`
+                  rounded-lg px-4 py-2 text-sm font-medium transition-colors
+                  ${
+                    viewMode === "overview"
+                      ? "bg-white text-zinc-900 shadow-sm ring-1 ring-zinc-200/80"
+                      : "text-zinc-600 hover:text-zinc-900"
+                  }
+                `}
+              >
+                概览
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("all")}
+                className={`
+                  rounded-lg px-4 py-2 text-sm font-medium transition-colors
+                  ${
+                    viewMode === "all"
+                      ? "bg-white text-zinc-900 shadow-sm ring-1 ring-zinc-200/80"
+                      : "text-zinc-600 hover:text-zinc-900"
+                  }
+                `}
+              >
+                全部简历
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        </header>
 
-        <ResumeList
-          resumes={filteredResumes}
-          loading={loading}
-          onView={handleView}
-          onDelete={handleDelete}
-        />
+        {/* 左图右导入：饼图 + 搜索/导入区（仅概览时显示） */}
+        {viewMode === "overview" && (
+          <section
+            aria-label="简历概览与操作"
+            className="mb-5 grid grid-cols-1 gap-5 lg:mb-6 lg:grid-cols-12 lg:gap-6 lg:items-start"
+          >
+            <div className="lg:col-span-7">
+              {loading ? (
+                <SkeletonPie />
+              ) : (
+                <ResumeStatusPieChart
+                  total={stats.total}
+                  pending={stats.pending}
+                  passed={stats.passed}
+                  rejected={stats.rejected}
+                />
+              )}
+            </div>
+            <div className="lg:col-span-5">
+              <div className="rounded-3xl border border-zinc-200/70 bg-white p-5 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] ring-1 ring-zinc-950/3">
+                <div className="space-y-1.5">
+                  <h2 className="text-sm font-semibold tracking-tight text-zinc-900">
+                    操作
+                  </h2>
+                  <p className="text-xs leading-relaxed text-zinc-500">
+                    上传文件或从已绑定邮箱拉取附件，快速进入智能筛选。
+                  </p>
+                </div>
+                <div className="mt-4 grid gap-2 [grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr))]">
+                  <button
+                    type="button"
+                    onClick={handleOpenImportModal}
+                    className="flex h-10 min-h-[2.5rem] w-full min-w-0 items-center justify-center gap-2 rounded-xl border border-zinc-200/80 bg-zinc-50/50 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-zinc-100/80"
+                  >
+                    <Mail className="h-4 w-4 shrink-0 text-zinc-500" />
+                    邮箱导入
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(true)}
+                    className="flex h-10 min-h-[2.5rem] w-full min-w-0 items-center justify-center gap-2 rounded-xl bg-sky-600 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2"
+                  >
+                    <Upload className="h-4 w-4 shrink-0" />
+                    上传简历
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 列表 */}
+        <section
+          className="overflow-hidden rounded-3xl border border-zinc-200/70 bg-white shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] ring-1 ring-zinc-950/3"
+          aria-label="简历列表"
+        >
+          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-zinc-100/80 px-6 py-4 sm:flex-row sm:items-end">
+            <div>
+              <h2 className="text-base font-semibold tracking-tight text-zinc-900">
+                {viewMode === "overview" ? "最近导入" : "全部列表"}
+              </h2>
+              <p className="mt-0.5 text-xs text-zinc-500">
+                {viewMode === "overview"
+                  ? `仅展示最近导入的前 ${RECENT_IMPORT_LIMIT} 份 · 当前 ${displayedResumes.length} 份`
+                  : `共 ${resumes.length} 份 · 按导入时间从新到旧`}
+              </p>
+            </div>
+          </div>
+
+          {loading ? (
+            <SkeletonTable />
+          ) : (
+            <ResumeList
+              resumes={displayedResumes}
+              loading={loading}
+              onView={handleView}
+              onDelete={handleDelete}
+              emptyTitle={emptyAfterFilter ? "暂无匹配" : undefined}
+              emptyDescription={
+                emptyAfterFilter
+                  ? "最近导入的简历中没有符合当前筛选或搜索的结果，可切换状态或清空搜索。"
+                  : undefined
+              }
+            />
+          )}
+        </section>
       </div>
 
-      {/* 上传弹窗 */}
       <ResumeModal
         isOpen={showModal}
         onClose={() => {
@@ -493,7 +443,6 @@ export default function Resumes() {
         uploading={uploading}
       />
 
-      {/* 查看简历详情抽屉 */}
       <ResumeDetailDrawer
         resume={viewResume}
         loading={viewLoading}
@@ -501,7 +450,6 @@ export default function Resumes() {
         onPreview={(url, fileName) => setPdfPreview({ url, fileName })}
       />
 
-      {/* PDF 预览模态框 */}
       <PdfPreviewModal
         isOpen={!!pdfPreview}
         onClose={() => setPdfPreview(null)}
@@ -509,7 +457,6 @@ export default function Resumes() {
         fileName={pdfPreview?.fileName || null}
       />
 
-      {/* 从邮箱导入弹窗 */}
       <ResumeModal
         isOpen={showImportModal}
         onClose={() => {

@@ -6,10 +6,8 @@ import {
   Mail,
   AlertCircle,
   CheckCircle2,
-  X,
   Inbox,
   File,
-  FileCheck,
 } from "lucide-react";
 import { Modal } from "../Modal";
 import { formatFileSize } from "../../utils/format";
@@ -44,10 +42,14 @@ interface ResumeModalProps {
 interface DropZoneProps {
   selectedFile: File | null;
   onFileChange: (file: File | null) => void;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
 }
 
-const DropZone = ({ selectedFile, onFileChange, fileInputRef }: DropZoneProps) => {
+const DropZone = ({
+  selectedFile,
+  onFileChange,
+  fileInputRef,
+}: DropZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -69,7 +71,7 @@ const DropZone = ({ selectedFile, onFileChange, fileInputRef }: DropZoneProps) =
         onFileChange(file);
       }
     },
-    [onFileChange]
+    [onFileChange],
   );
 
   const getFileIcon = () => {
@@ -86,7 +88,7 @@ const DropZone = ({ selectedFile, onFileChange, fileInputRef }: DropZoneProps) =
     const ext = selectedFile.name.split(".").pop()?.toLowerCase();
     if (ext === "pdf") return "from-rose-500 to-red-600";
     if (ext === "docx") return "from-blue-500 to-indigo-600";
-    return "from-violet-500 to-purple-600";
+    return "from-sky-500 to-blue-600";
   };
 
   return (
@@ -96,10 +98,10 @@ const DropZone = ({ selectedFile, onFileChange, fileInputRef }: DropZoneProps) =
         transition-all duration-300 cursor-pointer
         ${
           isDragging
-            ? "border-violet-500 bg-violet-50/50"
+            ? "border-sky-500 bg-sky-50/60"
             : selectedFile
-            ? "border-violet-200 bg-violet-50/30"
-            : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/50"
+              ? "border-sky-200 bg-sky-50/40"
+              : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/50"
         }
       `}
       onDragOver={handleDragOver}
@@ -118,81 +120,60 @@ const DropZone = ({ selectedFile, onFileChange, fileInputRef }: DropZoneProps) =
         id="resume-upload"
       />
       <label htmlFor="resume-upload" className="cursor-pointer block">
-        <div className="p-10 text-center">
+        <div className="p-6 text-center">
           {selectedFile ? (
-            <div className="space-y-4">
+            <div className="flex flex-col items-center gap-3">
               {/* File Preview */}
-              <div className="flex justify-center">
-                <div
-                  className={`
-                    flex h-20 w-20 items-center justify-center rounded-2xl
-                    bg-gradient-to-br ${getFileGradient()} shadow-lg
-                  `}
-                >
-                  <div className="text-white">{getFileIcon()}</div>
-                </div>
+              <div
+                className={`
+                  flex h-16 w-16 items-center justify-center rounded-2xl
+                  bg-gradient-to-br ${getFileGradient()} shadow-md
+                `}
+              >
+                <div className="text-white scale-90">{getFileIcon()}</div>
               </div>
 
               {/* File Info */}
               <div>
-                <p className="text-base font-semibold text-zinc-900 mb-1">
+                <p className="text-sm font-semibold text-zinc-900 mb-0.5 truncate max-w-[20rem]">
                   {selectedFile.name}
                 </p>
-                <p className="text-sm text-zinc-500">
+                <p className="text-xs text-zinc-500">
                   {formatFileSize(selectedFile.size)}
                 </p>
               </div>
 
               {/* Replace hint */}
-              <div className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-violet-600 shadow-sm ring-1 ring-violet-100">
-                <FileCheck className="h-4 w-4" />
-                点击或拖拽更换文件
-              </div>
+              <p className="text-xs text-sky-600 font-medium">
+                点击或拖拽以更换
+              </p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="flex flex-col items-center gap-2.5">
               {/* Upload Icon */}
-              <div className="flex justify-center">
-                <div
-                  className={`
-                    flex h-20 w-20 items-center justify-center rounded-2xl
-                    bg-gradient-to-br ${getFileGradient()} shadow-lg
-                    transition-transform duration-300
-                    ${isDragging ? "scale-110" : ""}
-                  `}
-                >
-                  <Upload
-                    className={`h-10 w-10 text-white transition-transform duration-300 ${
-                      isDragging ? "scale-110" : ""
-                    }`}
-                  />
-                </div>
+              <div
+                className={`
+                  flex h-14 w-14 items-center justify-center rounded-2xl
+                  bg-gradient-to-br ${getFileGradient()} shadow-md
+                  transition-transform duration-300
+                  ${isDragging ? "scale-110" : ""}
+                `}
+              >
+                <Upload
+                  className={`h-7 w-7 text-white transition-transform duration-300 ${
+                    isDragging ? "scale-110" : ""
+                  }`}
+                />
               </div>
 
               {/* Text Content */}
               <div>
-                <p className="text-base font-semibold text-zinc-900 mb-2">
-                  点击上传或拖拽文件到此处
+                <p className="text-sm font-semibold text-zinc-900 mb-1">
+                  {isDragging ? "松开以上传" : "点击上传或拖拽文件到此处"}
                 </p>
-                <p className="text-sm text-zinc-500">
+                <p className="text-xs text-zinc-400">
                   支持 PDF、Word 文档，最大 10MB
                 </p>
-              </div>
-
-              {/* Supported formats */}
-              <div className="flex justify-center gap-3 mt-4">
-                <div className="inline-flex items-center gap-1.5 rounded-lg bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600">
-                  <FileText className="h-3.5 w-3.5" />
-                  PDF
-                </div>
-                <div className="inline-flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600">
-                  <File className="h-3.5 w-3.5" />
-                  DOCX
-                </div>
-                <div className="inline-flex items-center gap-1.5 rounded-lg bg-violet-50 px-3 py-1.5 text-xs font-medium text-violet-600">
-                  <File className="h-3.5 w-3.5" />
-                  DOC
-                </div>
               </div>
             </div>
           )}
@@ -211,8 +192,6 @@ interface ImportSectionProps {
   loadingConfigs: boolean;
   selectedConfigId: number | null;
   onConfigChange: (id: number | null) => void;
-  onImport: () => void;
-  importing: boolean;
 }
 
 const ImportSection = ({
@@ -220,13 +199,11 @@ const ImportSection = ({
   loadingConfigs,
   selectedConfigId,
   onConfigChange,
-  onImport,
-  importing,
 }: ImportSectionProps) => {
   if (loadingConfigs) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 shadow-lg shadow-sky-500/20">
           <Loader2 className="h-7 w-7 animate-spin text-white" />
         </div>
       </div>
@@ -259,19 +236,20 @@ const ImportSection = ({
       {/* Email Config Selection */}
       <div className="space-y-3">
         <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700">
-          <Mail className="h-4 w-4 text-violet-500" />
+          <Mail className="h-4 w-4 text-sky-600" />
           选择邮箱账号
         </label>
         <div className="relative">
           <select
+            aria-label="选择邮箱账号"
             value={selectedConfigId || ""}
             onChange={(e) => onConfigChange(Number(e.target.value) || null)}
             className="
               w-full appearance-none rounded-xl border border-zinc-200
-              bg-white px-4 py-3 text-sm text-zinc-900
-              focus:border-violet-500 focus:outline-none focus:ring-2
-              focus:ring-violet-500/20 transition-all
-              cursor-pointer hover:border-zinc-300
+              bg-white px-4 py-3 pr-10 text-sm text-zinc-900
+              focus:border-sky-500 focus:outline-none focus:ring-2
+              focus:ring-sky-500/20 transition-all
+              cursor-pointer hover:border-sky-200
             "
           >
             <option value="">请选择邮箱</option>
@@ -301,13 +279,12 @@ const ImportSection = ({
       </div>
 
       {/* Info Card */}
-      <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-5">
-        {/* Background decoration */}
-        <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-blue-200/30" />
+      <div className="relative overflow-hidden rounded-2xl border border-sky-100/90 bg-gradient-to-br from-sky-50/90 to-blue-50/80 p-5">
+        <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-sky-200/25" />
 
         <div className="relative flex gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100">
-            <AlertCircle className="h-5 w-5 text-blue-600" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100">
+            <AlertCircle className="h-5 w-5 text-sky-600" />
           </div>
           <div>
             <h4 className="mb-1 text-sm font-semibold text-zinc-900">
@@ -315,7 +292,7 @@ const ImportSection = ({
             </h4>
             <p className="text-sm leading-relaxed text-zinc-600">
               系统将自动扫描该邮箱最近{" "}
-              <span className="font-semibold text-blue-600">7 天</span>{" "}
+              <span className="font-semibold text-sky-600">7 天</span>{" "}
               的邮件，查找包含 PDF 或 Word 格式简历附件的邮件并导入。
             </p>
           </div>
@@ -330,7 +307,7 @@ const ImportSection = ({
             if (!config) return null;
             return (
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 shadow-sm shadow-sky-500/15">
                   <Mail className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -387,30 +364,24 @@ export function ResumeModal({
   const getModalTitle = () => {
     if (isUpload) {
       return (
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">
-            <Upload className="h-5 w-5 text-white" />
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 shadow-sm shadow-sky-500/20">
+            <Upload className="h-4 w-4 text-white" />
           </div>
-          <div>
-            <span className="text-base font-semibold text-zinc-900">
-              上传简历
-            </span>
-            <p className="text-xs text-zinc-500">支持 PDF、Word 格式</p>
-          </div>
+          <span className="text-sm font-semibold text-zinc-900">
+            上传简历
+          </span>
         </div>
       );
     }
     return (
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/25">
-          <Mail className="h-5 w-5 text-white" />
+      <div className="flex items-center gap-2.5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-600 shadow-sm shadow-sky-500/20">
+          <Mail className="h-4 w-4 text-white" />
         </div>
-        <div>
-          <span className="text-base font-semibold text-zinc-900">
-            从邮箱导入
-          </span>
-          <p className="text-xs text-zinc-500">自动扫描简历附件</p>
-        </div>
+        <span className="text-sm font-semibold text-zinc-900">
+          从邮箱导入
+        </span>
       </div>
     );
   };
@@ -443,11 +414,11 @@ export function ResumeModal({
       title={getModalTitle()}
       size="md"
       footer={
-        <div className="flex w-full items-center justify-end gap-3">
+        <div className="flex w-full items-center justify-end gap-2">
           <button
             onClick={handleClose}
             className="
-              rounded-xl border border-zinc-200 bg-white px-5 py-2.5
+              rounded-xl border border-zinc-200 bg-white px-4 py-2
               text-sm font-medium text-zinc-600
               hover:bg-zinc-50 hover:border-zinc-300
               transition-all disabled:opacity-50
@@ -459,12 +430,10 @@ export function ResumeModal({
             onClick={isUpload ? onUpload : onImport}
             disabled={isSubmitDisabled}
             className="
-              flex items-center gap-2 rounded-xl
-              bg-gradient-to-r from-violet-600 to-purple-600
-              px-5 py-2.5 text-sm font-semibold text-white
-              shadow-lg shadow-violet-500/25
-              hover:shadow-xl hover:shadow-violet-500/30 hover:brightness-105
-              transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-lg
+              flex items-center gap-1.5 rounded-xl
+              bg-sky-600 px-4 py-2 text-sm font-medium text-white
+              shadow-sm hover:bg-sky-700
+              transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-sky-600
             "
           >
             {getSubmitButtonContent()}
@@ -484,8 +453,6 @@ export function ResumeModal({
           loadingConfigs={loadingConfigs || false}
           selectedConfigId={selectedConfigId || null}
           onConfigChange={onConfigChange || (() => {})}
-          onImport={onImport || (() => {})}
-          importing={importing || false}
         />
       )}
     </Modal>

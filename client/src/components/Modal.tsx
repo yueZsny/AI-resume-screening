@@ -14,9 +14,9 @@ interface ModalProps {
 
 const sizeClasses = {
   sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-  xl: "max-w-xl",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+  xl: "max-w-3xl",
 };
 
 export function Modal({
@@ -76,30 +76,30 @@ export function Modal({
       >
         {/* 头部 */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-100">
             {title && (
               typeof title === "string"
-                ? <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-                : <div className="text-lg font-semibold text-gray-900">{title}</div>
+                ? <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
+                : <div className="text-base font-semibold text-zinc-900">{title}</div>
             )}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-150"
+                className="p-1.5 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-lg transition-all duration-150"
                 aria-label="关闭"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
         )}
 
         {/* 内容区域 */}
-        <div className="px-6 py-4 max-h-[60vh] overflow-y-auto">{children}</div>
+        <div className="px-5 py-4 max-h-[60vh] overflow-y-auto">{children}</div>
 
         {/* 底部按钮区域 */}
         {footer && (
-          <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+          <div className="px-5 py-3.5 border-t border-zinc-100 flex justify-end gap-2">
             {footer}
           </div>
         )}

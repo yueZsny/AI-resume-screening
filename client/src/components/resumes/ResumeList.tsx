@@ -10,10 +10,13 @@ import {
   Clock,
   CheckCircle2,
   XCircle,
-  Sparkles,
 } from "lucide-react";
 import type { Resume } from "../../types/resume";
-import { formatFileSize, formatDate, formatRelativeTime } from "../../utils/format";
+import {
+  formatFileSize,
+  formatDate,
+  formatRelativeTime,
+} from "../../utils/format";
 
 // ============================================================================
 // Types & Constants
@@ -24,48 +27,24 @@ type StatusType = "pending" | "passed" | "rejected";
 interface StatusConfig {
   label: string;
   icon: typeof Clock;
-  color: {
-    bg: string;
-    text: string;
-    border: string;
-    dot: string;
-  };
-  gradient: string;
+  pill: string;
 }
 
 const STATUS_CONFIG: Record<StatusType, StatusConfig> = {
   pending: {
     label: "待筛选",
     icon: Clock,
-    color: {
-      bg: "bg-amber-50",
-      text: "text-amber-700",
-      border: "border-amber-200",
-      dot: "bg-amber-500",
-    },
-    gradient: "from-amber-50 to-orange-50",
+    pill: "bg-amber-50 text-amber-800 border-amber-200/80",
   },
   passed: {
     label: "已通过",
     icon: CheckCircle2,
-    color: {
-      bg: "bg-emerald-50",
-      text: "text-emerald-700",
-      border: "border-emerald-200",
-      dot: "bg-emerald-500",
-    },
-    gradient: "from-emerald-50 to-teal-50",
+    pill: "bg-emerald-50 text-emerald-800 border-emerald-200/80",
   },
   rejected: {
     label: "已拒绝",
     icon: XCircle,
-    color: {
-      bg: "bg-rose-50",
-      text: "text-rose-700",
-      border: "border-rose-200",
-      dot: "bg-rose-500",
-    },
-    gradient: "from-rose-50 to-pink-50",
+    pill: "bg-rose-50 text-rose-800 border-rose-200/80",
   },
 };
 
@@ -74,19 +53,15 @@ interface ResumeListProps {
   loading: boolean;
   onView: (id: number) => void;
   onDelete: (id: number, name: string) => void;
+  emptyTitle?: string;
+  emptyDescription?: string;
 }
 
 // ============================================================================
-// Avatar Component
+// Avatar
 // ============================================================================
 
-const ResumeAvatar = ({
-  name,
-  hasSummary,
-}: {
-  name: string;
-  hasSummary: boolean;
-}) => {
+const ResumeAvatar = ({ name }: { name: string }) => {
   const initials = name
     .split(/\s+/)
     .map((n) => n[0])
@@ -94,33 +69,15 @@ const ResumeAvatar = ({
     .join("")
     .toUpperCase();
 
-  const colors = [
-    "from-violet-500 to-purple-600",
-    "from-blue-500 to-indigo-600",
-    "from-emerald-500 to-teal-600",
-    "from-orange-500 to-amber-600",
-    "from-rose-500 to-pink-600",
-  ];
-
-  const colorIndex = name.length % colors.length;
-  const gradient = colors[colorIndex];
-
   return (
-    <div
-      className={`relative h-12 w-12 shrink-0 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-md`}
-    >
-      <span className="text-sm font-bold text-white">{initials || "R"}</span>
-      {hasSummary && (
-        <div className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-violet-500 shadow-sm">
-          <Sparkles className="h-2.5 w-2.5 text-white" />
-        </div>
-      )}
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-xs font-semibold text-zinc-600 ring-1 ring-zinc-200/60">
+      {initials || "—"}
     </div>
   );
 };
 
 // ============================================================================
-// Status Badge Component
+// Status badge
 // ============================================================================
 
 const StatusBadge = ({ status }: { status: StatusType }) => {
@@ -128,63 +85,163 @@ const StatusBadge = ({ status }: { status: StatusType }) => {
   const Icon = config.icon;
 
   return (
-    <div
-      className={`
-        inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium
-        ${config.color.bg} ${config.color.text} ${config.color.border}
-      `}
+    <span
+      className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium ${config.pill}`}
     >
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${config.color.dot} animate-pulse`}
-      />
-      <Icon className="h-3 w-3" />
+      <Icon className="h-3 w-3 shrink-0 opacity-80" />
       {config.label}
-    </div>
+    </span>
   );
 };
 
 // ============================================================================
-// Empty State Component
+// Empty / Loading
 // ============================================================================
 
-const EmptyState = () => (
-  <div className="flex flex-col items-center justify-center py-20 px-4">
-    <div className="relative mb-6">
-      <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-zinc-100 to-zinc-200">
-        <FileText className="h-10 w-10 text-zinc-400" />
-      </div>
-      <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg">
-        <Sparkles className="h-4 w-4 text-white" />
-      </div>
+const EmptyState = ({
+  title = "暂无简历数据",
+  description = "上传简历或从邮箱导入，开始智能筛选候选人",
+}: {
+  title?: string;
+  description?: string;
+}) => (
+  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl bg-zinc-50/60 px-6 py-14 text-center ring-1 ring-inset ring-zinc-950/4">
+    <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200/80">
+      <FileText className="h-7 w-7 text-zinc-300" strokeWidth={1.25} />
     </div>
-    <h3 className="mb-2 text-lg font-semibold text-zinc-900">
-      暂无简历数据
-    </h3>
-    <p className="text-sm text-zinc-500 text-center max-w-sm">
-      上传简历或从邮箱导入，开始智能筛选候选人
-    </p>
+    <p className="text-sm font-medium text-zinc-600">{title}</p>
+    <p className="mt-1 max-w-[240px] text-xs text-zinc-400">{description}</p>
   </div>
 );
-
-// ============================================================================
-// Loading State Component
-// ============================================================================
 
 const LoadingState = () => (
-  <div className="flex items-center justify-center py-20">
-    <div className="relative">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600">
-        <Loader2 className="h-8 w-8 animate-spin text-white" />
-      </div>
-    </div>
+  <div className="flex flex-1 items-center justify-center py-14">
+    <Loader2
+      className="h-8 w-8 animate-spin text-zinc-400"
+      strokeWidth={1.75}
+    />
   </div>
 );
 
 // ============================================================================
-// Resume Item Component
+// Desktop table：与 ActivityList panel 内容区对齐
 // ============================================================================
 
-const ResumeItem = ({
+function ResumeTable({
+  resumes,
+  onView,
+  onDelete,
+}: {
+  resumes: Resume[];
+  onView: (id: number) => void;
+  onDelete: (id: number, name: string) => void;
+}) {
+  return (
+    <div className="hidden md:block">
+      <table className="w-full border-collapse text-left text-sm">
+        <thead>
+          <tr className="border-b border-zinc-200 bg-zinc-50/80 text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <th className="px-6 py-3 font-medium">候选人</th>
+            <th className="px-4 py-3 font-medium">状态</th>
+            <th className="px-4 py-3 font-medium">联系方式</th>
+            <th className="px-4 py-3 font-medium">文件</th>
+            <th className="px-4 py-3 font-medium">导入时间</th>
+            <th className="px-6 py-3 pr-6 text-right font-medium">操作</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-zinc-100">
+          {resumes.map((resume) => (
+            <tr
+              key={resume.id}
+              className="bg-white transition-colors hover:bg-zinc-50/80"
+            >
+              <td className="px-6 py-3.5 align-middle">
+                <button
+                  type="button"
+                  onClick={() => onView(resume.id)}
+                  className="flex max-w-[200px] items-center gap-3 text-left"
+                >
+                  <ResumeAvatar name={resume.name} />
+                  <span className="truncate font-medium text-zinc-900">
+                    {resume.name}
+                  </span>
+                </button>
+              </td>
+              <td className="px-4 py-3.5 align-middle">
+                <StatusBadge status={resume.status as StatusType} />
+              </td>
+              <td className="px-4 py-3.5 align-middle">
+                <div className="flex max-w-[220px] flex-col gap-0.5 text-zinc-600">
+                  {resume.email ? (
+                    <span className="flex items-center gap-1.5 truncate text-xs">
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                      {resume.email}
+                    </span>
+                  ) : null}
+                  {resume.phone ? (
+                    <span className="flex items-center gap-1.5 text-xs tabular-nums">
+                      <Phone className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                      {resume.phone}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-zinc-400">—</span>
+                  )}
+                </div>
+              </td>
+              <td className="px-4 py-3.5 align-middle text-xs text-zinc-600">
+                <div className="flex items-center gap-1 whitespace-nowrap">
+                  <HardDrive className="h-3.5 w-3.5 text-zinc-400" />
+                  <span className="font-medium">
+                    {resume.fileType?.toUpperCase() ?? "—"}
+                  </span>
+                  <span className="text-zinc-300">·</span>
+                  <span>{formatFileSize(resume.fileSize || 0)}</span>
+                </div>
+              </td>
+              <td className="px-4 py-3.5 align-middle text-xs text-zinc-600">
+                <div className="flex flex-col gap-0.5">
+                  <span className="flex items-center gap-1 tabular-nums">
+                    <Calendar className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                    {formatDate(resume.createdAt)}
+                  </span>
+                  <span className="pl-5 text-zinc-400">
+                    {formatRelativeTime(resume.createdAt)}
+                  </span>
+                </div>
+              </td>
+              <td className="px-6 py-3.5 pr-6 align-middle text-right">
+                <div className="inline-flex items-center gap-0.5">
+                  <button
+                    type="button"
+                    onClick={() => onView(resume.id)}
+                    className="rounded-md p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+                    title="查看详情"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDelete(resume.id, resume.name)}
+                    className="rounded-md p-2 text-zinc-500 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                    title="删除"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ============================================================================
+// Mobile compact cards
+// ============================================================================
+
+function ResumeMobileCard({
   resume,
   onView,
   onDelete,
@@ -192,121 +249,89 @@ const ResumeItem = ({
   resume: Resume;
   onView: () => void;
   onDelete: () => void;
-}) => {
-  const statusConfig = STATUS_CONFIG[resume.status as StatusType] || STATUS_CONFIG.pending;
+}) {
   const hasSummary = !!resume.summary;
-  const relativeTime = formatRelativeTime(resume.createdAt);
 
   return (
-    <div className="group relative">
-      {/* Hover accent line */}
+    <div className="border-b border-zinc-100 px-4 py-3 last:border-b-0 md:hidden">
       <div
-        className={`
-          absolute left-0 top-0 h-full w-1 rounded-l-2xl
-          bg-gradient-to-b ${statusConfig.gradient.replace("50", "500")}
-          opacity-0 transition-opacity duration-300 group-hover:opacity-100
-        `}
-      />
-
-      <div
-        className={`
-          flex items-start gap-4 p-5 transition-all duration-200
-          hover:bg-zinc-50/80 cursor-pointer rounded-2xl
-          border border-transparent hover:border-zinc-100
-        `}
+        role="button"
+        tabIndex={0}
         onClick={onView}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onView();
+          }
+        }}
+        className="cursor-pointer rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40"
       >
-        {/* Avatar */}
-        <ResumeAvatar name={resume.name} hasSummary={hasSummary} />
-
-        {/* Main Content */}
-        <div className="flex-1 min-w-0">
-          {/* Header Row */}
-          <div className="flex items-start justify-between gap-4 mb-2">
-            <div className="min-w-0">
-              <div className="flex items-center gap-3">
-                <h3 className="truncate text-base font-semibold text-zinc-900">
-                  {resume.name}
-                </h3>
-                <StatusBadge status={resume.status as StatusType} />
-              </div>
+        <div className="flex gap-3">
+          <ResumeAvatar name={resume.name} />
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="truncate text-sm font-semibold text-zinc-900">
+                {resume.name}
+              </h3>
+              <StatusBadge status={resume.status as StatusType} />
             </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-zinc-500 mb-3">
-            {resume.email && (
-              <div className="flex items-center gap-1.5">
-                <Mail size={14} className="text-zinc-400" />
-                <span className="truncate max-w-[200px]">{resume.email}</span>
-              </div>
-            )}
-            {resume.phone && (
-              <div className="flex items-center gap-1.5">
-                <Phone size={14} className="text-zinc-400" />
-                <span>{resume.phone}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Meta Info Row */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-400">
-            <div className="flex items-center gap-1.5">
-              <HardDrive size={12} />
-              <span className="font-medium">
-                {resume.fileType?.toUpperCase()}
+            <div className="mt-1.5 space-y-0.5 text-xs text-zinc-500">
+              {resume.email && (
+                <div className="flex items-center gap-1.5 truncate">
+                  <Mail className="h-3 w-3 shrink-0 text-zinc-400" />
+                  {resume.email}
+                </div>
+              )}
+              {resume.phone && (
+                <div className="flex items-center gap-1.5">
+                  <Phone className="h-3 w-3 shrink-0 text-zinc-400" />
+                  {resume.phone}
+                </div>
+              )}
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-zinc-400">
+              <span>
+                {resume.fileType?.toUpperCase()} ·{" "}
+                {formatFileSize(resume.fileSize || 0)}
               </span>
-              <span>·</span>
-              <span>{formatFileSize(resume.fileSize || 0)}</span>
+              <span>{formatRelativeTime(resume.createdAt)}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Calendar size={12} />
-              <span>{formatDate(resume.createdAt)}</span>
-              <span className="text-zinc-300">·</span>
-              <span>{relativeTime}</span>
-            </div>
-          </div>
-
-          {/* Summary Preview */}
-          {hasSummary && (
-            <div className="mt-3 p-3 rounded-xl bg-gradient-to-br from-violet-50/50 to-purple-50/50 border border-violet-100/50">
-              <p className="text-sm text-zinc-600 line-clamp-2 leading-relaxed">
+            {hasSummary && (
+              <p className="mt-2 line-clamp-2 border-l-2 border-zinc-200 pl-2 text-xs leading-relaxed text-zinc-600">
                 {resume.summary}
               </p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onView();
-            }}
-            className="flex items-center justify-center h-9 w-9 rounded-xl text-zinc-400 hover:text-violet-600 hover:bg-violet-50 transition-all"
-            title="查看详情"
-          >
-            <Eye size={18} />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="flex items-center justify-center h-9 w-9 rounded-xl text-zinc-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
-            title="删除"
-          >
-            <Trash2 size={18} />
-          </button>
-        </div>
+      </div>
+      <div className="mt-2 flex justify-end gap-1 border-t border-zinc-50 pt-2">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onView();
+          }}
+          className="rounded-md px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100"
+        >
+          查看
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="rounded-md px-3 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50"
+        >
+          删除
+        </button>
       </div>
     </div>
   );
-};
+}
 
 // ============================================================================
-// Main Component
+// Main
 // ============================================================================
 
 export function ResumeList({
@@ -314,26 +339,32 @@ export function ResumeList({
   loading,
   onView,
   onDelete,
+  emptyTitle,
+  emptyDescription,
 }: ResumeListProps) {
   if (loading) {
     return <LoadingState />;
   }
 
   if (resumes.length === 0) {
-    return <EmptyState />;
+    return (
+      <EmptyState title={emptyTitle} description={emptyDescription} />
+    );
   }
 
   return (
-    <div className="divide-y divide-zinc-100/80">
-      {resumes.map((resume) => (
-        <div key={resume.id}>
-          <ResumeItem
+    <>
+      <ResumeTable resumes={resumes} onView={onView} onDelete={onDelete} />
+      <div className="md:hidden divide-y divide-zinc-100">
+        {resumes.map((resume) => (
+          <ResumeMobileCard
+            key={resume.id}
             resume={resume}
             onView={() => onView(resume.id)}
             onDelete={() => onDelete(resume.id, resume.name)}
           />
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }

@@ -10,6 +10,7 @@ const Login = lazy(() => import("../pages/login/Login"));
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
 const Activities = lazy(() => import("../pages/activities/Activities"));
 const Resumes = lazy(() => import("../pages/resumes/Resumes"));
+const ResumesAll = lazy(() => import("../pages/resumes/ResumesAll"));
 
 const Aiscreening = lazy(() => import("../pages/aiscreening/aiscreening"));
 const Settings = lazy(() => import("../pages/settings/Settings"));
@@ -51,6 +52,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <Activities />
+          </Suspense>
+        ),
+      },
+      {
+        path: "resumes/all",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ResumesAll />
           </Suspense>
         ),
       },
