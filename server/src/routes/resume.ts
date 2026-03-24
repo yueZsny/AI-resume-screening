@@ -4,7 +4,8 @@ import fs from "fs";
 import { db } from "../db/index.js";
 import { resumes, emailConfigs, activities } from "../db/schema.js";
 import { parseDocument, getFileType } from "../services/resume/parser.js";
-import { eq, desc, inArray } from "drizzle-orm";
+import { eq, desc, inArray, and, or, gte, lte, like } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
 import { extractContactInfo, upload } from "../utils/resume.js";
 import { authenticate } from "../middleware/auth.js";
 import {
@@ -129,13 +130,85 @@ router.post(
 );
 
 /**
- * 获取简历列表
+ * 获取简历列表（支持预筛选）
+ * Query 参数（均可选）：
+ *   - keywords: 关键词，多个用逗号分隔，匹配 name/email/phone/parsedContent
+ *   - keywordMode: and | or，默认 or
+ *   - minScore: 最低分（整数）
+ *   - dateFrom: 导入时间起（YYYY-MM-DD）
+ *   - dateTo: 导入时间止（YYYY-MM-DD）
+ *   - status: pending | passed | rejected
  */
 router.get("/resumes", async (req: Request, res: Response) => {
   try {
+    const {
+      keywords,
+      keywordMode = "or",
+      minScore,
+      dateFrom,
+      dateTo,
+      status,
+    } = req.query as Record<string, string>;
+
+    // 关键词筛选（parsedContent 模糊匹配）
+    let keywordCondition: SQL<unknown> | undefined;
+    if (keywords?.trim()) {
+      const kwList = keywords
+        .split(/[,，\s\n]+/)
+        .map((k) => k.trim())
+        .filter(Boolean);
+
+      if (kwList.length > 0) {
+        if (keywordMode === "and") {
+          keywordCondition = and(
+            ...kwList.map((kw) => like(resumes.parsedContent, `%${kw}%`)),
+          );
+        } else {
+          keywordCondition = or(
+            ...kwList.map((kw) => like(resumes.parsedContent, `%${kw}%`)),
+          );
+        }
+      }
+    }
+
+    // 最低分
+    const minScoreCond =
+      minScore !== undefined &&
+      minScore !== "" &&
+      !isNaN(Number(minScore))
+        ? gte(resumes.score, Number(minScore))
+        : undefined;
+
+    // 日期范围
+    const dateFromCond = dateFrom?.trim()
+      ? gte(resumes.createdAt, new Date(dateFrom))
+      : undefined;
+    const dateToCond = dateTo?.trim()
+      ? (() => {
+          const end = new Date(dateTo);
+          end.setHours(23, 59, 59, 999);
+          return lte(resumes.createdAt, end);
+        })()
+      : undefined;
+
+    // 状态
+    const statusCond =
+      status && ["pending", "passed", "rejected"].includes(status)
+        ? eq(resumes.status, status)
+        : undefined;
+
+    const whereClause = and(
+      keywordCondition,
+      minScoreCond,
+      dateFromCond,
+      dateToCond,
+      statusCond,
+    );
+
     const resumeList = await db
       .select()
       .from(resumes)
+      .where(whereClause ?? undefined)
       .orderBy(desc(resumes.createdAt));
 
     res.json({

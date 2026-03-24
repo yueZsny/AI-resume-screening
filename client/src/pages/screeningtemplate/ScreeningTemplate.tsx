@@ -94,12 +94,11 @@ interface EditorModalProps {
 }
 
 function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps) {
-  // 初始值直接从 props 同步，不在 effect 中 setState
   const [name, setName] = useState(() =>
     mode === "edit" && initial ? initial.name : "",
   );
   const [config, setConfig] = useState<PreFilterConfig>(() =>
-    mode === "edit" && initial ? initial.config : getDefaultPreFilter(),
+    mode === "edit" && initial ? { ...initial.config } : getDefaultPreFilter(),
   );
   const [preFilterModalOpen, setPreFilterModalOpen] = useState(false);
 
@@ -518,14 +517,17 @@ export default function ScreeningTemplate() {
         )}
       </div>
 
-      {/* Editor modal */}
-      <EditorModal
-        open={editorOpen}
-        mode={editorMode}
-        initial={editingTemplate}
-        onClose={() => setEditorOpen(false)}
-        onSave={handleSave}
-      />
+      {/* 仅打开时挂载 + key 保证每次打开都重新挂载，否则 useState 初值不会带上编辑中的模版 */}
+      {editorOpen && (
+        <EditorModal
+          key={`${editorMode}-${editingTemplate?.id ?? "new"}`}
+          open
+          mode={editorMode}
+          initial={editingTemplate}
+          onClose={() => setEditorOpen(false)}
+          onSave={handleSave}
+        />
+      )}
 
       {/* Delete confirm */}
       {confirmDelete && (

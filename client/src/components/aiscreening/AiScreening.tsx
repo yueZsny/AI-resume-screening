@@ -24,8 +24,8 @@ import {
   getDefaultPreFilter,
   isEmptyPreFilter,
 } from "./preFilterUtils";
-import { loadTemplates } from "../../pages/screeningtemplate/templateApi";
-import { getResumes, updateResumeStatus } from "../../api/resume";
+import { getTemplate, loadTemplates } from "../../pages/screeningtemplate/templateApi";
+import { getResumes, getFilteredResumes, updateResumeStatus } from "../../api/resume";
 import {
   batchScreenResumesWithAi,
   screenResumeWithAi,
@@ -298,23 +298,40 @@ export function AiScreening() {
     setReasoningOpen(Boolean(selectedResult?.reasoning?.trim()));
   }, [selectedResumeId, selectedResult?.reasoning]);
 
-  // 加载简历列表和AI配置，并读取主动应用的模版
+  // 加载简历列表和 AI 配置；优先「主动应用」的模版，否则自动套用默认筛选模版
   useEffect(() => {
-    loadResumes();
-    loadAiConfigs();
-
-    // 从模版页面跳转时，可能携带了 active-screening-template
     const activeId = localStorage.getItem("active-screening-template");
     if (activeId) {
       localStorage.removeItem("active-screening-template");
-      loadTemplates().then((templates) => {
-        const found = templates.find((t) => t.id === Number(activeId));
-        if (found) {
-          setPreFilterConfig(found.config);
-          toast.success(`已应用模版「${found.name}」的筛选条件`);
-        }
-      });
+      getTemplate(Number(activeId))
+        .then((tpl) => {
+          setPreFilterConfig(tpl.config);
+          return tpl;
+        })
+        .then((tpl) => {
+          if (!isEmptyPreFilter(tpl.config)) {
+            loadResumes(tpl.config);
+          } else {
+            loadResumes();
+          }
+          toast.success(`已应用模版「${tpl.name}」的筛选条件`);
+        })
+        .catch(() => loadResumes());
+    } else {
+      loadTemplates()
+        .then((list) => {
+          const def = list.find((t) => t.isDefault);
+          if (def) {
+            setPreFilterConfig(def.config);
+            if (!isEmptyPreFilter(def.config)) {
+              return loadResumes(def.config);
+            }
+          }
+          return loadResumes();
+        })
+        .catch(() => loadResumes());
     }
+    loadAiConfigs();
   }, []);
 
   const loadAiConfigs = async () => {
@@ -338,10 +355,14 @@ export function AiScreening() {
     }
   };
 
-  const loadResumes = async () => {
+  // 加载简历（可选后端预筛）
+  const loadResumes = async (filters?: Parameters<typeof getFilteredResumes>[0]) => {
     try {
       setLoading(true);
-      const data = await getResumes();
+      const data =
+        filters && !isEmptyPreFilter(filters as PreFilterConfig)
+          ? await getFilteredResumes(filters)
+          : await getResumes();
       setResumes(data);
     } catch (error) {
       console.error("加载简历失败:", error);

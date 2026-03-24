@@ -25,6 +25,36 @@ export const uploadResume = async (params: UploadResumeParams): Promise<Resume> 
   });
 };
 
+export interface ResumeFilterParams {
+  keywords?: string;
+  keywordMode?: "and" | "or";
+  minScore?: number | null;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
+/**
+ * 获取简历列表（支持预筛选）
+ */
+export const getFilteredResumes = async (
+  filters?: ResumeFilterParams,
+): Promise<Resume[]> => {
+  const params = new URLSearchParams();
+  if (filters?.keywords?.trim()) {
+    params.set("keywords", filters.keywords);
+    if (filters.keywordMode) params.set("keywordMode", filters.keywordMode);
+  }
+  if (filters?.minScore != null) {
+    params.set("minScore", String(filters.minScore));
+  }
+  if (filters?.dateFrom?.trim()) params.set("dateFrom", filters.dateFrom);
+  if (filters?.dateTo?.trim()) params.set("dateTo", filters.dateTo);
+
+  const qs = params.toString();
+  const url = qs ? `/v1/resumes?${qs}` : "/v1/resumes";
+  return instance.get(url);
+};
+
 /**
  * 获取简历列表
  */
