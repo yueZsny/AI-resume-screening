@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {
@@ -45,7 +45,9 @@ function ConditionPill({ label, value }: { label: string; value: string }) {
 function ConditionSummary({ config }: { config: PreFilterConfig }) {
   if (isEmptyPreFilter(config)) {
     return (
-      <span className="text-xs text-zinc-400 italic">无过滤条件（全部通过）</span>
+      <span className="text-xs text-zinc-400 italic">
+        无过滤条件（全部通过）
+      </span>
     );
   }
   const pills: { label: string; value: string }[] = [];
@@ -91,9 +93,18 @@ interface EditorModalProps {
   initial?: ScreeningTemplate;
   onClose: () => void;
   onSave: (name: string, config: PreFilterConfig) => void;
+  /** 编辑模式下，在预筛选弹窗点「应用筛选」时把当前条件写回服务端模版 */
+  onSyncConditions?: (name: string, config: PreFilterConfig) => Promise<void>;
 }
 
-function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps) {
+function EditorModal({
+  open,
+  mode,
+  initial,
+  onClose,
+  onSave,
+  onSyncConditions,
+}: EditorModalProps) {
   const [name, setName] = useState(() =>
     mode === "edit" && initial ? initial.name : "",
   );
@@ -101,6 +112,7 @@ function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps)
     mode === "edit" && initial ? { ...initial.config } : getDefaultPreFilter(),
   );
   const [preFilterModalOpen, setPreFilterModalOpen] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleSave = () => {
     if (!name.trim()) {
@@ -109,6 +121,21 @@ function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps)
     }
     onSave(name.trim(), config);
     onClose();
+  };
+
+  const handlePreFilterApply = async () => {
+    if (mode !== "edit" || !initial || !onSyncConditions) return;
+    const effectiveName = name.trim() || initial.name;
+    if (!effectiveName.trim()) {
+      toast.error("请先填写模版名称");
+      return;
+    }
+    try {
+      await onSyncConditions(effectiveName, { ...config });
+      toast.success("筛选条件已保存到模版");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "保存失败");
+    }
   };
 
   if (!open) return null;
@@ -124,7 +151,10 @@ function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps)
           if (e.target === e.currentTarget) onClose();
         }}
       >
-        <div className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm" aria-hidden />
+        <div
+          className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
+          aria-hidden
+        />
         <div className="relative flex max-h-[min(90vh,560px)] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-[0_25px_50px_-12px_rgba(15,23,42,0.25)]">
           {/* Header */}
           <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 bg-zinc-50/80 px-5 py-4">
@@ -167,6 +197,7 @@ function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps)
                   模版名称
                 </label>
                 <input
+                  ref={nameInputRef}
                   id="tpl-name"
                   type="text"
                   value={name}
@@ -179,7 +210,9 @@ function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps)
 
               <div>
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-800">筛选条件</span>
+                  <span className="text-sm font-medium text-zinc-800">
+                    筛选条件
+                  </span>
                   <button
                     type="button"
                     onClick={() => setPreFilterModalOpen(true)}
@@ -220,7 +253,9 @@ function EditorModal({ open, mode, initial, onClose, onSave }: EditorModalProps)
         onClose={() => setPreFilterModalOpen(false)}
         config={config}
         onConfigChange={setConfig}
-        onApply={() => setPreFilterModalOpen(false)}
+        onApply={() => {
+          void handlePreFilterApply();
+        }}
       />
     </>
   );
@@ -263,7 +298,9 @@ function TemplateCard({
 
       {/* Header */}
       <div className="mb-3.5 pr-16">
-        <h3 className="text-[15px] font-semibold text-zinc-900">{template.name}</h3>
+        <h3 className="text-[15px] font-semibold text-zinc-900">
+          {template.name}
+        </h3>
         <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400">
           <Clock className="h-3 w-3 shrink-0" aria-hidden />
           {createdDate}
@@ -339,8 +376,12 @@ export default function ScreeningTemplate() {
   const [error, setError] = useState<string | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [editorMode, setEditorMode] = useState<EditorMode>("create");
-  const [editingTemplate, setEditingTemplate] = useState<ScreeningTemplate | undefined>();
-  const [confirmDelete, setConfirmDelete] = useState<ScreeningTemplate | null>(null);
+  const [editingTemplate, setEditingTemplate] = useState<
+    ScreeningTemplate | undefined
+  >();
+  const [confirmDelete, setConfirmDelete] = useState<ScreeningTemplate | null>(
+    null,
+  );
 
   const refresh = useCallback(async () => {
     try {
@@ -353,8 +394,10 @@ export default function ScreeningTemplate() {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     refresh().finally(() => setLoading(false));
-  }, [refresh]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCreate = () => {
     setEditingTemplate(undefined);
@@ -374,13 +417,28 @@ export default function ScreeningTemplate() {
         await createTemplate(name, config);
         toast.success("模版创建成功");
       } else if (editingTemplate) {
-        await updateTemplate(editingTemplate.id, { name, config });
+        const updated = await updateTemplate(editingTemplate.id, {
+          name,
+          config,
+        });
+        setEditingTemplate(updated);
         toast.success("模版已保存");
       }
       await refresh();
-    } catch (e: any) {
-      toast.error(e.message || "保存失败");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "保存失败";
+      toast.error(msg);
     }
+  };
+
+  const handleSyncConditionsFromPreFilter = async (
+    name: string,
+    config: PreFilterConfig,
+  ) => {
+    if (!editingTemplate) return;
+    const updated = await updateTemplate(editingTemplate.id, { name, config });
+    setEditingTemplate(updated);
+    await refresh();
   };
 
   const handleDuplicate = async (t: ScreeningTemplate) => {
@@ -388,8 +446,8 @@ export default function ScreeningTemplate() {
       await duplicateTemplate(t.id, `${t.name} (副本)`);
       toast.success("模版已复制");
       await refresh();
-    } catch (e: any) {
-      toast.error(e.message || "复制失败");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "复制失败");
     }
   };
 
@@ -402,8 +460,8 @@ export default function ScreeningTemplate() {
       toast.success("模版已删除");
       setConfirmDelete(null);
       await refresh();
-    } catch (e: any) {
-      toast.error(e.message || "删除失败");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "删除失败");
     }
   };
 
@@ -457,7 +515,10 @@ export default function ScreeningTemplate() {
               to="/app/aiscreening"
               className="inline-flex items-center gap-2 rounded-xl border border-zinc-200/90 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
             >
-              <ArrowRight className="h-4 w-4 -scale-x-100 text-zinc-400" aria-hidden />
+              <ArrowRight
+                className="h-4 w-4 -scale-x-100 text-zinc-400"
+                aria-hidden
+              />
               前往筛选
             </Link>
             <button
@@ -477,7 +538,11 @@ export default function ScreeningTemplate() {
             <p className="text-sm font-medium text-rose-600">{error}</p>
             <button
               type="button"
-              onClick={() => { setLoading(true); setError(null); refresh().finally(() => setLoading(false)); }}
+              onClick={() => {
+                setLoading(true);
+                setError(null);
+                refresh().finally(() => setLoading(false));
+              }}
               className="mt-3 rounded-xl border border-rose-200 bg-white px-4 py-2 text-xs font-medium text-rose-600 shadow-sm hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
             >
               重新加载
@@ -526,6 +591,9 @@ export default function ScreeningTemplate() {
           initial={editingTemplate}
           onClose={() => setEditorOpen(false)}
           onSave={handleSave}
+          onSyncConditions={
+            editorMode === "edit" ? handleSyncConditionsFromPreFilter : undefined
+          }
         />
       )}
 
@@ -537,7 +605,10 @@ export default function ScreeningTemplate() {
           aria-modal="true"
           aria-label="确认删除"
         >
-          <div className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm" aria-hidden />
+          <div
+            className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
+            aria-hidden
+          />
           <div className="relative w-full max-w-sm rounded-2xl border border-zinc-200/90 bg-white p-6 shadow-[0_25px_50px_-12px_rgba(15,23,42,0.25)]">
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 ring-1 ring-rose-100">
               <Trash2 className="h-6 w-6 text-rose-600" />

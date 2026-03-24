@@ -19,13 +19,21 @@ import {
 } from "lucide-react";
 import { AiScreeningSettingsModal } from "./AiScreeningSettingsModal";
 import { PreFilterModal } from "./PreFilterModal";
+import { AiReasoningContent } from "./AiReasoningContent";
 import {
   type PreFilterConfig,
   getDefaultPreFilter,
   isEmptyPreFilter,
 } from "./preFilterUtils";
-import { getTemplate, loadTemplates } from "../../pages/screeningtemplate/templateApi";
-import { getResumes, getFilteredResumes, updateResumeStatus } from "../../api/resume";
+import {
+  getTemplate,
+  loadTemplates,
+} from "../../pages/screeningtemplate/templateApi";
+import {
+  getResumes,
+  getFilteredResumes,
+  updateResumeStatus,
+} from "../../api/resume";
 import {
   batchScreenResumesWithAi,
   screenResumeWithAi,
@@ -356,7 +364,9 @@ export function AiScreening() {
   };
 
   // 加载简历（可选后端预筛）
-  const loadResumes = async (filters?: Parameters<typeof getFilteredResumes>[0]) => {
+  const loadResumes = async (
+    filters?: Parameters<typeof getFilteredResumes>[0],
+  ) => {
     try {
       setLoading(true);
       const data =
@@ -598,7 +608,10 @@ export function AiScreening() {
         onClose={() => setPreFilterModalOpen(false)}
         config={preFilterConfig}
         onConfigChange={setPreFilterConfig}
-        onApply={() => {}}
+        onApply={(config) => {
+          void loadResumes(isEmptyPreFilter(config) ? undefined : config);
+          setPreFilterModalOpen(false);
+        }}
       />
 
       <AiScreeningSettingsModal
@@ -1107,9 +1120,10 @@ export function AiScreening() {
                           )}
                         </button>
                         {reasoningOpen && (
-                          <div className="border-t border-zinc-100 bg-zinc-50/30 px-4 py-4 text-sm leading-relaxed text-zinc-700 whitespace-pre-wrap">
-                            {selectedResult?.reasoning?.trim() ||
-                              "暂无评估内容。完成 AI 筛选后将在此展示模型结论。"}
+                          <div className="border-t border-zinc-100 bg-zinc-50/30 px-4 py-4">
+                            <AiReasoningContent
+                              text={(selectedResult?.reasoning ?? "").trim()}
+                            />
                           </div>
                         )}
                       </div>
