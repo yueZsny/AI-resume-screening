@@ -430,13 +430,11 @@ router.post(
               continue;
             }
 
-            // 从解析内容中提取联系信息
+            // 从解析内容中提取联系信息（简历正文 → 最准确）
             const extractedInfo = extractContactInfo(parseResult.content);
 
-            // 从邮件发件人提取邮箱
-            const emailMatch =
-              email.from.match(/<(.+)>/) || email.from.match(/([^\s]+@[^\s]+)/);
-            const fromEmail = emailMatch ? emailMatch[1] : "";
+            // 候选人邮箱应从简历正文解析，不从邮件发件人取（发件人是 HR/猎头，非候选人）
+            const candidateEmail = extractedInfo.email || "";
 
             // 使用邮件主题作为简历名称（去掉 Re: , Fw: 等前缀）
             const name =
@@ -449,7 +447,7 @@ router.post(
             await db.insert(resumes).values({
               userId: effectiveUserId,
               name,
-              email: fromEmail || extractedInfo.email || "",
+              email: candidateEmail,
               phone: extractedInfo.phone || "",
               resumeFile: filePath,
               originalFileName,

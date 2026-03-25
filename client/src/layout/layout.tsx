@@ -9,6 +9,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ClipboardList,
+  Palette,
 } from "lucide-react";
 import { useLoginStore } from "../store/Login";
 import { UserInfo } from "../components/UserInfo";
@@ -19,6 +20,7 @@ const navItems = [
   { path: "/app/aiscreening", label: "AI 筛选", icon: Briefcase },
   { path: "/app/screening-template", label: "筛选模版", icon: ClipboardList },
   { path: "/app/emails", label: "邮件群发", icon: Mail },
+  { path: "/app/demo", label: "主题 Demo", icon: Palette },
   { path: "/app/settings", label: "设置", icon: Settings },
 ];
 

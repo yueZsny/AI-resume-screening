@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 启用 dark: 变体（class 模式） */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* 显式扫描源码（含 lazy 路由），避免类名未生成导致「无样式」 */
 @source "../index.html";
 @source "./**/*.{js,ts,jsx,tsx}";
@@ -777,4 +780,54 @@ body {
 @keyframes successAppear {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* ========================
+   暗色主题变量（覆盖 :root 默认）
+   ======================== */
+.dark {
+  color-scheme: dark;
+  --app-page-bg: #09090b;
+  --app-primary: #38bdf8;
+  --app-accent: #60a5fa;
+  --app-primary-hover: #7dd3fc;
+  --app-primary-soft: rgb(56 189 248 / 0.12);
+  --app-accent-soft: rgb(96 165 250 / 0.12);
+
+  --color-demo-bg: #09090b;
+  --color-demo-surface: #18181b;
+  --color-demo-surface-raised: #27272a;
+  --color-demo-border: rgba(255, 255, 255, 0.08);
+  --color-demo-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-demo-text-primary: #fafafa;
+  --color-demo-text-secondary: #a1a1aa;
+  --color-demo-text-muted: #52525b;
+  --color-demo-accent: #38bdf8;
+  --color-demo-accent-hover: #7dd3fc;
+  --color-demo-success: #4ade80;
+  --color-demo-warning: #fbbf24;
+  --color-demo-danger: #f87171;
+  --color-demo-purple: #c084fc;
+  --color-demo-cyan: #22d3ee;
+}
+
+/* ========================
+   亮色主题变量（默认）
+   ======================== */
+:root {
+  --color-demo-bg: #f4f4f6;
+  --color-demo-surface: #ffffff;
+  --color-demo-surface-raised: #fafafa;
+  --color-demo-border: rgba(0, 0, 0, 0.07);
+  --color-demo-border-subtle: rgba(0, 0, 0, 0.04);
+  --color-demo-text-primary: #18181b;
+  --color-demo-text-secondary: #52525b;
+  --color-demo-text-muted: #a1a1aa;
+  --color-demo-accent: #0ea5e9;
+  --color-demo-accent-hover: #0284c7;
+  --color-demo-success: #22c55e;
+  --color-demo-warning: #f59e0b;
+  --color-demo-danger: #ef4444;
+  --color-demo-purple: #a855f7;
+  --color-demo-cyan: #06b6d4;
 }

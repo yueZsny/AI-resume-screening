@@ -14,6 +14,7 @@ const ResumesAll = lazy(() => import("../pages/resumes/ResumesAll"));
 
 const Aiscreening = lazy(() => import("../pages/aiscreening/aiscreening"));
 const ScreeningTemplate = lazy(() => import("../pages/screeningtemplate/ScreeningTemplate"));
+const ThemeDemo = lazy(() => import("../pages/demo/ThemeDemo"));
 const Settings = lazy(() => import("../pages/settings/Settings"));
 const EmailTemplates = lazy(() => import("../pages/emails/EmailTemplates"));
 
@@ -86,6 +87,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <ScreeningTemplate />
+          </Suspense>
+        ),
+      },
+      {
+        path: "demo",
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <ThemeDemo />
           </Suspense>
         ),
       },
