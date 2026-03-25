@@ -28,7 +28,7 @@ import {
 import {
   getTemplate,
   loadTemplates,
-} from "../../pages/screeningtemplate/templateApi";
+} from "../../api/screeningTemplate";
 import {
   getResumes,
   getFilteredResumes,

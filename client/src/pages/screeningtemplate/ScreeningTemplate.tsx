@@ -12,23 +12,22 @@ import {
   Clock,
   Hash,
   Tag,
-  ArrowLeft,
+  Filter,
 } from "lucide-react";
+import type { PreFilterConfig } from "../../components/aiscreening/preFilterUtils";
 import {
-  type ScreeningTemplate,
+  getDefaultPreFilter,
+  isEmptyPreFilter,
+} from "../../components/aiscreening/preFilterUtils";
+import type { ScreeningTemplate } from "../../api/screeningTemplate";
+import {
   loadTemplates,
   createTemplate,
   updateTemplate,
   deleteTemplate,
   setDefaultTemplate,
   duplicateTemplate,
-} from "./templateApi";
-import type { PreFilterConfig } from "../../components/aiscreening/preFilterUtils";
-import {
-  getDefaultPreFilter,
-  isEmptyPreFilter,
-} from "../../components/aiscreening/preFilterUtils";
-import { PreFilterModal } from "../../components/aiscreening/PreFilterModal";
+} from "../../api/screeningTemplate";
 
 // ─── 条件预览 ──────────────────────────────────────────────────
 
@@ -83,7 +82,138 @@ function ConditionSummary({ config }: { config: PreFilterConfig }) {
   );
 }
 
-// ─── 模板编辑器 Modal ──────────────────────────────────────────
+// ─── 单弹窗内：预筛选表单（与 AI 筛选页 PreFilterModal 字段一致）────────
+
+function PreFilterEditorFields({
+  config,
+  onConfigChange,
+}: {
+  config: PreFilterConfig;
+  onConfigChange: (next: PreFilterConfig) => void;
+}) {
+  return (
+    <div className="space-y-5">
+      <div>
+        <label
+          htmlFor="tpl-editor-keywords"
+          className="mb-2 block text-sm font-medium text-zinc-800"
+        >
+          关键词
+        </label>
+        <textarea
+          id="tpl-editor-keywords"
+          value={config.keywords}
+          onChange={(e) =>
+            onConfigChange({ ...config, keywords: e.target.value })
+          }
+          placeholder="多个关键词用逗号、空格或换行分隔。例：React, 3年, 硕士"
+          rows={4}
+          className="w-full resize-y rounded-xl border border-zinc-200/90 bg-zinc-50/40 px-4 py-3 text-sm leading-relaxed text-zinc-900 placeholder:text-zinc-400 focus:border-sky-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-200/80"
+        />
+        <p className="mt-1.5 text-xs text-zinc-500">
+          在姓名、邮箱、简历内容、AI 摘要中搜索
+        </p>
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-zinc-800">
+          关键词匹配
+        </label>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => onConfigChange({ ...config, keywordMode: "or" })}
+            className={`flex-1 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
+              config.keywordMode === "or"
+                ? "border-sky-300 bg-sky-50 text-sky-900 ring-1 ring-sky-200"
+                : "border-zinc-200/90 bg-white text-zinc-600 hover:bg-zinc-50"
+            }`}
+          >
+            满足任一
+          </button>
+          <button
+            type="button"
+            onClick={() => onConfigChange({ ...config, keywordMode: "and" })}
+            className={`flex-1 rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
+              config.keywordMode === "and"
+                ? "border-sky-300 bg-sky-50 text-sky-900 ring-1 ring-sky-200"
+                : "border-zinc-200/90 bg-white text-zinc-600 hover:bg-zinc-50"
+            }`}
+          >
+            全部满足
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label
+          htmlFor="tpl-editor-minScore"
+          className="mb-2 block text-sm font-medium text-zinc-800"
+        >
+          最低匹配分
+        </label>
+        <input
+          id="tpl-editor-minScore"
+          type="number"
+          min={0}
+          max={100}
+          value={config.minScore ?? ""}
+          onChange={(e) => {
+            const v = e.target.value;
+            onConfigChange({
+              ...config,
+              minScore: v === "" ? null : Math.min(100, Math.max(0, Number(v))),
+            });
+          }}
+          placeholder="不填则不限制"
+          className="h-11 w-full rounded-xl border border-zinc-200/90 bg-white px-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200/80"
+        />
+        <p className="mt-1 text-xs text-zinc-500">
+          仅对已有 AI 评分的简历生效
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label
+            htmlFor="tpl-editor-dateFrom"
+            className="mb-1.5 block text-xs font-medium text-zinc-600"
+          >
+            导入时间起
+          </label>
+          <input
+            id="tpl-editor-dateFrom"
+            type="date"
+            value={config.dateFrom}
+            onChange={(e) =>
+              onConfigChange({ ...config, dateFrom: e.target.value })
+            }
+            className="h-10 w-full rounded-xl border border-zinc-200/90 bg-white px-3 text-sm text-zinc-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200/80"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="tpl-editor-dateTo"
+            className="mb-1.5 block text-xs font-medium text-zinc-600"
+          >
+            导入时间止
+          </label>
+          <input
+            id="tpl-editor-dateTo"
+            type="date"
+            value={config.dateTo}
+            onChange={(e) =>
+              onConfigChange({ ...config, dateTo: e.target.value })
+            }
+            className="h-10 w-full rounded-xl border border-zinc-200/90 bg-white px-3 text-sm text-zinc-900 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200/80"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── 模板编辑器：单弹窗（标题区 + 模版名称 + 预筛选条件）──────────────
 
 type EditorMode = "create" | "edit";
 
@@ -93,8 +223,6 @@ interface EditorModalProps {
   initial?: ScreeningTemplate;
   onClose: () => void;
   onSave: (name: string, config: PreFilterConfig) => void;
-  /** 编辑模式下，在预筛选弹窗点「应用筛选」时把当前条件写回服务端模版 */
-  onSyncConditions?: (name: string, config: PreFilterConfig) => Promise<void>;
 }
 
 function EditorModal({
@@ -103,7 +231,6 @@ function EditorModal({
   initial,
   onClose,
   onSave,
-  onSyncConditions,
 }: EditorModalProps) {
   const [name, setName] = useState(() =>
     mode === "edit" && initial ? initial.name : "",
@@ -111,153 +238,160 @@ function EditorModal({
   const [config, setConfig] = useState<PreFilterConfig>(() =>
     mode === "edit" && initial ? { ...initial.config } : getDefaultPreFilter(),
   );
-  const [preFilterModalOpen, setPreFilterModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleSave = () => {
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => nameInputRef.current?.focus());
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, onClose]);
+
+  useEffect(() => {
+    if (mode === "edit" && initial) {
+      setName(initial.name);
+      setConfig({ ...initial.config });
+    } else {
+      setName("");
+      setConfig(getDefaultPreFilter());
+    }
+  }, [mode, initial]);
+
+  const handleSave = async () => {
     if (!name.trim()) {
       toast.error("请输入模版名称");
+      nameInputRef.current?.focus();
       return;
     }
-    onSave(name.trim(), config);
-    onClose();
+    setSaving(true);
+    try {
+      await onSave(name.trim(), config);
+      onClose();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "保存失败";
+      toast.error(msg);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handlePreFilterApply = async () => {
-    if (mode !== "edit" || !initial || !onSyncConditions) return;
-    const effectiveName = name.trim() || initial.name;
-    if (!effectiveName.trim()) {
-      toast.error("请先填写模版名称");
-      return;
-    }
-    try {
-      await onSyncConditions(effectiveName, { ...config });
-      toast.success("筛选条件已保存到模版");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "保存失败");
-    }
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") void handleSave();
+  };
+
+  const handleClearConditions = () => {
+    setConfig(getDefaultPreFilter());
   };
 
   if (!open) return null;
 
   return (
-    <>
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tpl-editor-modal-title"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
-        className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="editor-modal-title"
-        onMouseDown={(e) => {
-          if (e.target === e.currentTarget) onClose();
-        }}
-      >
-        <div
-          className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
-          aria-hidden
-        />
-        <div className="relative flex max-h-[min(90vh,560px)] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white shadow-[0_25px_50px_-12px_rgba(15,23,42,0.25)]">
-          {/* Header */}
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 bg-zinc-50/80 px-5 py-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-600 text-white shadow-sm shadow-sky-600/30">
-                <Tag className="h-5 w-5" strokeWidth={2} />
-              </div>
-              <div className="min-w-0">
-                <h2
-                  id="editor-modal-title"
-                  className="truncate text-base font-semibold text-zinc-900"
-                >
-                  {mode === "create" ? "新建筛选模版" : "编辑筛选模版"}
-                </h2>
-                <p className="truncate text-xs text-zinc-500">
-                  {mode === "create"
-                    ? "保存后可重复使用"
-                    : "修改后将同步到已引用的位置"}
-                </p>
-              </div>
+        className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
+        aria-hidden
+      />
+      <div className="relative flex max-h-[min(90vh,640px)] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-zinc-200/90 bg-white shadow-[0_25px_50px_-12px_rgba(15,23,42,0.25)] sm:rounded-2xl">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 bg-zinc-50/80 px-4 py-3.5 sm:px-5">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-sky-500 to-sky-600 text-white shadow-md shadow-sky-500/25">
+              <Filter className="h-5 w-5" strokeWidth={2} />
             </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl p-2 text-zinc-500 transition-colors hover:bg-white hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-1"
-              title="关闭"
-            >
-              <X className="h-5 w-5" aria-hidden />
-            </button>
-          </div>
-
-          {/* Body */}
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
-            <div className="space-y-5">
-              <div>
-                <label
-                  htmlFor="tpl-name"
-                  className="mb-2 block text-sm font-medium text-zinc-800"
-                >
-                  模版名称
-                </label>
-                <input
-                  ref={nameInputRef}
-                  id="tpl-name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="如：技术岗初筛、上海地区"
-                  maxLength={60}
-                  className="h-11 w-full rounded-xl border border-zinc-200/90 bg-white px-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200/80"
-                />
-              </div>
-
-              <div>
-                <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-800">
-                    筛选条件
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setPreFilterModalOpen(true)}
-                    className="text-xs font-semibold text-sky-600 hover:text-sky-700 focus-visible:outline-none focus-visible:underline"
-                  >
-                    编辑条件
-                  </button>
-                </div>
-                <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/50 px-4 py-3">
-                  <ConditionSummary config={config} />
-                </div>
-              </div>
+            <div className="min-w-0">
+              <h2
+                id="tpl-editor-modal-title"
+                className="truncate text-base font-semibold text-zinc-900"
+              >
+                自定义预筛选条件
+              </h2>
+              <p className="truncate text-xs text-zinc-500">
+                先按条件筛一遍，再进行 AI 筛选
+              </p>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl p-2.5 text-zinc-500 transition-colors hover:bg-white hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
+            title="关闭"
+          >
+            <X className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
 
-          {/* Footer */}
-          <div className="flex shrink-0 flex-wrap gap-2 border-t border-zinc-100 bg-zinc-50/90 px-5 py-3.5">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl border border-zinc-200/90 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
-            >
-              取消
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              className="ml-auto rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-sky-600/30 transition-colors hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
-            >
-              {mode === "create" ? "创建模版" : "保存修改"}
-            </button>
+        <div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
+          <div className="space-y-5">
+            <div>
+              <label
+                htmlFor="tpl-editor-name"
+                className="mb-2 block text-sm font-medium text-zinc-800"
+              >
+                模版名称
+              </label>
+              <input
+                ref={nameInputRef}
+                id="tpl-editor-name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="如：技术岗初筛、上海地区"
+                maxLength={60}
+                className="h-11 w-full rounded-xl border border-zinc-200/90 bg-white px-3.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200/80"
+              />
+            </div>
+            <PreFilterEditorFields config={config} onConfigChange={setConfig} />
           </div>
         </div>
-      </div>
 
-      <PreFilterModal
-        open={preFilterModalOpen}
-        onClose={() => setPreFilterModalOpen(false)}
-        config={config}
-        onConfigChange={setConfig}
-        onApply={() => {
-          void handlePreFilterApply();
-        }}
-      />
-    </>
+        <div className="flex shrink-0 flex-wrap gap-2 border-t border-zinc-100 bg-zinc-50/90 px-4 py-3.5 sm:px-5">
+          <button
+            type="button"
+            onClick={handleClearConditions}
+            disabled={saving}
+            className="rounded-xl border border-zinc-200/90 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 disabled:opacity-50"
+          >
+            清空
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={saving}
+            className="rounded-xl border border-zinc-200/90 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300 disabled:opacity-50"
+          >
+            取消
+          </button>
+          <button
+            type="button"
+            onClick={() => void handleSave()}
+            disabled={saving}
+            className="ml-auto inline-flex items-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-sky-500/25 transition-colors hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {saving && (
+              <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+            )}
+            {mode === "create" ? "创建模版" : "保存修改"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -431,16 +565,6 @@ export default function ScreeningTemplate() {
     }
   };
 
-  const handleSyncConditionsFromPreFilter = async (
-    name: string,
-    config: PreFilterConfig,
-  ) => {
-    if (!editingTemplate) return;
-    const updated = await updateTemplate(editingTemplate.id, { name, config });
-    setEditingTemplate(updated);
-    await refresh();
-  };
-
   const handleDuplicate = async (t: ScreeningTemplate) => {
     try {
       await duplicateTemplate(t.id, `${t.name} (副本)`);
@@ -490,25 +614,16 @@ export default function ScreeningTemplate() {
       <div className="mx-auto max-w-[1360px] px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         {/* Header */}
         <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex items-start gap-3">
-            <Link
-              to="/app"
-              className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-200/80 bg-white text-zinc-600 shadow-sm no-underline transition-colors hover:bg-zinc-50 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-              aria-label="返回工作台"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-            <div>
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">
-                Templates
-              </p>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
-                筛选模版
-              </h1>
-              <p className="mt-1 text-sm text-zinc-500">
-                保存常用的预筛选条件组合，一键应用到 AI 筛选流程中。
-              </p>
-            </div>
+          <div>
+            <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">
+              Templates
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+              筛选模版
+            </h1>
+            <p className="mt-1 text-sm text-zinc-500">
+              保存常用的预筛选条件组合，一键应用到 AI 筛选流程中。
+            </p>
           </div>
           <div className="flex items-center gap-2">
             <Link
@@ -582,7 +697,7 @@ export default function ScreeningTemplate() {
         )}
       </div>
 
-      {/* 仅打开时挂载 + key 保证每次打开都重新挂载，否则 useState 初值不会带上编辑中的模版 */}
+      {/* 仅打开时挂载 + key 保证每次打开都重新挂载 */}
       {editorOpen && (
         <EditorModal
           key={`${editorMode}-${editingTemplate?.id ?? "new"}`}
@@ -591,9 +706,6 @@ export default function ScreeningTemplate() {
           initial={editingTemplate}
           onClose={() => setEditorOpen(false)}
           onSave={handleSave}
-          onSyncConditions={
-            editorMode === "edit" ? handleSyncConditionsFromPreFilter : undefined
-          }
         />
       )}
 

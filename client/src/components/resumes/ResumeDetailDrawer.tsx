@@ -114,8 +114,8 @@ export function ResumeDetailDrawer({
           {loading ? (
             <div className="flex items-center justify-center py-24">
               <div className="relative">
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-xl">
-                  <Loader2 className="h-10 w-10 animate-spin text-white" />
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50 to-white shadow-md shadow-sky-900/5">
+                  <Loader2 className="h-10 w-10 animate-spin text-sky-600" />
                 </div>
               </div>
             </div>
@@ -124,30 +124,37 @@ export function ResumeDetailDrawer({
               {/* Profile Header：仅姓名 + 上传时间 */}
               <div
                 className="
-                  relative overflow-hidden rounded-2xl border border-transparent
-                  bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 p-6
+                  relative overflow-hidden rounded-2xl border border-zinc-200/80
+                  bg-gradient-to-br from-sky-50/70 via-[var(--app-page-bg)] to-white
+                  p-6 shadow-sm shadow-zinc-900/[0.04]
                 "
               >
                 <div
                   className="
-                    absolute -right-12 -top-12 h-40 w-40 rounded-full
-                    bg-gradient-to-br from-violet-500 to-purple-600
-                    opacity-20 blur-3xl
+                    pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full
+                    bg-gradient-to-br from-app-primary/20 to-app-accent/15
+                    blur-3xl
                   "
+                  aria-hidden
                 />
-                <div className="absolute -left-6 -bottom-6 h-24 w-24 rounded-full bg-violet-500/10" />
+                <div
+                  className="pointer-events-none absolute -left-6 -bottom-6 h-24 w-24 rounded-full bg-app-primary/10 blur-2xl"
+                  aria-hidden
+                />
 
                 <div className="relative min-w-0">
-                  <h2 className="text-2xl font-bold text-white">
+                  <h2 className="text-2xl font-bold tracking-tight text-zinc-900">
                     {resume.name}
                   </h2>
-                  <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-300">
-                    <Calendar className="h-4 w-4 shrink-0 text-zinc-500" />
-                    <span>{formatDate(resume.createdAt)}</span>
-                    <span className="text-zinc-600" aria-hidden>
+                  <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-600">
+                    <Calendar className="h-4 w-4 shrink-0 text-app-primary" />
+                    <span className="tabular-nums">
+                      {formatDate(resume.createdAt)}
+                    </span>
+                    <span className="text-zinc-300" aria-hidden>
                       ·
                     </span>
-                    <span className="text-zinc-400">
+                    <span className="text-zinc-500">
                       {formatRelativeTime(resume.createdAt)}
                     </span>
                   </div>
