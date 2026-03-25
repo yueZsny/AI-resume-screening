@@ -1,5 +1,11 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import {
   Plus,
@@ -8,11 +14,13 @@ import {
   Star,
   StarOff,
   X,
-  ArrowRight,
   Clock,
   Hash,
-  Tag,
   Filter,
+  Mail,
+  Eye,
+  Send,
+  Pencil,
 } from "lucide-react";
 import type { PreFilterConfig } from "../../components/aiscreening/preFilterUtils";
 import {
@@ -33,10 +41,10 @@ import {
 
 function ConditionPill({ label, value }: { label: string; value: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 ring-1 ring-sky-200/70">
-      <span className="font-semibold">{value}</span>
-      <span className="text-sky-400">·</span>
-      {label}
+    <span className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 ring-1 ring-sky-200/70">
+      <span className="min-w-0 break-words font-semibold">{value}</span>
+      <span className="shrink-0 text-sky-400">·</span>
+      <span className="shrink-0">{label}</span>
     </span>
   );
 }
@@ -74,12 +82,55 @@ function ConditionSummary({ config }: { config: PreFilterConfig }) {
     pills.push({ label: "导入至", value: config.dateTo });
   }
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-col gap-1.5 sm:flex-row sm:flex-wrap">
       {pills.map((p) => (
         <ConditionPill key={p.label} label={p.label} value={p.value} />
       ))}
     </div>
   );
+}
+
+function getConditionSummaryLine(config: PreFilterConfig): string {
+  if (isEmptyPreFilter(config)) {
+    return "无过滤条件（全部通过）";
+  }
+  const parts: string[] = [];
+  if (config.keywords.trim()) {
+    const kws = config.keywords
+      .split(/[,，\s\n]+/)
+      .map((k) => k.trim())
+      .filter(Boolean);
+    const text =
+      kws.length > 6
+        ? `${kws.slice(0, 6).join("、")}…共${kws.length}个`
+        : kws.join("、");
+    parts.push(text);
+  }
+  if (config.keywordMode === "and") {
+    parts.push("全部满足");
+  }
+  if (config.minScore != null) {
+    parts.push(`最低分 ${config.minScore}`);
+  }
+  if (config.dateFrom.trim()) {
+    parts.push(`导入从 ${config.dateFrom}`);
+  }
+  if (config.dateTo.trim()) {
+    parts.push(`导入至 ${config.dateTo}`);
+  }
+  return parts.join(" · ");
+}
+
+function formatTemplateDateZh(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) {
+    return "—";
+  }
+  return d.toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 // ─── 单弹窗内：预筛选表单（与 AI 筛选页 PreFilterModal 字段一致）────────
@@ -395,7 +446,77 @@ function EditorModal({
   );
 }
 
-// ─── 模板卡片 ───────────────────────────────────────────────────
+// ─── 条件预览弹窗 ────────────────────────────────────────────────
+
+function TemplatePreviewModal({
+  template,
+  open,
+  onClose,
+}: {
+  template: ScreeningTemplate | null;
+  open: boolean;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+
+  if (!open || !template) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tpl-preview-title"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        className="absolute inset-0 bg-zinc-950/50 backdrop-blur-sm"
+        aria-hidden
+      />
+      <div className="relative w-full max-w-md rounded-t-2xl border border-zinc-200/90 bg-white p-5 shadow-[0_25px_50px_-12px_rgba(15,23,42,0.25)] sm:rounded-2xl">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-xs text-zinc-400">模版名称</p>
+            <h2
+              id="tpl-preview-title"
+              className="mt-0.5 truncate text-lg font-semibold text-zinc-900"
+            >
+              {template.name}
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="shrink-0 rounded-xl p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+            title="关闭"
+          >
+            <X className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
+        <p className="mb-2 text-xs font-medium text-zinc-500">预筛条件</p>
+        <ConditionSummary config={template.config} />
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-6 w-full rounded-xl bg-sky-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+        >
+          关闭
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── 模板卡片（列表项视觉参考设计稿）──────────────────────────────
 
 interface TemplateCardProps {
   template: ScreeningTemplate;
@@ -406,6 +527,30 @@ interface TemplateCardProps {
   onApply: (t: ScreeningTemplate) => void;
 }
 
+function TemplateCardIconButton({
+  label,
+  onClick,
+  className,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      className={`rounded-lg p-2 text-zinc-400 transition-colors hover:bg-sky-50/80 hover:text-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 ${className ?? ""}`}
+    >
+      {children}
+    </button>
+  );
+}
+
 function TemplateCard({
   template,
   onEdit,
@@ -414,90 +559,113 @@ function TemplateCard({
   onSetDefault,
   onApply,
 }: TemplateCardProps) {
-  const createdDate = new Date(template.createdAt).toLocaleDateString("zh-CN", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const summaryLine = getConditionSummaryLine(template.config);
+  const createdZh = formatTemplateDateZh(template.createdAt);
 
   return (
-    <div className="group relative flex flex-col rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] transition-all hover:border-zinc-300 hover:shadow-[0_4px_16px_-4px_rgba(15,23,42,0.10)]">
-      {/* Default badge */}
-      {template.isDefault && (
-        <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 ring-1 ring-amber-200/70">
-          <Star className="h-3 w-3 fill-amber-400" aria-hidden />
-          默认
-        </span>
-      )}
+    <>
+      <article className="group relative overflow-hidden rounded-2xl border border-sky-200/90 bg-white p-5 shadow-[0_2px_12px_-4px_rgba(14,165,233,0.08)] transition-shadow hover:shadow-[0_8px_24px_-8px_rgba(14,165,233,0.15)]">
+        <div
+          className="pointer-events-none absolute right-0 top-0 size-0 border-l-22 border-l-transparent border-t-22 border-t-sky-500"
+          aria-hidden
+        />
 
-      {/* Header */}
-      <div className="mb-3.5 pr-16">
-        <h3 className="text-[15px] font-semibold text-zinc-900">
-          {template.name}
-        </h3>
-        <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-400">
-          <Clock className="h-3 w-3 shrink-0" aria-hidden />
-          {createdDate}
+        <div className="relative flex gap-4 pr-6">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-b from-sky-400 to-sky-600 text-white shadow-md shadow-sky-500/25">
+            <Mail className="h-5 w-5" strokeWidth={2} aria-hidden />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-xs text-zinc-400">模板名称</p>
+                <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                  <h3 className="truncate text-base font-bold text-zinc-900">
+                    {template.name}
+                  </h3>
+                  {template.isDefault && (
+                    <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 ring-1 ring-amber-200/80">
+                      <Star className="h-2.5 w-2.5 fill-amber-400" aria-hidden />
+                      默认
+                    </span>
+                  )}
+                </div>
+                <div className="mt-1 flex items-center gap-1 text-xs text-zinc-400">
+                  <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                  {createdZh}
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-0.5">
+                <TemplateCardIconButton
+                  label="编辑模版"
+                  onClick={() => onEdit(template)}
+                >
+                  <Pencil className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                </TemplateCardIconButton>
+                <TemplateCardIconButton
+                  label="复制模版"
+                  onClick={() => onDuplicate(template)}
+                >
+                  <Copy className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                </TemplateCardIconButton>
+                {!template.isDefault && (
+                  <TemplateCardIconButton
+                    label="设为默认模版"
+                    onClick={() => onSetDefault(template)}
+                  >
+                    <StarOff
+                      className="h-[18px] w-[18px]"
+                      strokeWidth={1.75}
+                    />
+                  </TemplateCardIconButton>
+                )}
+                <TemplateCardIconButton
+                  label="删除模版"
+                  onClick={() => onDelete(template)}
+                  className="hover:bg-rose-50 hover:text-rose-600"
+                >
+                  <Trash2 className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                </TemplateCardIconButton>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Condition summary */}
-      <div className="mb-5 min-h-0 flex-1">
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
-          包含条件
-        </p>
-        <ConditionSummary config={template.config} />
-      </div>
+        <div className="relative mt-5 min-w-0">
+          <p className="text-xs text-zinc-400">条件概要</p>
+          <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-zinc-800">
+            {summaryLine}
+          </p>
+        </div>
 
-      {/* Actions */}
-      <div className="flex flex-wrap items-center gap-2 border-t border-zinc-100 pt-4">
-        <button
-          type="button"
-          onClick={() => onApply(template)}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm shadow-sky-600/20 transition-colors hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-1"
-        >
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-          应用
-        </button>
-        <button
-          type="button"
-          onClick={() => onEdit(template)}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200/90 bg-white px-3 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
-        >
-          <Tag className="h-3.5 w-3.5 text-zinc-400" aria-hidden />
-          编辑
-        </button>
-        <button
-          type="button"
-          onClick={() => onDuplicate(template)}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200/90 bg-white px-3 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
-          title="复制模版"
-        >
-          <Copy className="h-3.5 w-3.5 text-zinc-400" aria-hidden />
-          复制
-        </button>
-        {!template.isDefault && (
+        <hr className="relative my-5 border-0 border-t border-zinc-100" />
+
+        <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="button"
-            onClick={() => onSetDefault(template)}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200/90 bg-white px-3 py-2 text-xs font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
-            title="设为默认"
+            onClick={() => setPreviewOpen(true)}
+            className="inline-flex items-center gap-1.5 self-start text-sm text-zinc-400 transition-colors hover:text-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 rounded-lg"
           >
-            <StarOff className="h-3.5 w-3.5 text-zinc-400" aria-hidden />
-            设为默认
+            <Eye className="h-4 w-4 shrink-0" aria-hidden />
+            点击预览
           </button>
-        )}
-        <button
-          type="button"
-          onClick={() => onDelete(template)}
-          className="ml-auto inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-rose-600 transition-colors hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
-          title="删除模版"
-        >
-          <Trash2 className="h-3.5 w-3.5" aria-hidden />
-          删除
-        </button>
-      </div>
-    </div>
+          <button
+            type="button"
+            onClick={() => onApply(template)}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-sky-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-sky-500/30 transition-colors hover:bg-sky-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2"
+          >
+            <Send className="h-4 w-4 shrink-0" aria-hidden />
+            去使用
+          </button>
+        </div>
+      </article>
+
+      <TemplatePreviewModal
+        template={template}
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+      />
+    </>
   );
 }
 
@@ -626,16 +794,6 @@ export default function ScreeningTemplate() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Link
-              to="/app/aiscreening"
-              className="inline-flex items-center gap-2 rounded-xl border border-zinc-200/90 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
-            >
-              <ArrowRight
-                className="h-4 w-4 -scale-x-100 text-zinc-400"
-                aria-hidden
-              />
-              前往筛选
-            </Link>
             <button
               type="button"
               onClick={handleCreate}
@@ -681,7 +839,11 @@ export default function ScreeningTemplate() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div>
+            <p className="mb-3 text-sm text-zinc-500">
+              共 {templates.length} 个模板
+            </p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {templates.map((t) => (
               <TemplateCard
                 key={t.id}
@@ -693,6 +855,7 @@ export default function ScreeningTemplate() {
                 onApply={handleApply}
               />
             ))}
+            </div>
           </div>
         )}
       </div>
