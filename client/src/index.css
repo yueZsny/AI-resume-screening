@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* 启用 dark: 变体（class 模式） */
-@custom-variant dark (&:where(.dark, .dark *));
+/* 启用 dark: 变体（class 模式，挂在 html.dark 上） */
+@custom-variant dark (.dark &);
 
 /* 显式扫描源码（含 lazy 路由），避免类名未生成导致「无样式」 */
 @source "../index.html";
@@ -141,6 +141,8 @@
   --md-heading-bg-from: #f8fafc;   /* slate-50 */
   --md-heading-bg-to: #eff6ff;     /* blue-50 */
   --md-heading-border: #e2e8f0;     /* slate-100 */
+
+  color: var(--app-text-primary);
 }
 
 /* Tailwind v4：主题色工具类，便于组件统一引用 */
@@ -1020,4 +1022,7 @@ body {
   --md-heading-bg-from: rgba(30, 41, 59, 0.8);
   --md-heading-bg-to: rgba(30, 58, 138, 0.15);
   --md-heading-border: rgba(255, 255, 255, 0.06);
+
+  /* 根节点默认字色，与变量一致，减少未显式设色的区域在 dark 下的对比问题 */
+  color: var(--app-text-primary);
 }

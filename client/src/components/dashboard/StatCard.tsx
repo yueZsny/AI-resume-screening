@@ -50,11 +50,11 @@ export function StatCardList({ stats }: { stats: DashboardStats }) {
             key={m.field}
             className={`
               group relative flex flex-col rounded-2xl border
-              bg-[var(--app-surface,#fff)] dark:bg-[var(--app-surface,#161b22)]
-              border-[var(--app-border,#e4e4e7)] dark:border-[var(--app-border,rgba(255,255,255,0.10))]
+              bg-[var(--app-surface,#fff)]
+              border-[var(--app-border,#e4e4e7)]
               px-5 py-5
               shadow-[var(--app-shadow-sm)]
-              ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))]
+              ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]
               transition-all duration-300 ease-out
               hover:-translate-y-0.5
               hover:shadow-[var(--app-shadow)]

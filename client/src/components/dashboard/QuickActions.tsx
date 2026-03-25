@@ -26,7 +26,7 @@ const actions: QuickActionItem[] = [
 
 export function QuickActions() {
   return (
-    <section className="rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-4 py-5 shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))] sm:px-6">
+    <section className="rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-4 py-5 shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] sm:px-6">
       <div className="mb-4 flex items-center justify-between gap-2">
         <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--app-text-muted,#a1a1aa)]">
           快捷入口

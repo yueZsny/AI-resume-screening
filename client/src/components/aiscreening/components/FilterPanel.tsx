@@ -1,6 +1,5 @@
-import React from "react";
+import React, { type ChangeEvent } from "react";
 import { Search, ChevronDown, SlidersHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export type FilterStatus = "all" | "passed" | "failed" | "pending";
@@ -17,10 +16,10 @@ interface FilterPanelProps {
 }
 
 const STATUS_TABS: { label: string; value: FilterStatus; dot: string }[] = [
-  { label: "全部", value: "all", dot: "bg-slate-400" },
-  { label: "通过", value: "passed", dot: "bg-emerald-500" },
-  { label: "淘汰", value: "failed", dot: "bg-rose-500" },
-  { label: "待评估", value: "pending", dot: "bg-amber-400" },
+  { label: "全部", value: "all", dot: "bg-[var(--app-text-muted)]" },
+  { label: "通过", value: "passed", dot: "bg-[var(--app-success)]" },
+  { label: "淘汰", value: "failed", dot: "bg-[var(--app-danger)]" },
+  { label: "待评估", value: "pending", dot: "bg-[var(--app-warning)]" },
 ];
 
 const SORT_OPTIONS: { label: string; value: SortKey }[] = [
@@ -39,53 +38,64 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
   resultCount,
 }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-xl shadow-sm px-4 py-3 mb-4 flex flex-col md:flex-row md:items-center gap-3">
+    <div className="mb-4 flex flex-col gap-3 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 shadow-[var(--app-shadow-sm)] md:flex-row md:items-center">
       {/* Search */}
-      <div className="relative flex-1 min-w-0">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+      <div className="relative min-w-0 flex-1">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-text-muted)]" />
         <Input
           value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onSearchChange(e.target.value)
+          }
           placeholder="搜索候选人姓名、岗位…"
-          className="pl-9 h-9 text-sm bg-slate-50 border-slate-200 focus:border-indigo-400 focus:ring-indigo-100 rounded-lg"
+          className="h-9 rounded-lg border-[var(--app-border)] bg-[var(--app-surface-raised)] pl-9 text-sm text-[var(--app-text-primary)] placeholder:text-[var(--app-text-muted)] focus:border-[var(--app-primary)] focus:ring-[var(--app-ring)]"
         />
       </div>
 
       {/* Status Tabs */}
-      <div className="flex items-center gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200">
+      <div className="flex items-center gap-1 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] p-1">
         {STATUS_TABS.map(({ label, value, dot }) => (
           <button
             key={value}
+            type="button"
             onClick={() => onStatusChange(value)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
+            className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
               status === value
-                ? "bg-white text-slate-800 shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-[var(--app-surface)] text-[var(--app-text-primary)] shadow-sm ring-1 ring-[var(--app-border-subtle)]"
+                : "text-[var(--app-text-secondary)] hover:text-[var(--app-text-primary)]"
             }`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
+            <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
             {label}
           </button>
         ))}
       </div>
 
       {/* Sort + Count */}
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex shrink-0 items-center gap-2">
         <div className="relative">
-          <SlidersHorizontal className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+          <SlidersHorizontal className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--app-text-muted)]" />
           <select
+            title="排序方式"
+            aria-label="排序方式"
             value={sortKey}
             onChange={(e) => onSortChange(e.target.value as SortKey)}
-            className="pl-8 pr-7 h-9 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-600 appearance-none focus:outline-none focus:border-indigo-400 cursor-pointer"
+            className="h-9 cursor-pointer appearance-none rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] pl-8 pr-7 text-xs text-[var(--app-text-secondary)] focus:border-[var(--app-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--app-ring)]"
           >
             {SORT_OPTIONS.map(({ label, value }) => (
-              <option key={value} value={value}>{label}</option>
+              <option key={value} value={value}>
+                {label}
+              </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-[var(--app-text-muted)]" />
         </div>
-        <span className="text-xs text-slate-400 whitespace-nowrap">
-          共 <span className="font-semibold text-slate-600">{resultCount}</span> 人
+        <span className="whitespace-nowrap text-xs text-[var(--app-text-muted)]">
+          共{" "}
+          <span className="font-semibold text-[var(--app-text-primary)]">
+            {resultCount}
+          </span>{" "}
+          人
         </span>
       </div>
     </div>

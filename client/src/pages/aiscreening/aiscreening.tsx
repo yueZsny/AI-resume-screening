@@ -5,7 +5,7 @@ import { AiScreening } from "../../components/aiscreening/AiScreening";
  */
 export default function AiScreeningPage() {
   return (
-    <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col bg-zinc-50/40">
+    <div className="flex min-h-0 min-w-0 w-full flex-1 flex-col bg-[var(--app-bg)]/50">
       <AiScreening />
     </div>
   );

@@ -67,10 +67,10 @@ export function ScreeningCandidateTable({
   screeningScores,
 }: ScreeningCandidateTableProps) {
   return (
-    <div className="min-h-0 min-w-0 flex-1 overflow-auto">
+    <div className="min-h-0 min-w-0 flex-1 overflow-auto text-[var(--app-text-primary)]">
       <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-        <thead className="sticky top-0 z-10 border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface-raised,#fafafa)]/95 backdrop-blur-sm">
-          <tr className="text-[11px] font-semibold uppercase tracking-wide text-[var(--app-text-muted,#a1a1aa)]">
+        <thead className="sticky top-0 z-10 border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface-raised,#fafafa)]/95 text-[var(--app-text-secondary,#52525b)] backdrop-blur-sm">
+          <tr className="text-[11px] font-semibold uppercase tracking-wide">
             <th className="whitespace-nowrap px-3 py-2.5 pl-4">候选人</th>
             <th className="whitespace-nowrap px-3 py-2.5 normal-case">
               <span className="block leading-tight">匹配分</span>

@@ -86,10 +86,10 @@ export function ResumePreviewModal({
       title={
         <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3 pr-1">
           <div className="min-w-0">
-            <p className="truncate text-base font-semibold text-zinc-900">
+            <p className="truncate text-base font-semibold text-[var(--app-text-primary)]">
               {fileName || "简历预览"}
             </p>
-            <p className="text-xs font-normal text-zinc-500">
+            <p className="text-xs font-normal text-[var(--app-text-secondary)]">
               {previewType.toUpperCase()} 预览
             </p>
           </div>
@@ -98,7 +98,7 @@ export function ResumePreviewModal({
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-sky-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-700"
+              className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-[var(--app-primary)] px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-[var(--app-primary-hover)]"
             >
               <ExternalLink size={16} />
               新窗口打开
@@ -107,7 +107,7 @@ export function ResumePreviewModal({
         </div>
       }
     >
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-zinc-50/80">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-[var(--app-surface-raised)]/80">
         {previewType === "pdf" ? (
           <iframe
             src={url || undefined}
@@ -117,14 +117,17 @@ export function ResumePreviewModal({
         ) : previewType === "docx" ? (
           loading ? (
             <div className="flex min-h-[200px] flex-1 items-center justify-center">
-              <Loader2 className="animate-spin text-zinc-400" size={36} />
+              <Loader2
+                className="animate-spin text-[var(--app-text-muted)]"
+                size={36}
+              />
             </div>
           ) : error ? (
-            <div className="flex min-h-[200px] flex-1 items-center justify-center px-6 text-center text-sm text-zinc-600">
+            <div className="flex min-h-[200px] flex-1 items-center justify-center px-6 text-center text-sm text-[var(--app-text-secondary)]">
               {error}
             </div>
           ) : docxHtml ? (
-            <div className="min-h-0 flex-1 overflow-y-auto bg-white">
+            <div className="min-h-0 flex-1 overflow-y-auto bg-[var(--app-surface)]">
               <div className="mx-auto max-w-5xl p-8">
                 <div
                   className="prose max-w-none"
@@ -133,12 +136,12 @@ export function ResumePreviewModal({
               </div>
             </div>
           ) : (
-            <div className="flex min-h-[200px] flex-1 items-center justify-center px-6 text-center text-sm text-zinc-600">
+            <div className="flex min-h-[200px] flex-1 items-center justify-center px-6 text-center text-sm text-[var(--app-text-secondary)]">
               未读取到可预览内容
             </div>
           )
         ) : (
-          <div className="flex min-h-[200px] flex-1 items-center justify-center px-6 text-center text-sm text-zinc-600">
+          <div className="flex min-h-[200px] flex-1 items-center justify-center px-6 text-center text-sm text-[var(--app-text-secondary)]">
             {previewType === "doc"
               ? "暂不支持 DOC 预览，请下载后查看"
               : "暂不支持该格式预览，请下载后查看"}

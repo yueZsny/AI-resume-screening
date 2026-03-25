@@ -956,8 +956,8 @@ export function AiScreening() {
                     aria-label="加载中"
                   >
                     <table className="w-full min-w-[640px] border-collapse">
-                      <thead className="border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface-raised,#fafafa)]/95">
-                        <tr className="text-[11px] font-semibold uppercase tracking-wide text-[var(--app-text-muted,#a1a1aa)]">
+                      <thead className="border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface-raised,#fafafa)]/95 text-[var(--app-text-secondary,#52525b)]">
+                        <tr className="text-[11px] font-semibold uppercase tracking-wide">
                           <th className="px-3 py-2.5 pl-4 text-left">候选人</th>
                           <th className="px-3 py-2.5 text-left normal-case">
                             <span className="block leading-tight">匹配分</span>

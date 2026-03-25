@@ -23,7 +23,7 @@ export function ActivityList({ activities }: ActivityListProps) {
   const list = deduplicate(activities).slice(0, 8);
 
   return (
-    <div className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))]">
+    <div className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]">
       <div className="flex flex-wrap items-start justify-between gap-2 border-b border-[var(--app-border,#e4e4e7)]/80 px-5 py-4 sm:px-6">
         <div>
           <h2 className="text-base font-semibold tracking-tight text-[var(--app-text-primary,#18181b)]">
@@ -53,7 +53,7 @@ export function ActivityList({ activities }: ActivityListProps) {
             ))}
           </div>
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center rounded-2xl bg-[var(--app-surface-raised,#fafafa)] px-6 py-10 text-center ring-1 ring-inset ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))]">
+          <div className="flex flex-1 flex-col items-center justify-center rounded-2xl bg-[var(--app-surface-raised,#fafafa)] px-6 py-10 text-center ring-1 ring-inset ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]">
             <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-surface,#fff)] shadow-sm ring-1 ring-[var(--app-border,#e4e4e7)]">
               <FileText className="h-7 w-7 text-[var(--app-text-muted,#a1a1aa)]" strokeWidth={1.25} />
             </div>

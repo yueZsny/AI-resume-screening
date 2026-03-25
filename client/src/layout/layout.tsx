@@ -34,7 +34,7 @@ export default function Layout() {
   );
 
   return (
-    <div className="flex h-screen min-h-0 overflow-hidden bg-[var(--app-page-bg,#f8f9fc)] dark:bg-[var(--app-page-bg)]">
+    <div className="flex h-screen min-h-0 overflow-hidden bg-[var(--app-page-bg,#f8f9fc)]">
       {/* Sidebar */}
       <aside
         className={`
