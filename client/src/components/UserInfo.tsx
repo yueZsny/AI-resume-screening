@@ -55,11 +55,12 @@ export function UserInfo({ username: propsUsername, compact = false }: UserInfoP
         onClick={() => setIsOpen(!isOpen)}
         title={compact ? displayUsername : undefined}
         aria-label={compact ? `用户菜单：${displayUsername}` : undefined}
-        aria-expanded={isOpen ? "true" : "false"}
+        aria-expanded={isOpen ? true : undefined}
         aria-haspopup="menu"
         className={`
           flex items-center w-full bg-transparent border-none rounded-[10px] cursor-pointer
-          hover:bg-[#f3f4f6] transition-all duration-150
+          transition-all duration-150
+          hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)]
           ${compact ? "justify-center px-2 py-2" : "gap-2.5 px-3 py-2 text-left"}
         `}
       >
@@ -80,14 +81,14 @@ export function UserInfo({ username: propsUsername, compact = false }: UserInfoP
           <>
             {/* Name + role */}
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-[13px] font-semibold text-[#1a1a2e] truncate leading-tight">
+              <span className="text-[13px] font-semibold text-[var(--app-sidebar-text-primary,#1a1a2e)] truncate leading-tight">
                 {displayUsername}
               </span>
-              <span className="text-[11px] text-[#9ca3af] leading-tight">管理员</span>
+              <span className="text-[11px] text-[var(--app-sidebar-text-muted,#9ca3af)] leading-tight">管理员</span>
             </div>
 
             <ChevronDown
-              className={`w-3.5 h-3.5 text-[#9ca3af] shrink-0 transition-transform duration-200 ${
+              className={`w-3.5 h-3.5 text-[var(--app-sidebar-text-muted,#9ca3af)] shrink-0 transition-transform duration-200 ${
                 isOpen ? "rotate-180" : ""
               }`}
             />
@@ -107,9 +108,9 @@ export function UserInfo({ username: propsUsername, compact = false }: UserInfoP
           <div className="flex flex-col gap-0.5">
             <button
               onClick={() => { setIsOpen(false); navigate("/app/settings"); }}
-              className="flex items-center gap-2.5 w-full px-3 py-2.5 border-none bg-transparent rounded-lg text-[13px] font-medium text-[#374151] cursor-pointer hover:bg-[#f3f4f6] transition-all duration-150"
+              className="flex items-center gap-2.5 w-full px-3 py-2.5 border-none bg-transparent rounded-lg text-[13px] font-medium text-[var(--app-sidebar-hover-text,#374151)] cursor-pointer hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] transition-all duration-150"
             >
-              <Settings className="w-3.5 h-3.5 text-[#9ca3af]" />
+              <Settings className="w-3.5 h-3.5 text-[var(--app-sidebar-text-muted,#9ca3af)]" />
               账号设置
             </button>
           </div>

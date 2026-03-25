@@ -29,17 +29,17 @@ const STATUS_CONFIG: Record<StatusType, StatusConfig> = {
   pending: {
     label: "待筛选",
     icon: Clock,
-    pill: "bg-amber-50 text-amber-800 border-amber-200/80",
+    pill: "bg-[var(--app-warning-soft,#fef3c7)] text-[var(--app-warning,#f59e0b)] border-[var(--app-warning-soft,#fde68a)]",
   },
   passed: {
     label: "已通过",
     icon: CheckCircle2,
-    pill: "bg-emerald-50 text-emerald-800 border-emerald-200/80",
+    pill: "bg-[var(--app-success-soft,#dcfce7)] text-[var(--app-success,#22c55e)] border-[var(--app-success-soft,#bbf7d0)]",
   },
   rejected: {
     label: "已拒绝",
     icon: XCircle,
-    pill: "bg-rose-50 text-rose-800 border-rose-200/80",
+    pill: "bg-[var(--app-danger-soft,#fee2e2)] text-[var(--app-danger,#ef4444)] border-[var(--app-danger-soft,#fecaca)]",
   },
 };
 
@@ -65,7 +65,7 @@ const ResumeAvatar = ({ name }: { name: string }) => {
     .toUpperCase();
 
   return (
-    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-xs font-semibold text-zinc-600 ring-1 ring-zinc-200/60">
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--app-skeleton,#f4f4f6)] text-xs font-semibold text-[var(--app-text-secondary,#52525b)] ring-1 ring-[var(--app-border,#e4e4e7)]">
       {initials || "—"}
     </div>
   );
@@ -100,19 +100,19 @@ const EmptyState = ({
   title?: string;
   description?: string;
 }) => (
-  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl bg-zinc-50/60 px-6 py-14 text-center ring-1 ring-inset ring-zinc-950/4">
-    <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200/80">
-      <FileText className="h-7 w-7 text-zinc-300" strokeWidth={1.25} />
+  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl bg-[var(--app-surface-raised,#fafafa)]/60 px-6 py-14 text-center ring-1 ring-inset ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]">
+    <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border,#e4e4e7)]">
+      <FileText className="h-7 w-7 text-[var(--app-text-muted,#a1a1aa)]" strokeWidth={1.25} />
     </div>
-    <p className="text-sm font-medium text-zinc-600">{title}</p>
-    <p className="mt-1 max-w-[240px] text-xs text-zinc-400">{description}</p>
+    <p className="text-sm font-medium text-[var(--app-text-secondary,#52525b)]">{title}</p>
+    <p className="mt-1 max-w-[240px] text-xs text-[var(--app-text-muted,#a1a1aa)]">{description}</p>
   </div>
 );
 
 const LoadingState = () => (
   <div className="flex flex-1 items-center justify-center py-14">
     <Loader2
-      className="h-8 w-8 animate-spin text-zinc-400"
+      className="h-8 w-8 animate-spin text-[var(--app-text-muted,#a1a1aa)]"
       strokeWidth={1.75}
     />
   </div>
@@ -135,7 +135,7 @@ function ResumeTable({
     <div className="hidden md:block">
       <table className="w-full border-collapse text-left text-sm">
         <thead>
-          <tr className="border-b border-zinc-200 bg-zinc-50/80 text-xs font-medium uppercase tracking-wide text-zinc-500">
+          <tr className="border-b border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/80 text-xs font-medium uppercase tracking-wide text-[var(--app-text-muted,#a1a1aa)]">
             <th className="px-6 py-3 font-medium">候选人</th>
             <th className="px-4 py-3 font-medium">状态</th>
             <th className="px-4 py-3 font-medium">联系方式</th>
@@ -143,11 +143,11 @@ function ResumeTable({
             <th className="px-6 py-3 pr-6 text-right font-medium">操作</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-100">
+        <tbody className="divide-y divide-[var(--app-border,#e4e4e7)]">
           {resumes.map((resume) => (
             <tr
               key={resume.id}
-              className="bg-white transition-colors hover:bg-zinc-50/80"
+              className="bg-[var(--app-surface,#fff)] transition-colors hover:bg-[var(--app-surface-raised,#fafafa)]/80"
             >
               <td className="px-6 py-3.5 align-middle">
                 <button
@@ -156,7 +156,7 @@ function ResumeTable({
                   className="flex max-w-[200px] items-center gap-3 text-left"
                 >
                   <ResumeAvatar name={resume.name} />
-                  <span className="truncate font-medium text-zinc-900">
+                  <span className="truncate font-medium text-[var(--app-text-primary,#18181b)]">
                     {resume.name}
                   </span>
                 </button>
@@ -165,26 +165,26 @@ function ResumeTable({
                 <StatusBadge status={resume.status as StatusType} />
               </td>
               <td className="px-4 py-3.5 align-middle">
-                <div className="flex max-w-[220px] flex-col gap-0.5 text-zinc-600">
+                <div className="flex max-w-[220px] flex-col gap-0.5 text-[var(--app-text-secondary,#52525b)]">
                   {resume.email ? (
                     <span className="flex items-center gap-1.5 truncate text-xs">
-                      <Mail className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                      <Mail className="h-3.5 w-3.5 shrink-0 text-[var(--app-text-muted,#a1a1aa)]" />
                       {resume.email}
                     </span>
                   ) : null}
                   {resume.phone ? (
                     <span className="flex items-center gap-1.5 text-xs tabular-nums">
-                      <Phone className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                      <Phone className="h-3.5 w-3.5 shrink-0 text-[var(--app-text-muted,#a1a1aa)]" />
                       {resume.phone}
                     </span>
                   ) : (
-                    <span className="text-xs text-zinc-400">—</span>
+                    <span className="text-xs text-[var(--app-text-muted,#a1a1aa)]">—</span>
                   )}
                 </div>
               </td>
-              <td className="px-4 py-3.5 align-middle text-xs text-zinc-600">
+              <td className="px-4 py-3.5 align-middle text-xs text-[var(--app-text-secondary,#52525b)]">
                 <span className="flex items-center gap-1 tabular-nums">
-                  <Calendar className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                  <Calendar className="h-3.5 w-3.5 shrink-0 text-[var(--app-text-muted,#a1a1aa)]" />
                   {formatDate(resume.createdAt)}
                 </span>
               </td>
@@ -193,7 +193,7 @@ function ResumeTable({
                   <button
                     type="button"
                     onClick={() => onView(resume.id)}
-                    className="rounded-md p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+                    className="rounded-md p-2 text-[var(--app-text-muted,#a1a1aa)] transition-colors hover:bg-[var(--app-surface-raised,#fafafa)] hover:text-[var(--app-text-primary,#18181b)]"
                     title="查看详情"
                   >
                     <Eye className="h-4 w-4" />
@@ -201,7 +201,7 @@ function ResumeTable({
                   <button
                     type="button"
                     onClick={() => onDelete(resume.id, resume.name)}
-                    className="rounded-md p-2 text-zinc-500 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                    className="rounded-md p-2 text-[var(--app-text-muted,#a1a1aa)] transition-colors hover:bg-[var(--app-danger-soft,#fee2e2)] hover:text-[var(--app-danger,#ef4444)]"
                     title="删除"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -232,7 +232,7 @@ function ResumeMobileCard({
   const hasSummary = !!resume.summary;
 
   return (
-    <div className="border-b border-zinc-100 px-4 py-3 last:border-b-0 md:hidden">
+    <div className="border-b border-[var(--app-border,#e4e4e7)] px-4 py-3 last:border-b-0 md:hidden">
       <div
         role="button"
         tabIndex={0}
@@ -243,51 +243,51 @@ function ResumeMobileCard({
             onView();
           }
         }}
-        className="cursor-pointer rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-sky-500/40"
+        className="cursor-pointer rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)]/40"
       >
         <div className="flex gap-3">
           <ResumeAvatar name={resume.name} />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="truncate text-sm font-semibold text-zinc-900">
+              <h3 className="truncate text-sm font-semibold text-[var(--app-text-primary,#18181b)]">
                 {resume.name}
               </h3>
               <StatusBadge status={resume.status as StatusType} />
             </div>
-            <div className="mt-1.5 space-y-0.5 text-xs text-zinc-500">
+            <div className="mt-1.5 space-y-0.5 text-xs text-[var(--app-text-secondary,#52525b)]">
               {resume.email && (
                 <div className="flex items-center gap-1.5 truncate">
-                  <Mail className="h-3 w-3 shrink-0 text-zinc-400" />
+                  <Mail className="h-3 w-3 shrink-0 text-[var(--app-text-muted,#a1a1aa)]" />
                   {resume.email}
                 </div>
               )}
               {resume.phone && (
                 <div className="flex items-center gap-1.5">
-                  <Phone className="h-3 w-3 shrink-0 text-zinc-400" />
+                  <Phone className="h-3 w-3 shrink-0 text-[var(--app-text-muted,#a1a1aa)]" />
                   {resume.phone}
                 </div>
               )}
             </div>
-            <div className="mt-2 flex items-center gap-1 text-[11px] text-zinc-400 tabular-nums">
+            <div className="mt-2 flex items-center gap-1 text-[11px] text-[var(--app-text-muted,#a1a1aa)] tabular-nums">
               <Calendar className="h-3 w-3 shrink-0" />
               {formatDate(resume.createdAt)}
             </div>
             {hasSummary && (
-              <p className="mt-2 line-clamp-2 border-l-2 border-zinc-200 pl-2 text-xs leading-relaxed text-zinc-600">
+              <p className="mt-2 line-clamp-2 border-l-2 border-[var(--app-border,#e4e4e7)] pl-2 text-xs leading-relaxed text-[var(--app-text-secondary,#52525b)]">
                 {resume.summary}
               </p>
             )}
           </div>
         </div>
       </div>
-      <div className="mt-2 flex justify-end gap-1 border-t border-zinc-50 pt-2">
+      <div className="mt-2 flex justify-end gap-1 border-t border-[var(--app-border,#e4e4e7)] pt-2">
         <button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             onView();
           }}
-          className="rounded-md px-3 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-100"
+          className="rounded-md px-3 py-1.5 text-xs font-medium text-[var(--app-text-secondary,#52525b)] hover:bg-[var(--app-surface-raised,#fafafa)]"
         >
           查看
         </button>
@@ -297,7 +297,7 @@ function ResumeMobileCard({
             e.stopPropagation();
             onDelete();
           }}
-          className="rounded-md px-3 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50"
+          className="rounded-md px-3 py-1.5 text-xs font-medium text-[var(--app-danger,#ef4444)] hover:bg-[var(--app-danger-soft,#fee2e2)]"
         >
           删除
         </button>
@@ -329,7 +329,7 @@ export function ResumeList({
   return (
     <>
       <ResumeTable resumes={resumes} onView={onView} onDelete={onDelete} />
-      <div className="md:hidden divide-y divide-zinc-100">
+      <div className="md:hidden divide-y divide-[var(--app-border,#e4e4e7)]">
         {resumes.map((resume) => (
           <ResumeMobileCard
             key={resume.id}

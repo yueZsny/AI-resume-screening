@@ -7,56 +7,8 @@ import {
   Loader2, BarChart3, Bell, X, Users,
   Clock3, Filter, ArrowUpDown, RefreshCw,
 } from "lucide-react";
-
-// ─── 主题管理 ──────────────────────────────────────────────────
-
-function getStoredTheme(): "light" | "dark" | "system" {
-  return (localStorage.getItem("theme-demo") as "light" | "dark" | "system") ?? "light";
-}
-
-function applyTheme(mode: "light" | "dark" | "system") {
-  const root = document.documentElement;
-  root.classList.remove("light", "dark");
-  if (mode === "system") {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      root.classList.add("dark");
-    }
-  } else {
-    root.classList.add(mode);
-  }
-}
-
-function ThemeSwitcher({ value, onChange }: {
-  value: "light" | "dark" | "system";
-  onChange: (v: "light" | "dark" | "system") => void;
-}) {
-  const options: { value: "light" | "dark" | "system"; label: string; icon: React.ReactNode }[] = [
-    { value: "light", label: "浅色", icon: <Sun className="size-4" /> },
-    { value: "dark", label: "深色", icon: <Moon className="size-4" /> },
-    { value: "system", label: "跟随系统", icon: <Monitor className="size-4" /> },
-  ];
-  return (
-    <div className="inline-flex rounded-xl bg-[var(--color-demo-surface)] p-1 ring-1 ring-[var(--color-demo-border)]">
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value)}
-          title={opt.label}
-          aria-label={opt.label}
-          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200 ${
-            value === opt.value
-              ? "bg-[var(--color-demo-accent)] text-white shadow-sm"
-              : "text-[var(--color-demo-text-secondary)] hover:text-[var(--color-demo-text-primary)] hover:bg-[var(--color-demo-surface-raised)]"
-          }`}
-        >
-          {opt.icon}
-          <span className="hidden sm:inline">{opt.label}</span>
-        </button>
-      ))}
-    </div>
-  );
-}
+import { ThemeSwitcher } from "../components/ThemeSwitcher";
+import { useThemeStore } from "../store/theme";
 
 // ─── 1. 基础：颜色 + 排版 ───────────────────────────────────────
 
@@ -879,21 +831,8 @@ function NavTab({ items, active, onChange }: {
 type TabId = "basic" | "button" | "form" | "card" | "feedback" | "popup" | "data" | "advance";
 
 export default function ThemeDemo() {
-  const [theme, setTheme] = useState<"light" | "dark" | "system">(getStoredTheme);
+  const { mode } = useThemeStore();
   const [activeTab, setActiveTab] = useState<TabId>("basic");
-
-  useEffect(() => {
-    localStorage.setItem("theme-demo", theme);
-    applyTheme(theme);
-  }, [theme]);
-
-  useEffect(() => {
-    if (theme !== "system") return;
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = () => applyTheme("system");
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, [theme]);
 
   const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
     { id: "basic", label: "基础", icon: <Palette className="size-4" /> },
@@ -926,7 +865,7 @@ export default function ThemeDemo() {
             <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-demo-text-primary)]">主题系统 & 组件库</h1>
             <p className="mt-1 text-sm text-[var(--color-demo-text-secondary)]">浅色 / 深色主题切换，完整组件演示。</p>
           </div>
-          <ThemeSwitcher value={theme} onChange={setTheme} />
+          <ThemeSwitcher />
         </header>
 
         <div className="mb-8 overflow-x-auto pb-1">

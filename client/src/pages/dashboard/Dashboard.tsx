@@ -11,15 +11,15 @@ import toast from "../../utils/toast";
 
 function SkeletonStrip() {
   return (
-    <div className="animate-pulse overflow-hidden rounded-3xl border border-zinc-200/70 bg-white">
-      <div className="grid grid-cols-2 divide-x divide-y divide-zinc-100 lg:grid-cols-4 lg:divide-y-0">
+    <div className="animate-pulse overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
+      <div className="grid grid-cols-2 divide-x divide-y divide-[var(--app-border,#e4e4e7)] lg:grid-cols-4 lg:divide-y-0">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="p-6">
             <div className="mb-4 flex justify-between">
-              <div className="h-3 w-16 rounded bg-zinc-100" />
-              <div className="h-9 w-9 rounded-xl bg-zinc-100" />
+              <div className="h-3 w-16 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-9 w-9 rounded-xl bg-[var(--app-skeleton,#f4f4f6)]" />
             </div>
-            <div className="h-9 w-20 rounded-lg bg-zinc-100" />
+            <div className="h-9 w-20 rounded-lg bg-[var(--app-skeleton,#f4f4f6)]" />
           </div>
         ))}
       </div>
@@ -29,17 +29,17 @@ function SkeletonStrip() {
 
 function SkeletonChart() {
   return (
-    <div className="flex min-h-[300px] animate-pulse flex-col overflow-hidden rounded-3xl border border-zinc-200/70 bg-white">
-      <div className="border-b border-zinc-100 px-6 py-4">
-        <div className="h-4 w-32 rounded bg-zinc-100" />
-        <div className="mt-2 h-3 w-48 rounded bg-zinc-100" />
+    <div className="flex min-h-[300px] animate-pulse flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
+      <div className="border-b border-[var(--app-border,#e4e4e7)] px-6 py-4">
+        <div className="h-4 w-32 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+        <div className="mt-2 h-3 w-48 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
       </div>
-      <div className="m-4 flex flex-1 rounded-2xl bg-zinc-100/80 p-4">
+      <div className="m-4 flex flex-1 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]/80 p-4">
         <div className="flex flex-1 items-end gap-2">
           {[35, 55, 40, 70, 50, 65, 45].map((h, i) => (
             <div
               key={i}
-              className="flex-1 rounded-t-lg bg-zinc-200/90"
+              className="flex-1 rounded-t-lg bg-[var(--app-border-strong,#d4d4d8)]/90"
               style={{ height: `${h}%` }}
             />
           ))}
@@ -51,18 +51,18 @@ function SkeletonChart() {
 
 function SkeletonActivity() {
   return (
-    <div className="flex min-h-[300px] animate-pulse flex-col rounded-3xl border border-zinc-200/70 bg-white">
-      <div className="border-b border-zinc-100 px-6 py-4">
-        <div className="h-4 w-24 rounded bg-zinc-100" />
-        <div className="mt-2 h-3 w-32 rounded bg-zinc-100" />
+    <div className="flex min-h-[300px] animate-pulse flex-col rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
+      <div className="border-b border-[var(--app-border,#e4e4e7)] px-6 py-4">
+        <div className="h-4 w-24 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+        <div className="mt-2 h-3 w-32 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
       </div>
       <div className="flex flex-1 flex-col gap-4 p-5">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="flex gap-3">
-            <div className="h-7 w-7 shrink-0 rounded-full bg-zinc-100" />
+            <div className="h-7 w-7 shrink-0 rounded-full bg-[var(--app-skeleton,#f4f4f6)]" />
             <div className="flex-1 space-y-2 pt-0.5">
-              <div className="h-3 w-full max-w-xs rounded bg-zinc-100" />
-              <div className="h-2.5 w-20 rounded bg-zinc-100" />
+              <div className="h-3 w-full max-w-xs rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-2.5 w-20 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
             </div>
           </div>
         ))}
@@ -73,11 +73,11 @@ function SkeletonActivity() {
 
 function SkeletonQuick() {
   return (
-    <div className="animate-pulse rounded-3xl border border-zinc-200/70 bg-white px-6 py-5">
-      <div className="mb-4 h-3 w-20 rounded bg-zinc-100" />
+    <div className="animate-pulse rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-6 py-5">
+      <div className="mb-4 h-3 w-20 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3 xl:grid-cols-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-24 rounded-2xl bg-zinc-100" />
+          <div key={i} className="h-24 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]" />
         ))}
       </div>
     </div>

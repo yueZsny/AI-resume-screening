@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useLoginStore } from "../store/Login";
 import { UserInfo } from "../components/UserInfo";
+import { ThemeSwitcher } from "../components/ThemeSwitcher";
 
 const navItems = [
   { path: "/app", label: "仪表盘", icon: LayoutDashboard },
@@ -33,17 +34,18 @@ export default function Layout() {
   );
 
   return (
-    <div className="flex h-screen min-h-0 overflow-hidden bg-[var(--app-page-bg,#f8f9fc)]">
+    <div className="flex h-screen min-h-0 overflow-hidden bg-[var(--app-page-bg,#f8f9fc)] dark:bg-[var(--app-page-bg)]">
       {/* Sidebar */}
       <aside
         className={`
-          fixed left-0 top-0 bottom-0 flex flex-col bg-white border-r border-black/5 z-40
-          transition-[width] duration-200 ease-out overflow-hidden
+          fixed left-0 top-0 bottom-0 flex flex-col z-40 overflow-hidden
+          bg-[var(--app-sidebar-bg,#ffffff)] border-r border-[var(--app-sidebar-border,rgba(0,0,0,0.05))]
+          transition-[width] duration-200 ease-out
           ${expanded ? "w-60" : "w-[72px]"}
         `}
       >
         {/* 顶栏：品牌 + 侧栏开关 */}
-        <div className="shrink-0 border-b border-black/5">
+        <div className="shrink-0 border-b border-[var(--app-sidebar-border,rgba(0,0,0,0.05))]">
           {expanded ? (
             <div className="flex items-center gap-1 pl-4 pr-2 py-[18px]">
               <Link
@@ -76,7 +78,7 @@ export default function Layout() {
                     />
                   </svg>
                 </div>
-                <span className="truncate text-[15px] font-semibold tracking-tight text-[#1a1a2e]">
+                <span className="truncate text-[15px] font-semibold tracking-tight text-[var(--app-sidebar-text-primary,#1a1a2e)]">
                   简历筛选
                 </span>
               </Link>
@@ -85,7 +87,7 @@ export default function Layout() {
                 onClick={() => setExpanded(false)}
                 title="收起侧栏"
                 aria-label="收起侧边栏"
-                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/25 focus-visible:ring-offset-2"
+                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent transition-colors hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] text-[var(--app-sidebar-text-muted,#9ca3af)] hover:text-[var(--app-sidebar-hover-text,#374151)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,rgba(14,165,233,0.25))] focus-visible:ring-offset-2"
               >
                 <PanelLeftClose
                   className="h-[18px] w-[18px]"
@@ -132,7 +134,7 @@ export default function Layout() {
                 onClick={() => setExpanded(true)}
                 title="展开侧栏"
                 aria-label="展开侧边栏"
-                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0ea5e9]/25 focus-visible:ring-offset-2"
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent transition-colors hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] text-[var(--app-sidebar-text-muted,#9ca3af)] hover:text-[var(--app-sidebar-hover-text,#374151)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,rgba(14,165,233,0.25))] focus-visible:ring-offset-2"
               >
                 <PanelLeftOpen
                   className="h-[17px] w-[17px]"
@@ -161,8 +163,8 @@ export default function Layout() {
                   ${expanded ? "gap-3 px-3.5 py-2.5" : "justify-center px-2 py-2.5"}
                   ${
                     isActive
-                      ? "bg-linear-to-r from-[rgba(14,165,233,0.1)] to-[rgba(59,130,246,0.1)] text-[#0ea5e9]"
-                      : "text-[#6b7280] hover:bg-[#f3f4f6] hover:text-[#374151]"
+                      ? "bg-linear-to-r from-[var(--app-sidebar-nav-active-from)] to-[var(--app-sidebar-nav-active-to)] text-[var(--app-sidebar-nav-active-text)]"
+                      : "text-[var(--app-sidebar-text-secondary)] hover:bg-[var(--app-sidebar-hover-bg)] hover:text-[var(--app-sidebar-hover-text)]"
                   }
                 `}
               >
@@ -173,9 +175,14 @@ export default function Layout() {
           })}
         </nav>
 
+        {/* 主题切换 */}
+        <div className={`shrink-0 ${expanded ? "px-3 pt-3 pb-1" : "px-2 pt-3 pb-1"}`}>
+          <ThemeSwitcher compact={!expanded} />
+        </div>
+
         {/* User */}
         <div
-          className={`border-t border-black/5 shrink-0 ${expanded ? "px-3 py-3" : "px-2 py-3"}`}
+          className={`border-t border-[var(--app-sidebar-border,rgba(0,0,0,0.05))] shrink-0 ${expanded ? "px-3 py-3" : "px-2 py-3"}`}
         >
           <UserInfo username={user?.username} compact={!expanded} />
         </div>

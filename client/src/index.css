@@ -46,6 +46,101 @@
   --color-demo-purple: #a855f7;
   --color-demo-purple-soft: rgba(168, 85, 247, 0.1);
   --color-demo-cyan: #06b6d4;
+
+  /* ── 布局 / 侧栏色板 ─────────────────────────────────────── */
+  --app-sidebar-bg: #ffffff;
+  --app-sidebar-border: rgba(0, 0, 0, 0.05);
+  --app-sidebar-text-primary: #1a1a2e;
+  --app-sidebar-text-secondary: #6b7280;
+  --app-sidebar-text-muted: #9ca3af;
+  --app-sidebar-hover-bg: #f3f4f6;
+  --app-sidebar-hover-text: #374151;
+  --app-sidebar-nav-active-from: rgba(14, 165, 233, 0.10);
+  --app-sidebar-nav-active-to: rgba(59, 130, 246, 0.10);
+  --app-sidebar-nav-active-text: var(--app-primary);
+
+  /* ── 全站通用 UI 色板 ─────────────────────────────────────── */
+  /* 页面背景与卡片 */
+  --app-bg: #f8f9fc;
+  --app-surface: #ffffff;
+  --app-surface-raised: #fafafa;
+
+  /* 边框 */
+  --app-border: rgba(0, 0, 0, 0.07);
+  --app-border-subtle: rgba(0, 0, 0, 0.04);
+  --app-border-strong: rgba(0, 0, 0, 0.12);
+
+  /* 文字 */
+  --app-text-primary: #18181b;
+  --app-text-secondary: #52525b;
+  --app-text-muted: #a1a1aa;
+
+  /* 主色（按钮、链接、强调） */
+  --app-primary: #0ea5e9;
+  --app-primary-hover: #0284c7;
+  --app-primary-soft: rgba(14, 165, 233, 0.1);
+
+  /* 语义色 */
+  --app-success: #22c55e;
+  --app-success-soft: rgba(34, 197, 94, 0.1);
+  --app-warning: #f59e0b;
+  --app-warning-soft: rgba(245, 158, 11, 0.1);
+  --app-danger: #ef4444;
+  --app-danger-soft: rgba(239, 68, 68, 0.1);
+  --app-violet: #8b5cf6;
+  --app-violet-soft: rgba(139, 92, 246, 0.1);
+
+  /* violet active 态（PreFilterModal 用） */
+  --app-violet-active-bg: #ede9fe;
+  --app-violet-active-text: #5b21b6;
+  --app-violet-active-border: #c4b5fd;
+  --app-violet-active-ring: rgba(139, 92, 246, 0.2);
+
+  /* 阴影 */
+  --app-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.1), 0 2px 6px -2px rgba(15, 23, 42, 0.06);
+  --app-shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.06);
+  --app-shadow-primary: 0 4px 16px -4px rgba(14, 165, 233, 0.15);
+
+  /* 聚焦环 */
+  --app-ring: rgba(14, 165, 233, 0.2);
+  --app-ring-strong: rgba(14, 165, 233, 0.35);
+
+  /* 骨架屏 */
+  --app-skeleton: #f4f4f6;
+  --app-skeleton-shine: #fafafa;
+
+  /* 遮罩层 */
+  --app-overlay: rgba(15, 23, 42, 0.4);
+
+  /* AI 筛选详情页（蓝调） */
+  --app-ai-bg: #f0f6ff;
+  --app-ai-border: rgba(59, 130, 246, 0.2);
+  --app-ai-text: #1e40af;
+  --app-ai-soft: rgba(59, 130, 246, 0.08);
+
+  /* ── Markdown / AI 推理内容色板 ─────────────────────────── */
+  --md-bg: #ffffff;
+  --md-text-primary: #0f172a;      /* slate-900 */
+  --md-text-secondary: #334155;    /* slate-700 */
+  --md-text-muted: #64748b;        /* slate-500 */
+  --md-border: #e2e8f0;             /* slate-200 */
+  --md-border-subtle: #f1f5f9;     /* slate-100 */
+  --md-surface: #f8fafc;           /* slate-50 */
+  --md-code-bg: #1e293b;            /* slate-800 */
+  --md-code-text: #f1f5f9;         /* slate-100 */
+  --md-code-inline-bg: #f1f5f9;    /* slate-100 */
+  --md-code-inline-text: #4338ca;  /* indigo-700 */
+  --md-code-inline-border: #cbd5e1; /* slate-300 */
+  --md-link: #2563eb;              /* blue-600 */
+  --md-link-hover: #1d4ed8;        /* blue-700 */
+  --md-link-underline: #bfdbfe;   /* blue-200 */
+  --md-marker: #60a5fa;           /* blue-400 */
+  --md-quote-border: #ede9fe;      /* violet-100 */
+  --md-quote-from: #f5f3ff;        /* violet-50 */
+  --md-quote-to: #f8fafc;          /* slate-50 */
+  --md-heading-bg-from: #f8fafc;   /* slate-50 */
+  --md-heading-bg-to: #eff6ff;     /* blue-50 */
+  --md-heading-border: #e2e8f0;     /* slate-100 */
 }
 
 /* Tailwind v4：主题色工具类，便于组件统一引用 */
@@ -839,4 +934,90 @@ body {
   --color-demo-purple: #bc8cff;
   --color-demo-purple-soft: rgba(188, 140, 255, 0.12);
   --color-demo-cyan: #39c5cf;
+
+  /* ── 布局 / 侧栏色（深色模式） ─────────────────────────── */
+  --app-sidebar-bg: #161b22;
+  --app-sidebar-border: rgba(255, 255, 255, 0.07);
+  --app-sidebar-text-primary: #e6edf3;
+  --app-sidebar-text-secondary: #8b949e;
+  --app-sidebar-text-muted: #484f58;
+  --app-sidebar-hover-bg: rgba(255, 255, 255, 0.06);
+  --app-sidebar-hover-text: #c9d1d9;
+  --app-sidebar-nav-active-from: rgba(56, 189, 248, 0.12);
+  --app-sidebar-nav-active-to: rgba(96, 165, 250, 0.12);
+  --app-sidebar-nav-active-text: #38bdf8;
+
+  /* ── 全站通用 UI 色（深色模式） ─────────────────────────── */
+  --app-bg: #0d1117;
+  --app-surface: #161b22;
+  --app-surface-raised: #1c2333;
+
+  --app-border: rgba(255, 255, 255, 0.10);
+  --app-border-subtle: rgba(255, 255, 255, 0.06);
+  --app-border-strong: rgba(255, 255, 255, 0.18);
+
+  --app-text-primary: #e6edf3;
+  --app-text-secondary: #8b949e;
+  --app-text-muted: #484f58;
+
+  --app-primary: #38bdf8;
+  --app-primary-hover: #7dd3fc;
+  --app-primary-soft: rgba(56, 189, 248, 0.12);
+
+  --app-success: #3fb950;
+  --app-success-soft: rgba(63, 185, 80, 0.12);
+  --app-warning: #d29922;
+  --app-warning-soft: rgba(210, 153, 34, 0.12);
+  --app-danger: #f85149;
+  --app-danger-soft: rgba(248, 81, 73, 0.12);
+  --app-violet: #a78bfa;
+  --app-violet-soft: rgba(167, 139, 250, 0.12);
+
+  /* violet active 态（深色模式） */
+  --app-violet-active-bg: rgba(139, 92, 246, 0.15);
+  --app-violet-active-text: #c4b5fd;
+  --app-violet-active-border: rgba(167, 139, 250, 0.35);
+  --app-violet-active-ring: rgba(139, 92, 246, 0.3);
+
+  --app-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.4), 0 2px 6px -2px rgba(0, 0, 0, 0.3);
+  --app-shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.3);
+  --app-shadow-primary: 0 4px 16px -4px rgba(56, 189, 248, 0.2);
+
+  --app-ring: rgba(56, 189, 248, 0.3);
+  --app-ring-strong: rgba(56, 189, 248, 0.45);
+
+  --app-skeleton: #1c2333;
+  --app-skeleton-shine: #242d3d;
+
+  --app-overlay: rgba(0, 0, 0, 0.6);
+
+  /* AI 筛选详情页（深色蓝调） */
+  --app-ai-bg: rgba(30, 58, 138, 0.15);
+  --app-ai-border: rgba(96, 165, 250, 0.25);
+  --app-ai-text: #93c5fd;
+  --app-ai-soft: rgba(96, 165, 250, 0.12);
+
+  /* ── Markdown / AI 推理内容色（深色模式） ──────────────── */
+  --md-bg: #1e293b;
+  --md-text-primary: #f1f5f9;
+  --md-text-secondary: #cbd5e1;
+  --md-text-muted: #94a3b8;
+  --md-border: rgba(255, 255, 255, 0.08);
+  --md-border-subtle: rgba(255, 255, 255, 0.05);
+  --md-surface: #0f172a;
+  --md-code-bg: #0f172a;
+  --md-code-text: #f1f5f9;
+  --md-code-inline-bg: rgba(255, 255, 255, 0.08);
+  --md-code-inline-text: #a5b4fc;
+  --md-code-inline-border: rgba(255, 255, 255, 0.1);
+  --md-link: #93c5fd;
+  --md-link-hover: #bfdbfe;
+  --md-link-underline: rgba(96, 165, 250, 0.3);
+  --md-marker: #60a5fa;
+  --md-quote-border: rgba(167, 139, 250, 0.3);
+  --md-quote-from: rgba(139, 92, 246, 0.08);
+  --md-quote-to: rgba(15, 23, 42, 0.5);
+  --md-heading-bg-from: rgba(30, 41, 59, 0.8);
+  --md-heading-bg-to: rgba(30, 58, 138, 0.15);
+  --md-heading-border: rgba(255, 255, 255, 0.06);
 }

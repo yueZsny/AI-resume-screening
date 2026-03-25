@@ -20,17 +20,17 @@ export function StatusFeedback({ result, onRetry, labels }: StatusFeedbackProps)
 
   const configs = {
     testing: {
-      className: "border border-sky-200 bg-sky-50 text-sky-700",
+      className: "border border-[var(--app-primary,#0ea5e9)]/20 bg-[var(--app-primary-soft,rgba(14,165,233,0.1))] text-[var(--app-primary-hover,#0284c7)]",
       Icon: Loader2,
       title: labels?.testing ?? "正在处理...",
     },
     success: {
-      className: "border border-emerald-200 bg-emerald-50 text-emerald-700",
+      className: "border border-[var(--app-success,#22c55e)]/20 bg-[var(--app-success-soft,rgba(34,197,94,0.1))] text-[var(--app-success,#22c55e)]",
       Icon: CheckCircle2,
       title: labels?.success ?? "操作成功",
     },
     error: {
-      className: "border border-red-200 bg-red-50 text-red-700",
+      className: "border border-[var(--app-danger,#ef4444)]/20 bg-[var(--app-danger-soft,rgba(239,68,68,0.1))] text-[var(--app-danger,#ef4444)]",
       Icon: AlertCircle,
       title: labels?.error ?? "操作失败",
     },
