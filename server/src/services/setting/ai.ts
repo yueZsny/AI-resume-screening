@@ -416,30 +416,28 @@ function clampScore0to100(n: number): number {
   return Math.min(100, Math.max(0, Math.round(n)));
 }
 
-function normalizeDimensions(
-  raw: unknown,
-  overallScore: number,
-): AiDimensionScores | undefined {
+/**
+ * 分项仅采纳模型给出的数值，每项独立为 0–100 的整数百分比；
+ * 任一项缺失则不返回分项（避免用综合分「抹平」各轴）。
+ */
+function normalizeDimensions(raw: unknown): AiDimensionScores | undefined {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
   const o = { ...(raw as Record<string, unknown>) };
   // 旧版 JSON 分项字段 stability → campus
-  if (o.campus == null && typeof o.stability === "number" && !Number.isNaN(o.stability)) {
+  if (
+    o.campus == null &&
+    typeof o.stability === "number" &&
+    !Number.isNaN(o.stability)
+  ) {
     o.campus = o.stability;
   }
-  const out: Partial<AiDimensionScores> = {};
-  let any = false;
-  for (const k of DIMENSION_KEYS) {
-    const v = o[k];
-    if (typeof v === "number" && !Number.isNaN(v)) {
-      out[k] = clampScore0to100(v);
-      any = true;
-    }
-  }
-  if (!any) return undefined;
   const filled = {} as AiDimensionScores;
   for (const k of DIMENSION_KEYS) {
-    const v = out[k];
-    filled[k] = v !== undefined ? v : clampScore0to100(overallScore);
+    const v = o[k];
+    if (typeof v !== "number" || Number.isNaN(v)) {
+      return undefined;
+    }
+    filled[k] = clampScore0to100(v);
   }
   return filled;
 }
@@ -515,8 +513,8 @@ ${resume.parsedContent}
 请用以下 Markdown 格式输出（不要用 JSON，不要用代码块包裹）：
 
 推荐：pass|reject|pending（必填，只填这三个词之一）
-综合分：XX（0-100 整数）
-维度评分：
+综合分：XX（0-100 整数，表示整体匹配度）
+维度评分：（以下每项均为 0–100 的整数百分比，**相互独立**按简历与岗位在该维度的匹配程度分别打分，勿全部与综合分相同）
 - 专业技能：XX
 - 项目经验：XX
 - 工作经历：XX
@@ -678,7 +676,7 @@ function parseAiResponse(aiResponse: string): {
           ? Math.min(100, Math.max(0, Math.round(parsed.score)))
           : 50;
 
-      const dimensions = normalizeDimensions(parsed.dimensions, score);
+      const dimensions = normalizeDimensions(parsed.dimensions);
 
       return {
         recommendation,
@@ -727,9 +725,7 @@ function parseAiResponse(aiResponse: string): {
 /**
  * 解析 Markdown 格式的 AI 响应
  */
-function parseMarkdownResponse(
-  raw: string,
-): {
+function parseMarkdownResponse(raw: string): {
   recommendation: "pass" | "reject" | "pending";
   score: number;
   reasoning: string;
@@ -763,13 +759,11 @@ function parseMarkdownResponse(
   ];
 
   const dimensions: Partial<AiDimensionScores> = {};
-  let dimsFound = 0;
   for (const alternatives of dimPatterns) {
     for (const [label, key] of alternatives) {
       const m = raw.match(new RegExp(`${label}[：:]\\s*(\\d{1,3})`, "i"));
       if (m) {
         dimensions[key] = Math.min(100, Math.max(0, parseInt(m[1]))) as never;
-        dimsFound++;
         break;
       }
     }
@@ -779,10 +773,14 @@ function parseMarkdownResponse(
   const reasoningMatch = raw.match(/##\s*评估理由\n([\s\S]*)$/i);
   const reasoning = reasoningMatch
     ? reasoningMatch[1].trim()
-    : raw.replace(/^推荐[：:].*/m, "").replace(/^综合[分评分][：:].*/m, "").replace(/^维度评分\n/, "").replace(/^[-*]\s*.+\n?/gm, "").trim();
+    : raw
+        .replace(/^推荐[：:].*/m, "")
+        .replace(/^综合[分评分][：:].*/m, "")
+        .replace(/^维度评分\n/, "")
+        .replace(/^[-*]\s*.+\n?/gm, "")
+        .trim();
 
-  const normalized =
-    dimsFound > 0 ? normalizeDimensions(dimensions, score) : undefined;
+  const normalized = normalizeDimensions(dimensions);
 
   return {
     recommendation,

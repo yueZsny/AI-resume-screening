@@ -557,28 +557,39 @@ export function AiScreening() {
     status: "pending" | "passed" | "rejected",
   ) => {
     const resume = resumes.find((r) => r.id === resumeId);
+    const statusToast: Record<typeof status, string> = {
+      pending: "已设为待定",
+      passed: "已通过初筛",
+      rejected: "已标记为未通过",
+    };
     try {
       await updateResumeStatus(resumeId, status);
       setResumes((prev) =>
         prev.map((r) => (r.id === resumeId ? { ...r, status } : r)),
       );
-      if (status === "passed") {
-        await logActivity({
-          type: "pass",
-          resumeId,
-          resumeName: resume?.name ?? undefined,
-          description: "通过初筛",
-        });
-      } else if (status === "rejected") {
-        await logActivity({
-          type: "reject",
-          resumeId,
-          resumeName: resume?.name ?? undefined,
-          description: "未通过筛选",
-        });
+      try {
+        if (status === "passed") {
+          await logActivity({
+            type: "pass",
+            resumeId,
+            resumeName: resume?.name ?? undefined,
+            description: "通过初筛",
+          });
+        } else if (status === "rejected") {
+          await logActivity({
+            type: "reject",
+            resumeId,
+            resumeName: resume?.name ?? undefined,
+            description: "未通过筛选",
+          });
+        }
+      } catch (logErr) {
+        console.error("记录活动失败:", logErr);
       }
+      toast.success(statusToast[status]);
     } catch (error) {
       console.error("更新状态失败:", error);
+      toast.error("状态更新失败，请重试");
     }
   };
 
@@ -705,7 +716,7 @@ export function AiScreening() {
   };
 
   return (
-    <div className="relative min-h-full">
+    <div className="relative flex min-h-0 min-w-0 w-full flex-1 flex-col">
       <PreFilterModal
         open={preFilterModalOpen}
         onClose={() => setPreFilterModalOpen(false)}
@@ -761,7 +772,7 @@ export function AiScreening() {
         aria-hidden
       />
 
-      <div className="mx-auto flex min-h-0 max-w-[1360px] flex-1 flex-col px-4 pb-12 pt-6 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1360px] flex-1 flex-col px-4 pb-12 pt-6 sm:px-6 lg:px-8">
         <header className="mb-6 flex flex-col gap-4 sm:mb-7 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
@@ -788,10 +799,10 @@ export function AiScreening() {
           </button>
         </header>
         <section
-          className="flex min-h-[min(640px,calc(100vh-10rem))] flex-1 flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white/80 shadow-[0_2px_24px_rgba(59,130,246,0.08)] backdrop-blur-md"
+          className="flex min-h-[min(820px,calc(100dvh-5.5rem))] w-full min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-blue-100 bg-white/80 shadow-[0_2px_24px_rgba(59,130,246,0.08)] backdrop-blur-md"
           aria-label="AI 筛选工作台"
         >
-          <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col">
             <aside className="flex min-h-0 min-w-0 flex-1 flex-col border-r border-blue-100/80 bg-linear-to-b from-blue-50/50 to-white/40">
               <div className="shrink-0 border-b border-blue-100/90 px-4 pb-3 pt-4">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
