@@ -51,15 +51,15 @@ export function ResumePaginationBar({
   const rangeEnd = Math.min(currentPage * pageSize, totalCount);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100/80 px-6 py-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--app-border,#e4e4e7)] px-6 py-4">
       <div className="flex items-center gap-3">
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-[var(--app-text-secondary,#52525b)]">
           第 {rangeStart}–{rangeEnd} 条，共 {totalCount} 份
         </p>
         <select
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="rounded-lg border border-zinc-200 bg-white px-2 py-1 text-xs text-zinc-600 outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-200"
+          className="rounded-lg border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-2 py-1 text-xs text-[var(--app-text-secondary,#52525b)] outline-none focus:border-[var(--app-primary,#0ea5e9)] focus:ring-1 focus:ring-[var(--app-primary,#0ea5e9)]/25"
           aria-label="每页条数"
         >
           {PAGE_SIZE_OPTIONS.map((size) => (
@@ -75,7 +75,7 @@ export function ResumePaginationBar({
           type="button"
           onClick={() => onPageChange(1)}
           disabled={currentPage <= 1}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200/80 bg-white text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] text-[var(--app-text-secondary,#52525b)] transition-colors hover:border-[var(--app-border-strong,#d4d4d8)] hover:bg-[var(--app-surface-raised,#fafafa)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--app-surface,#fff)]"
           aria-label="首页"
         >
           <span className="text-xs font-medium">«</span>
@@ -85,7 +85,7 @@ export function ResumePaginationBar({
           type="button"
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage <= 1}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200/80 bg-white text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] text-[var(--app-text-secondary,#52525b)] transition-colors hover:border-[var(--app-border-strong,#d4d4d8)] hover:bg-[var(--app-surface-raised,#fafafa)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--app-surface,#fff)]"
           aria-label="上一页"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -96,7 +96,7 @@ export function ResumePaginationBar({
             item === "..." ? (
               <span
                 key={`ellipsis-${idx}`}
-                className="flex h-9 w-8 items-center justify-center text-zinc-300"
+                className="flex h-9 w-8 items-center justify-center text-[var(--app-text-muted,#a1a1aa)]"
               >
                 …
               </span>
@@ -109,8 +109,8 @@ export function ResumePaginationBar({
                   flex h-9 min-w-9 items-center justify-center rounded-lg border px-2 text-sm font-medium transition-colors
                   ${
                     item === currentPage
-                      ? "border-sky-200 bg-sky-50 text-sky-700"
-                      : "border-zinc-200/80 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50"
+                      ? "border-[var(--app-primary,#0ea5e9)] bg-[var(--app-primary-soft,rgba(14,165,233,0.1))] text-[var(--app-primary,#0ea5e9)]"
+                      : "border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] text-[var(--app-text-secondary,#52525b)] hover:border-[var(--app-border-strong,#d4d4d8)] hover:bg-[var(--app-surface-raised,#fafafa)]"
                   }
                 `}
               >
@@ -124,7 +124,7 @@ export function ResumePaginationBar({
           type="button"
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage >= totalPages}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200/80 bg-white text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] text-[var(--app-text-secondary,#52525b)] transition-colors hover:border-[var(--app-border-strong,#d4d4d8)] hover:bg-[var(--app-surface-raised,#fafafa)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--app-surface,#fff)]"
           aria-label="下一页"
         >
           <ChevronRight className="h-4 w-4" />
@@ -134,7 +134,7 @@ export function ResumePaginationBar({
           type="button"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage >= totalPages}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200/80 bg-white text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] text-[var(--app-text-secondary,#52525b)] transition-colors hover:border-[var(--app-border-strong,#d4d4d8)] hover:bg-[var(--app-surface-raised,#fafafa)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[var(--app-surface,#fff)]"
           aria-label="末页"
         >
           <span className="text-xs font-medium">»</span>

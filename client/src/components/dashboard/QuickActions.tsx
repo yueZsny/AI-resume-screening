@@ -26,9 +26,9 @@ const actions: QuickActionItem[] = [
 
 export function QuickActions() {
   return (
-    <section className="rounded-3xl border border-zinc-200/70 bg-white px-4 py-5 shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] ring-1 ring-zinc-950/[0.03] sm:px-6">
+    <section className="rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-4 py-5 shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))] sm:px-6">
       <div className="mb-4 flex items-center justify-between gap-2">
-        <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-400">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--app-text-muted,#a1a1aa)]">
           快捷入口
         </h2>
       </div>
@@ -39,12 +39,12 @@ export function QuickActions() {
             <Link
               key={`${action.to}-${action.label}`}
               to={action.to}
-              className="group flex flex-col items-center gap-2 rounded-2xl border border-zinc-100/90 bg-zinc-50/40 px-2 py-3.5 text-center no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-200/60 hover:bg-white hover:shadow-md hover:shadow-sky-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/25"
+              className="group flex flex-col items-center gap-2 rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)] px-2 py-3.5 text-center no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--app-primary,#0ea5e9)]/20 hover:bg-[var(--app-surface,#fff)] hover:shadow-md hover:shadow-[var(--app-primary,#0ea5e9)]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)]/25"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-sky-600 shadow-sm ring-1 ring-zinc-200/60 transition-transform duration-200 group-hover:scale-105 group-hover:text-sky-700">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--app-surface,#fff)] text-[var(--app-primary,#0ea5e9)] shadow-sm ring-1 ring-[var(--app-border,#e4e4e7)] transition-transform duration-200 group-hover:scale-105 group-hover:text-[var(--app-primary-hover,#0284c7)]">
                 <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
               </span>
-              <span className="line-clamp-2 text-[11px] font-medium leading-tight text-zinc-600 group-hover:text-zinc-900">
+              <span className="line-clamp-2 text-[11px] font-medium leading-tight text-[var(--app-text-secondary,#52525b)] group-hover:text-[var(--app-text-primary,#18181b)]">
                 {action.label}
               </span>
             </Link>

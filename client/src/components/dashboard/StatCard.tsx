@@ -49,16 +49,21 @@ export function StatCardList({ stats }: { stats: DashboardStats }) {
           <div
             key={m.field}
             className={`
-              group relative flex flex-col rounded-2xl border border-zinc-200/80 bg-white
-              px-5 py-5 shadow-[0_1px_3px_-1px_rgba(15,23,42,0.08),0_4px_16px_-4px_rgba(15,23,42,0.06)]
-              ring-1 ring-zinc-950/[0.03] transition-all duration-300 ease-out
-              hover:-translate-y-0.5 hover:border-zinc-200 hover:shadow-[0_8px_24px_-8px_rgba(15,23,42,0.12)]
+              group relative flex flex-col rounded-2xl border
+              bg-[var(--app-surface,#fff)] dark:bg-[var(--app-surface,#161b22)]
+              border-[var(--app-border,#e4e4e7)] dark:border-[var(--app-border,rgba(255,255,255,0.10))]
+              px-5 py-5
+              shadow-[var(--app-shadow-sm)]
+              ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))]
+              transition-all duration-300 ease-out
+              hover:-translate-y-0.5
+              hover:shadow-[var(--app-shadow)]
               hover:ring-2 sm:px-6 sm:py-6
               ${m.bar} border-t-[3px] ${m.hoverRing}
             `}
           >
             <div className="mb-4 flex items-start justify-between gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--app-text-muted,#a1a1aa)]">
                 {m.desc}
               </span>
               <div
@@ -67,7 +72,7 @@ export function StatCardList({ stats }: { stats: DashboardStats }) {
                 <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
               </div>
             </div>
-            <p className="text-3xl font-semibold tabular-nums tracking-tight text-zinc-900 lg:text-[2rem]">
+            <p className="text-3xl font-semibold tabular-nums tracking-tight text-[var(--app-text-primary,#18181b)] lg:text-[2rem]">
               {stats[m.field].toLocaleString()}
             </p>
           </div>

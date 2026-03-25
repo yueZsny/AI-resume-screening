@@ -124,10 +124,10 @@ const EmailCard = ({
   const isTesting = testingId !== null && testingId === config.id;
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-zinc-200/60 bg-white shadow-sm transition-all duration-300 hover:border-zinc-300/80 hover:shadow-xl hover:-translate-y-1">
+    <div className="group relative overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-sm transition-all duration-300 hover:border-[var(--app-border-strong,#d4d4d8)] hover:shadow-xl hover:-translate-y-1">
       {/* Gradient top accent */}
       <div className={`h-1.5 w-full bg-linear-to-r ${provider.gradient}`} />
-      
+
       {/* Content */}
       <div className="p-5">
         {/* Header */}
@@ -138,10 +138,10 @@ const EmailCard = ({
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h3 className="truncate text-sm font-semibold text-zinc-900">{config.email}</h3>
+                <h3 className="truncate text-sm font-semibold text-[var(--app-text-primary,#18181b)]">{config.email}</h3>
                 {config.isDefault && (
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-linear-to-r from-amber-100 to-orange-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700 ring-1 ring-inset ring-amber-200/60">
-                    <Star className="h-2.5 w-2.5 fill-amber-500" />
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[var(--app-warning-soft,rgba(245,158,11,0.1))] px-2 py-0.5 text-[10px] font-semibold text-[var(--app-warning,#f59e0b)] ring-1 ring-inset ring-[var(--app-warning,#f59e0b)]/20">
+                    <Star className="h-2.5 w-2.5 fill-[var(--app-warning,#f59e0b)]" />
                     默认
                   </span>
                 )}
@@ -154,39 +154,39 @@ const EmailCard = ({
         </div>
 
         {/* Server Info */}
-        <div className="mb-4 space-y-2 rounded-2xl bg-zinc-50/80 p-3.5">
+        <div className="mb-4 space-y-2 rounded-2xl bg-[var(--app-surface-raised,#fafafa)]/80 p-3.5">
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-white shadow-sm">
-                <Inbox className="h-3.5 w-3.5 text-sky-600" />
+              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[var(--app-surface,#fff)] shadow-sm">
+                <Inbox className="h-3.5 w-3.5 text-[var(--app-primary,#0ea5e9)]" />
               </div>
-              <span className="font-medium text-zinc-700">IMAP</span>
+              <span className="font-medium text-[var(--app-text-secondary,#52525b)]">IMAP</span>
             </div>
-            <code className="rounded bg-white px-2 py-0.5 font-mono text-zinc-500 shadow-sm">
+            <code className="rounded bg-[var(--app-surface,#fff)] px-2 py-0.5 font-mono text-[var(--app-text-muted,#a1a1aa)] shadow-sm">
               {config.imapHost}:{config.imapPort}
             </code>
           </div>
-          <div className="h-px bg-zinc-200/60" />
+          <div className="h-px bg-[var(--app-border,#e4e4e7)]" />
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-white shadow-sm">
-                <Send className="h-3.5 w-3.5 text-sky-600" />
+              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-[var(--app-surface,#fff)] shadow-sm">
+                <Send className="h-3.5 w-3.5 text-[var(--app-primary,#0ea5e9)]" />
               </div>
-              <span className="font-medium text-zinc-700">SMTP</span>
+              <span className="font-medium text-[var(--app-text-secondary,#52525b)]">SMTP</span>
             </div>
-            <code className="rounded bg-white px-2 py-0.5 font-mono text-zinc-500 shadow-sm">
+            <code className="rounded bg-[var(--app-surface,#fff)] px-2 py-0.5 font-mono text-[var(--app-text-muted,#a1a1aa)] shadow-sm">
               {config.smtpHost}:{config.smtpPort}
             </code>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5">
+        <div className="flex items-center justify-between border-t border-[var(--app-border,#e4e4e7)] pt-3.5">
           <div className="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
             {!config.isDefault && (
               <button
                 onClick={onSetDefault}
-                className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-zinc-400 transition-all hover:bg-amber-50 hover:text-amber-600"
+                className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-[var(--app-text-muted,#a1a1aa)] transition-all hover:bg-[var(--app-warning-soft,rgba(245,158,11,0.1))] hover:text-[var(--app-warning,#f59e0b)]"
                 title="设为默认"
               >
                 <StarOff className="h-3.5 w-3.5" />
@@ -194,12 +194,12 @@ const EmailCard = ({
               </button>
             )}
           </div>
-          
+
           <div className="flex items-center gap-1">
             <button
               onClick={onTest}
               disabled={isTesting}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-white px-3 py-1.5 text-xs font-medium text-emerald-600 transition-all hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-3 py-1.5 text-xs font-medium text-[var(--app-success,#22c55e)] transition-all hover:bg-[var(--app-success-soft,rgba(34,197,94,0.1))] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isTesting ? (
                 <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -208,18 +208,18 @@ const EmailCard = ({
               )}
               <span>{isTesting ? "测试中" : "测试"}</span>
             </button>
-            
+
             <button
               onClick={onEdit}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition-all hover:bg-sky-50 hover:text-sky-600"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-3 py-1.5 text-xs font-medium text-[var(--app-text-secondary,#52525b)] transition-all hover:bg-[var(--app-primary-soft,rgba(14,165,233,0.1))] hover:text-[var(--app-primary,#0ea5e9)]"
             >
               <Settings2 className="h-3.5 w-3.5" />
               <span>编辑</span>
             </button>
-            
+
             <button
               onClick={onDelete}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition-all hover:bg-red-50"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-3 py-1.5 text-xs font-medium text-[var(--app-danger,#ef4444)] transition-all hover:bg-[var(--app-danger-soft,rgba(239,68,68,0.1))]"
             >
               <Trash2 className="h-3.5 w-3.5" />
               <span>删除</span>

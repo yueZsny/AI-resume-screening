@@ -132,18 +132,18 @@ export default function Dashboard() {
       <div className="mx-auto max-w-[1360px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--app-text-muted,#a1a1aa)]">
               Overview
             </p>
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-[1.75rem]">
+            <h1 className="text-2xl font-semibold tracking-tight text-[var(--app-text-primary,#18181b)] sm:text-[1.75rem]">
               {greeting}
-              <span className="font-normal text-zinc-500">，</span>
+              <span className="font-normal text-[var(--app-text-secondary,#52525b)]">，</span>
               工作台
             </h1>
           </div>
           <time
             dateTime={now.toISOString()}
-            className="text-sm tabular-nums text-zinc-500"
+            className="text-sm tabular-nums text-[var(--app-text-secondary,#52525b)]"
           >
             {dateStr}
           </time>

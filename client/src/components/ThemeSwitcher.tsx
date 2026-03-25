@@ -76,7 +76,7 @@ export function ThemeSwitcher({ compact = false }: { compact?: boolean }) {
   return (
     <div
       ref={containerRef}
-      className="relative mx-1 rounded-xl border border-black/5 bg-zinc-50/80 p-1"
+      className="relative mx-1 rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)] p-1"
       role="group"
       aria-label="选择主题"
     >

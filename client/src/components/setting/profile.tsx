@@ -275,8 +275,8 @@ export function ProfileSettings() {
   return (
     <div className="space-y-6">
       {/* Header Card */}
-      <div className="overflow-hidden rounded-3xl border border-zinc-200/70 bg-white shadow-sm transition-shadow hover:shadow-md">
-        <div className="h-24 bg-linear-to-br from-sky-500/10 via-blue-500/10 to-indigo-500/10" />
+      <div className="overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-sm transition-shadow hover:shadow-md">
+        <div className="h-24 bg-linear-to-br from-[var(--app-primary,#0ea5e9)]/10 via-[var(--app-primary,#0ea5e9)]/10 to-indigo-500/10" />
 
         <div className="relative px-6 pb-6">
           {/* Avatar */}
@@ -302,7 +302,7 @@ export function ProfileSettings() {
               </button>
 
               {formData.avatar !== profile?.avatar && formData.avatar && (
-                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-emerald-500 text-white shadow-sm">
+                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-[var(--app-success,#22c55e)] text-white shadow-sm">
                   <CheckCircle2 className="h-4 w-4" />
                 </div>
               )}
@@ -325,7 +325,7 @@ export function ProfileSettings() {
                 <button
                   onClick={onCancel}
                   disabled={isSaving}
-                  className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-600 shadow-sm transition-all hover:bg-zinc-50 disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-4 py-2 text-sm font-medium text-[var(--app-text-secondary,#52525b)] shadow-sm transition-all hover:bg-[var(--app-surface-raised,#fafafa)] disabled:opacity-50"
                 >
                   <Undo2 className="h-4 w-4" />
                   取消
@@ -333,7 +333,7 @@ export function ProfileSettings() {
                 <button
                   onClick={onSave}
                   disabled={isSaving || !validation.valid}
-                  className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-sky-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[var(--app-primary,#0ea5e9)] to-[var(--app-accent,#3b82f6)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                   {isSaving ? "保存中..." : "保存更改"}
@@ -342,7 +342,7 @@ export function ProfileSettings() {
             ) : (
               <button
                 onClick={toggleEdit}
-                className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-sky-600 to-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-105"
+                className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[var(--app-primary,#0ea5e9)] to-[var(--app-accent,#3b82f6)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:brightness-105"
               >
                 编辑资料
               </button>
@@ -362,40 +362,40 @@ export function ProfileSettings() {
                     maxLength={20}
                     placeholder="输入用户名"
                     aria-label="用户名"
-                    className={`w-full rounded-lg border-2 bg-white px-3 py-2 text-xl font-semibold text-zinc-900 outline-none transition-colors ${
-                      hasUsernameWarning ? "border-amber-400 focus:border-amber-500" : "border-transparent focus:border-sky-400"
+                    className={`w-full rounded-lg border-2 bg-[var(--app-surface,#fff)] px-3 py-2 text-xl font-semibold text-[var(--app-text-primary,#18181b)] outline-none transition-colors ${
+                      hasUsernameWarning ? "border-[var(--app-warning,#f59e0b)] focus:border-[var(--app-warning,#f59e0b)]" : "border-transparent focus:border-[var(--app-primary,#0ea5e9)]"
                     }`}
                   />
                   {hasUsernameWarning && (
-                    <p className="flex items-center gap-1 text-xs text-amber-600">
+                    <p className="flex items-center gap-1 text-xs text-[var(--app-warning,#f59e0b)]">
                       <AlertCircle className="h-3 w-3" />
                       {validation.message}
                     </p>
                   )}
                 </div>
               ) : (
-                <h1 className="text-2xl font-bold tracking-tight text-zinc-900">{displayName}</h1>
+                <h1 className="text-2xl font-bold tracking-tight text-[var(--app-text-primary,#18181b)]">{displayName}</h1>
               )}
 
-              <p className="mt-1 flex items-center gap-2 text-sm text-zinc-500">
+              <p className="mt-1 flex items-center gap-2 text-sm text-[var(--app-text-secondary,#52525b)]">
                 <Mail className="h-4 w-4" />
                 {profile?.email ?? "-"}
               </p>
 
               {/* Badges */}
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-600 ring-1 ring-inset ring-sky-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[var(--app-primary-soft,rgba(14,165,233,0.1))] px-3 py-1 text-xs font-medium text-[var(--app-primary,#0ea5e9)] ring-1 ring-inset ring-[var(--app-primary,#0ea5e9)]/20">
                   <Shield className="h-3 w-3" />
                   个人账户
                 </span>
                 {profile?.avatar && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600 ring-1 ring-inset ring-emerald-100">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--app-success-soft,rgba(34,197,94,0.1))] px-3 py-1 text-xs font-medium text-[var(--app-success,#22c55e)] ring-1 ring-inset ring-[var(--app-success,#22c55e)]/20">
                     <CheckCircle2 className="h-3 w-3" />
                     已上传头像
                   </span>
                 )}
                 {isDirty && isEditing && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-600 ring-1 ring-inset ring-amber-100">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--app-warning-soft,rgba(245,158,11,0.1))] px-3 py-1 text-xs font-medium text-[var(--app-warning,#f59e0b)] ring-1 ring-inset ring-[var(--app-warning,#f59e0b)]/20">
                     <AlertCircle className="h-3 w-3" />
                     有未保存的更改
                   </span>
@@ -408,13 +408,13 @@ export function ProfileSettings() {
 
       {/* Info Cards */}
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="group relative rounded-2xl border border-zinc-200/60 bg-white p-4 transition-all hover:border-zinc-300 hover:shadow-sm">
+        <div className="group relative rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] p-4 transition-all hover:border-[var(--app-border-strong,#d4d4d8)] hover:shadow-sm">
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition-colors group-hover:bg-sky-100">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--app-primary-soft,rgba(14,165,233,0.1))] text-[var(--app-primary,#0ea5e9)] transition-colors group-hover:bg-[var(--app-primary-soft,rgba(14,165,233,0.15))]">
               <User className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">用户名</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--app-text-muted,#a1a1aa)]">用户名</p>
               {isEditing ? (
                 <input
                   type="text"
@@ -423,25 +423,25 @@ export function ProfileSettings() {
                   maxLength={20}
                   placeholder="输入用户名"
                   aria-label="用户名"
-                  className={`mt-1 w-full rounded-lg border bg-white px-2 py-1 text-sm font-medium outline-none transition-colors ${
-                    hasUsernameWarning ? "border-amber-400 text-amber-700" : "border-transparent text-zinc-900"
+                  className={`mt-1 w-full rounded-lg border bg-[var(--app-surface,#fff)] px-2 py-1 text-sm font-medium outline-none transition-colors ${
+                    hasUsernameWarning ? "border-[var(--app-warning,#f59e0b)] text-[var(--app-warning,#f59e0b)]" : "border-transparent text-[var(--app-text-primary,#18181b)]"
                   }`}
                 />
               ) : (
-                <p className="mt-1 text-sm font-medium text-zinc-900">{profile?.username ?? "-"}</p>
+                <p className="mt-1 text-sm font-medium text-[var(--app-text-primary,#18181b)]">{profile?.username ?? "-"}</p>
               )}
             </div>
           </div>
         </div>
 
-        <div className="group relative rounded-2xl border border-zinc-200/60 bg-white p-4 transition-all hover:border-zinc-300 hover:shadow-sm">
+        <div className="group relative rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] p-4 transition-all hover:border-[var(--app-border-strong,#d4d4d8)] hover:shadow-sm">
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition-colors group-hover:bg-sky-100">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--app-primary-soft,rgba(14,165,233,0.1))] text-[var(--app-primary,#0ea5e9)] transition-colors group-hover:bg-[var(--app-primary-soft,rgba(14,165,233,0.15))]">
               <Mail className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">邮箱</p>
-              <p className="mt-1 text-sm font-medium text-zinc-900">{profile?.email ?? "-"}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--app-text-muted,#a1a1aa)]">邮箱</p>
+              <p className="mt-1 text-sm font-medium text-[var(--app-text-primary,#18181b)]">{profile?.email ?? "-"}</p>
             </div>
           </div>
         </div>
@@ -449,9 +449,9 @@ export function ProfileSettings() {
 
       {/* Help text */}
       {!isEditing && (
-        <div className="rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/40 p-4">
-          <p className="flex items-center gap-2 text-sm text-zinc-500">
-            <AlertCircle className="h-4 w-4 shrink-0 text-zinc-400" />
+        <div className="rounded-2xl border border-dashed border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/40 p-4">
+          <p className="flex items-center gap-2 text-sm text-[var(--app-text-secondary,#52525b)]">
+            <AlertCircle className="h-4 w-4 shrink-0 text-[var(--app-text-muted,#a1a1aa)]" />
             如需修改邮箱或其他信息，请联系管理员处理。
           </p>
         </div>

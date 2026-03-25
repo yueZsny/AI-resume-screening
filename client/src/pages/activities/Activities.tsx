@@ -47,59 +47,59 @@ export default function ActivitiesPage() {
           <div className="flex items-start gap-3">
             <Link
               to="/app"
-              className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-zinc-200/80 bg-white text-zinc-600 shadow-sm no-underline transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+              className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] text-[var(--app-text-secondary,#52525b)] shadow-sm no-underline transition-colors hover:bg-[var(--app-surface-raised,#fafafa)] hover:text-[var(--app-text-primary,#18181b)]"
               aria-label="返回工作台"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div>
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-zinc-400">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--app-text-muted,#a1a1aa)]">
                 Activity log
               </p>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+              <h1 className="text-2xl font-semibold tracking-tight text-[var(--app-text-primary,#18181b)]">
                 全部活动
               </h1>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="mt-1 text-sm text-[var(--app-text-secondary,#52525b)]">
                 记录与「候选人 / 简历」相关的操作；姓名均为投递方，非当前登录账号
               </p>
             </div>
           </div>
-          <p className="text-sm tabular-nums text-zinc-500 sm:text-right">
-            共 <span className="font-medium text-zinc-800">{total}</span> 条
+          <p className="text-sm tabular-nums text-[var(--app-text-secondary,#52525b)] sm:text-right">
+            共 <span className="font-medium text-[var(--app-text-primary,#18181b)]">{total}</span> 条
           </p>
         </header>
 
-        <div className="overflow-hidden rounded-3xl border border-zinc-200/70 bg-white shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] ring-1 ring-zinc-950/[0.03]">
-          <div className="border-b border-zinc-100/80 px-5 py-4 sm:px-6">
-            <h2 className="text-base font-semibold tracking-tight text-zinc-900">
+        <div className="overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))]">
+          <div className="border-b border-[var(--app-border,#e4e4e7)]/80 px-5 py-4 sm:px-6">
+            <h2 className="text-base font-semibold tracking-tight text-[var(--app-text-primary,#18181b)]">
               操作记录
             </h2>
-            <p className="mt-0.5 text-xs text-zinc-500">
+            <p className="mt-0.5 text-xs text-[var(--app-text-secondary,#52525b)]">
               每条记录为一次业务操作；AI 筛选可展开查看简要说明
             </p>
           </div>
 
           <div className="px-4 py-5 sm:px-6">
             {loading ? (
-              <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
-                <Loader2 className="mb-3 h-8 w-8 animate-spin text-sky-500" />
+              <div className="flex flex-col items-center justify-center py-20 text-[var(--app-text-secondary,#52525b)]">
+                <Loader2 className="mb-3 h-8 w-8 animate-spin text-[var(--app-primary,#0ea5e9)]" />
                 <p className="text-sm">加载中…</p>
               </div>
             ) : list.length === 0 ? (
-              <div className="flex flex-col items-center justify-center rounded-2xl bg-linear-to-b from-zinc-50/80 to-transparent px-6 py-16 text-center ring-1 ring-inset ring-zinc-950/[0.04]">
-                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200/80">
+              <div className="flex flex-col items-center justify-center rounded-2xl bg-[var(--app-surface-raised,#fafafa)] px-6 py-16 text-center ring-1 ring-inset ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))]">
+                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-surface,#fff)] shadow-sm ring-1 ring-[var(--app-border,#e4e4e7)]">
                   <FileText
-                    className="h-7 w-7 text-zinc-300"
+                    className="h-7 w-7 text-[var(--app-text-muted,#a1a1aa)]"
                     strokeWidth={1.25}
                   />
                 </div>
-                <p className="text-sm font-medium text-zinc-600">暂无活动记录</p>
-                <p className="mt-1 max-w-[280px] text-xs text-zinc-400">
+                <p className="text-sm font-medium text-[var(--app-text-secondary,#52525b)]">暂无活动记录</p>
+                <p className="mt-1 max-w-[280px] text-xs text-[var(--app-text-muted,#a1a1aa)]">
                   在简历管理、AI 筛选或邮件群发中进行操作后，将在此集中展示
                 </p>
                 <Link
                   to="/app/resumes"
-                  className="mt-6 rounded-full bg-sky-600 px-4 py-2 text-xs font-semibold text-white no-underline shadow-sm transition-colors hover:bg-sky-700"
+                  className="mt-6 rounded-full bg-[var(--app-primary,#0ea5e9)] px-4 py-2 text-xs font-semibold text-white no-underline shadow-sm transition-colors hover:bg-[var(--app-primary-hover,#0284c7)]"
                 >
                   前往简历库
                 </Link>
@@ -118,8 +118,8 @@ export default function ActivitiesPage() {
                 </div>
 
                 {totalPages > 1 ? (
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 pt-6">
-                    <p className="text-xs text-zinc-500">
+                  <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--app-border,#e4e4e7)] pt-6">
+                    <p className="text-xs text-[var(--app-text-secondary,#52525b)]">
                       第 {page} / {totalPages} 页
                     </p>
                     <div className="flex gap-2">
@@ -127,7 +127,7 @@ export default function ActivitiesPage() {
                         type="button"
                         disabled={page <= 1 || loading}
                         onClick={() => void load(page - 1)}
-                        className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-3 py-2 text-xs font-medium text-[var(--app-text-secondary,#52525b)] transition-colors hover:bg-[var(--app-surface-raised,#fafafa)] disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         上一页
                       </button>
@@ -135,7 +135,7 @@ export default function ActivitiesPage() {
                         type="button"
                         disabled={page >= totalPages || loading}
                         onClick={() => void load(page + 1)}
-                        className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-3 py-2 text-xs font-medium text-[var(--app-text-secondary,#52525b)] transition-colors hover:bg-[var(--app-surface-raised,#fafafa)] disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         下一页
                       </button>

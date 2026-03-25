@@ -78,27 +78,27 @@ export function Modal({
     >
       <div
         ref={modalRef}
-        className={`relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-2xl transform animate-in zoom-in-95 fade-in duration-200 ${panelClassName}`.trim()}
+        className={`relative w-full ${sizeClasses[size]} bg-[var(--app-surface,#fff)] rounded-2xl shadow-2xl transform animate-in zoom-in-95 fade-in duration-200 ${panelClassName}`.trim()}
         role="dialog"
         aria-modal="true"
       >
         {/* 头部 */}
         {(title || showCloseButton) && (
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-zinc-100 px-5 py-3.5">
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[var(--app-border,#e4e4e7)] px-5 py-3.5">
             {title &&
               (typeof title === "string" ? (
-                <h2 className="text-base font-semibold text-zinc-900">
+                <h2 className="text-base font-semibold text-[var(--app-text-primary,#18181b)]">
                   {title}
                 </h2>
               ) : (
-                <div className="text-base font-semibold text-zinc-900">
+                <div className="text-base font-semibold text-[var(--app-text-primary,#18181b)]">
                   {title}
                 </div>
               ))}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-1.5 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 rounded-lg transition-all duration-150"
+                className="p-1.5 text-[var(--app-text-muted,#a1a1aa)] hover:text-[var(--app-text-primary,#18181b)] hover:bg-[var(--app-surface-raised,#fafafa)] rounded-lg transition-all duration-150"
                 aria-label="关闭"
               >
                 <X className="w-4 h-4" />
@@ -119,7 +119,7 @@ export function Modal({
 
         {/* 底部按钮区域 */}
         {footer && (
-          <div className="flex shrink-0 justify-end gap-2 border-t border-zinc-100 px-5 py-3.5">
+          <div className="flex shrink-0 justify-end gap-2 border-t border-[var(--app-border,#e4e4e7)] px-5 py-3.5">
             {footer}
           </div>
         )}
@@ -169,7 +169,7 @@ export function ConfirmModal({
           <button
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 text-sm font-medium text-[var(--app-text-secondary,#52525b)] bg-[var(--app-surface,#fff)] border border-[var(--app-border,#e4e4e7)] rounded-lg hover:bg-[var(--app-surface-raised,#fafafa)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {cancelText}
           </button>
@@ -178,8 +178,8 @@ export function ConfirmModal({
             disabled={loading}
             className={`px-4 py-2 text-sm font-medium text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
               confirmVariant === "danger"
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-blue-500 hover:bg-blue-600"
+                ? "bg-[var(--app-danger,#ef4444)] hover:bg-red-600"
+                : "bg-[var(--app-primary,#0ea5e9)] hover:bg-[var(--app-primary-hover,#0284c7)]"
             }`}
           >
             {loading ? "处理中..." : confirmText}
@@ -187,7 +187,7 @@ export function ConfirmModal({
         </>
       }
     >
-      <p className="text-gray-600 text-sm leading-relaxed">{message}</p>
+      <p className="text-[var(--app-text-secondary,#52525b)] text-sm leading-relaxed">{message}</p>
     </Modal>
   );
 }

@@ -100,8 +100,8 @@ export function UserInfo({ username: propsUsername, compact = false }: UserInfoP
       {isOpen && (
         <div
           className={`
-            absolute z-50 bg-white border border-black/5 rounded-xl
-            shadow-[0_8px_24px_rgba(0,0,0,0.1),0_2px_8px_rgba(0,0,0,0.06)] p-1 min-w-44
+            absolute z-50 bg-[var(--app-surface,#fff)] border border-[var(--app-border,#e4e4e7)] rounded-xl
+            shadow-[var(--app-shadow)] p-1 min-w-44
             ${compact ? "left-full bottom-0 ml-2" : "left-2 right-2 bottom-full mb-1"}
           `}
         >
@@ -114,11 +114,11 @@ export function UserInfo({ username: propsUsername, compact = false }: UserInfoP
               账号设置
             </button>
           </div>
-          <div className="h-px bg-black/5 my-1" />
+          <div className="h-px bg-[var(--app-border,#e4e4e7)] my-1" />
           <div className="flex flex-col gap-0.5">
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2.5 w-full px-3 py-2.5 border-none bg-transparent rounded-lg text-[13px] font-medium text-red-500 cursor-pointer hover:bg-red-50 hover:text-red-600 transition-all duration-150"
+              className="flex items-center gap-2.5 w-full px-3 py-2.5 border-none bg-transparent rounded-lg text-[13px] font-medium text-[var(--app-danger,#ef4444)] cursor-pointer hover:bg-[var(--app-danger-soft,#fef2f2)] transition-all duration-150"
             >
               <LogOut className="w-3.5 h-3.5" />
               退出登录

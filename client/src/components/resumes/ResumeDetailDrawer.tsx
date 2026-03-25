@@ -30,15 +30,15 @@ const ParsedContentCard = ({
   onOpenOriginal: () => void;
   resume: Resume;
 }) => (
-  <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden">
-    <div className="flex items-center justify-between border-b border-zinc-100 bg-zinc-50/50 px-6 py-4">
+  <div className="rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] overflow-hidden">
+    <div className="flex items-center justify-between border-b border-[var(--app-border,#e4e4e7)]/80 bg-[var(--app-surface-raised,#fafafa)]/80 px-6 py-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-200">
-          <FileCheck className="h-4 w-4 text-zinc-600" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--app-surface-raised,#fafafa)]">
+          <FileCheck className="h-4 w-4 text-[var(--app-text-secondary,#52525b)]" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-zinc-900">简历完整内容</h3>
-          <p className="text-xs text-zinc-500">OCR 识别后的文本内容</p>
+          <h3 className="text-sm font-semibold text-[var(--app-text-primary,#18181b)]">简历完整内容</h3>
+          <p className="text-xs text-[var(--app-text-muted,#a1a1aa)]">OCR 识别后的文本内容</p>
         </div>
       </div>
       {resume.resumeFile && (
@@ -46,7 +46,7 @@ const ParsedContentCard = ({
           type="button"
           title="在新标签页打开"
           onClick={onOpenOriginal}
-          className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200/50 transition-all hover:bg-zinc-50 hover:shadow-md"
+          className="flex items-center gap-2 rounded-xl bg-[var(--app-surface,#fff)] px-4 py-2 text-sm font-medium text-[var(--app-text-secondary,#52525b)] shadow-sm ring-1 ring-[var(--app-border,#e4e4e7)] transition-all hover:bg-[var(--app-surface-raised,#fafafa)]"
         >
           <Eye className="h-4 w-4" />
           查看原文件
@@ -54,7 +54,7 @@ const ParsedContentCard = ({
       )}
     </div>
     <div className="p-6">
-      <pre className="text-sm leading-7 text-zinc-700 whitespace-pre-wrap font-simplified max-h-[400px] overflow-y-auto">
+      <pre className="text-sm leading-7 text-[var(--app-text-secondary,#52525b)] whitespace-pre-wrap font-simplified max-h-[400px] overflow-y-auto">
         {content}
       </pre>
     </div>
@@ -66,14 +66,14 @@ const ParsedContentCard = ({
 // ============================================================================
 
 const EmptyContent = () => (
-  <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-zinc-50/50 py-16 px-8">
-    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-100">
-      <FileText className="h-8 w-8 text-zinc-400" />
+  <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/50 py-16 px-8">
+    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--app-surface-raised,#fafafa)]">
+      <FileText className="h-8 w-8 text-[var(--app-text-muted,#a1a1aa)]" />
     </div>
-    <h4 className="mb-2 text-base font-medium text-zinc-700">
+    <h4 className="mb-2 text-base font-medium text-[var(--app-text-secondary,#52525b)]">
       暂无简历解析内容
     </h4>
-    <p className="text-sm text-zinc-500 text-center max-w-sm">
+    <p className="text-sm text-[var(--app-text-muted,#a1a1aa)] text-center max-w-sm">
       系统将在 AI 分析完成后自动生成简历摘要和完整内容
     </p>
   </div>
@@ -114,8 +114,8 @@ export function ResumeDetailDrawer({
           {loading ? (
             <div className="flex items-center justify-center py-24">
               <div className="relative">
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50 to-white shadow-md shadow-sky-900/5">
-                  <Loader2 className="h-10 w-10 animate-spin text-sky-600" />
+                <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-[var(--app-primary,#0ea5e9)]/10 bg-[var(--app-primary-soft,rgba(14,165,233,0.08))] shadow-md shadow-[var(--app-primary,#0ea5e9)]/5">
+                  <Loader2 className="h-10 w-10 animate-spin text-[var(--app-primary,#0ea5e9)]" />
                 </div>
               </div>
             </div>
@@ -124,37 +124,37 @@ export function ResumeDetailDrawer({
               {/* Profile Header：仅姓名 + 上传时间 */}
               <div
                 className="
-                  relative overflow-hidden rounded-2xl border border-zinc-200/80
-                  bg-gradient-to-br from-sky-50/70 via-[var(--app-page-bg)] to-white
-                  p-6 shadow-sm shadow-zinc-900/[0.04]
+                  relative overflow-hidden rounded-2xl border border-[var(--app-border,#e4e4e7)]
+                  bg-[var(--app-surface,#fff)]
+                  p-6 shadow-sm
                 "
               >
                 <div
                   className="
                     pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full
-                    bg-gradient-to-br from-app-primary/20 to-app-accent/15
+                    bg-gradient-to-br from-[var(--app-primary,#0ea5e9)]/10 to-[var(--app-accent,#3b82f6)]/10
                     blur-3xl
                   "
                   aria-hidden
                 />
                 <div
-                  className="pointer-events-none absolute -left-6 -bottom-6 h-24 w-24 rounded-full bg-app-primary/10 blur-2xl"
+                  className="pointer-events-none absolute -left-6 -bottom-6 h-24 w-24 rounded-full bg-[var(--app-primary,#0ea5e9)]/5 blur-2xl"
                   aria-hidden
                 />
 
                 <div className="relative min-w-0">
-                  <h2 className="text-2xl font-bold tracking-tight text-zinc-900">
+                  <h2 className="text-2xl font-bold tracking-tight text-[var(--app-text-primary,#18181b)]">
                     {resume.name}
                   </h2>
-                  <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-600">
-                    <Calendar className="h-4 w-4 shrink-0 text-app-primary" />
+                  <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--app-text-secondary,#52525b)]">
+                    <Calendar className="h-4 w-4 shrink-0 text-[var(--app-primary,#0ea5e9)]" />
                     <span className="tabular-nums">
                       {formatDate(resume.createdAt)}
                     </span>
-                    <span className="text-zinc-300" aria-hidden>
+                    <span className="text-[var(--app-text-muted,#a1a1aa)]" aria-hidden>
                       ·
                     </span>
-                    <span className="text-zinc-500">
+                    <span className="text-[var(--app-text-muted,#a1a1aa)]">
                       {formatRelativeTime(resume.createdAt)}
                     </span>
                   </div>
@@ -163,8 +163,8 @@ export function ResumeDetailDrawer({
 
               {/* Original File Name */}
               {resume.originalFileName && (
-                <div className="rounded-xl bg-zinc-50 px-4 py-3 text-sm text-zinc-600">
-                  <span className="font-medium text-zinc-500">
+                <div className="rounded-xl bg-[var(--app-surface-raised,#fafafa)] px-4 py-3 text-sm text-[var(--app-text-secondary,#52525b)]">
+                  <span className="font-medium text-[var(--app-text-muted,#a1a1aa)]">
                     原始文件名：
                   </span>
                   <span className="font-mono">{resume.originalFileName}</span>
@@ -184,13 +184,13 @@ export function ResumeDetailDrawer({
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-24 px-4">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-zinc-100">
-                <FileText className="h-8 w-8 text-zinc-400" />
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--app-surface-raised,#fafafa)]">
+                <FileText className="h-8 w-8 text-[var(--app-text-muted,#a1a1aa)]" />
               </div>
-              <p className="text-base font-medium text-zinc-700">
+              <p className="text-base font-medium text-[var(--app-text-secondary,#52525b)]">
                 无法加载简历详情
               </p>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="mt-1 text-sm text-[var(--app-text-muted,#a1a1aa)]">
                 请稍后重试或联系管理员
               </p>
             </div>
