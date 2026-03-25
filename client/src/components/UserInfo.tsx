@@ -1,22 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import { LogOut, ChevronDown, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
+import { LogOut } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useLoginStore } from "../store/Login";
 import { getProfile } from "../api/profile";
-import { useNavigate } from "react-router-dom";
 
 interface UserInfoProps {
   username?: string;
-  /** 侧边栏收起时仅显示头像，菜单在右侧弹出 */
+  /** 侧边栏收起时仅显示头像（退出需展开侧栏） */
   compact?: boolean;
 }
 
-export function UserInfo({ username: propsUsername, compact = false }: UserInfoProps) {
+export function UserInfo({
+  username: propsUsername,
+  compact = false,
+}: UserInfoProps) {
   const logout = useLoginStore((state) => state.logout);
   const user = useLoginStore((state) => state.user);
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -38,94 +38,70 @@ export function UserInfo({ username: propsUsername, compact = false }: UserInfoP
     window.location.href = "/";
   };
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const avatarBlock = (
+    <div className="h-9 w-9 shrink-0 rounded-full bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] p-[2px]">
+      <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-[var(--app-surface,#fff)]">
+        {displayAvatar ? (
+          <img
+            src={displayAvatar}
+            alt=""
+            aria-hidden
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-[13px] font-semibold text-transparent">
+            {displayUsername.charAt(0).toUpperCase()}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+
+  const logoutButtonClass =
+    "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent text-[var(--app-danger,#ef4444)] transition-all duration-150 hover:bg-[var(--app-danger-soft,#fef2f2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-sidebar-bg)]";
+
+  if (compact) {
+    return (
+      <div className="flex flex-col items-center">
+        <Link
+          to="/app/settings"
+          title={displayUsername}
+          aria-label={`账号设置：${displayUsername}`}
+          className="flex cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent transition-all duration-150 hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-sidebar-bg)]"
+        >
+          {avatarBlock}
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <div className="flex w-full items-center gap-1">
+      <Link
+        to="/app/settings"
+        title="账号设置"
+        aria-label={`账号设置：${displayUsername}`}
+        className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[10px] bg-transparent px-3 py-2 no-underline transition-all duration-150 hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-sidebar-bg)]"
+      >
+        {avatarBlock}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <span className="truncate text-[13px] font-semibold leading-tight text-[var(--app-sidebar-text-primary,#1a1a2e)]">
+            {displayUsername}
+          </span>
+          <span className="text-[11px] leading-tight text-[var(--app-sidebar-text-muted,#9ca3af)]">
+            管理员
+          </span>
+        </div>
+      </Link>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        title={compact ? displayUsername : undefined}
-        aria-label={compact ? `用户菜单：${displayUsername}` : undefined}
-        aria-expanded={isOpen ? true : undefined}
-        aria-haspopup="menu"
-        className={`
-          flex items-center w-full bg-transparent border-none rounded-[10px] cursor-pointer
-          transition-all duration-150
-          hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)]
-          ${compact ? "justify-center px-2 py-2" : "gap-2.5 px-3 py-2 text-left"}
-        `}
+        onClick={handleLogout}
+        title="退出登录"
+        aria-label="退出登录"
+        className={logoutButtonClass}
       >
-        {/* Avatar with gradient ring */}
-        <div className="w-9 h-9 rounded-full p-[2px] bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] shrink-0">
-          <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
-            {displayAvatar ? (
-              <img src={displayAvatar} alt="" aria-hidden className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-[13px] font-semibold bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent">
-                {displayUsername.charAt(0).toUpperCase()}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {!compact && (
-          <>
-            {/* Name + role */}
-            <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-[13px] font-semibold text-[var(--app-sidebar-text-primary,#1a1a2e)] truncate leading-tight">
-                {displayUsername}
-              </span>
-              <span className="text-[11px] text-[var(--app-sidebar-text-muted,#9ca3af)] leading-tight">管理员</span>
-            </div>
-
-            <ChevronDown
-              className={`w-3.5 h-3.5 text-[var(--app-sidebar-text-muted,#9ca3af)] shrink-0 transition-transform duration-200 ${
-                isOpen ? "rotate-180" : ""
-              }`}
-            />
-          </>
-        )}
+        <LogOut className="h-4 w-4" aria-hidden />
       </button>
-
-      {/* Dropdown — 展开：在底部上方；收起：在右侧 */}
-      {isOpen && (
-        <div
-          className={`
-            absolute z-50 bg-[var(--app-surface,#fff)] border border-[var(--app-border,#e4e4e7)] rounded-xl
-            shadow-[var(--app-shadow)] p-1 min-w-44
-            ${compact ? "left-full bottom-0 ml-2" : "left-2 right-2 bottom-full mb-1"}
-          `}
-        >
-          <div className="flex flex-col gap-0.5">
-            <button
-              onClick={() => { setIsOpen(false); navigate("/app/settings"); }}
-              className="flex items-center gap-2.5 w-full px-3 py-2.5 border-none bg-transparent rounded-lg text-[13px] font-medium text-[var(--app-sidebar-hover-text,#374151)] cursor-pointer hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] transition-all duration-150"
-            >
-              <Settings className="w-3.5 h-3.5 text-[var(--app-sidebar-text-muted,#9ca3af)]" />
-              账号设置
-            </button>
-          </div>
-          <div className="h-px bg-[var(--app-border,#e4e4e7)] my-1" />
-          <div className="flex flex-col gap-0.5">
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2.5 w-full px-3 py-2.5 border-none bg-transparent rounded-lg text-[13px] font-medium text-[var(--app-danger,#ef4444)] cursor-pointer hover:bg-[var(--app-danger-soft,#fef2f2)] transition-all duration-150"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              退出登录
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

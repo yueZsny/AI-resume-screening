@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -25,6 +25,43 @@ const navItems = [
   { path: "/app/settings", label: "设置", icon: Settings },
 ];
 
+const SIDEBAR_EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
+const SIDEBAR_MS = 280;
+
+const logoBoxClass =
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] text-white shadow-[0_2px_8px_rgba(14,165,233,0.35)]";
+
+function BrandGlyph() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M12 2L2 7l10 5 10-5-10-5z"
+        fill="currentColor"
+        opacity="0.9"
+      />
+      <path
+        d="M2 17l10 5 10-5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.6"
+      />
+      <path
+        d="M2 12l10 5 10-5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.8"
+      />
+    </svg>
+  );
+}
+
+const toggleBtnClass =
+  "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent transition-[color,background-color,transform] duration-150 hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] text-[var(--app-sidebar-text-muted,#9ca3af)] hover:text-[var(--app-sidebar-hover-text,#374151)] active:scale-[0.94] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,rgba(14,165,233,0.25))] focus-visible:ring-offset-2 motion-reduce:active:scale-100";
+
 export default function Layout() {
   const location = useLocation();
   const { user } = useLoginStore();
@@ -33,117 +70,84 @@ export default function Layout() {
     () => localStorage.getItem("sidebar-expanded") !== "false",
   );
 
+  useEffect(() => {
+    localStorage.setItem("sidebar-expanded", String(expanded));
+  }, [expanded]);
+
   return (
     <div className="flex h-screen min-h-0 overflow-hidden bg-[var(--app-page-bg,#f8f9fc)]">
       {/* Sidebar */}
       <aside
+        aria-label="主导航"
         className={`
           fixed left-0 top-0 bottom-0 flex flex-col z-40 overflow-hidden
           bg-[var(--app-sidebar-bg,#ffffff)] border-r border-[var(--app-sidebar-border,rgba(0,0,0,0.05))]
-          transition-[width] duration-200 ease-out
+          motion-safe:transition-[width] motion-reduce:transition-none
           ${expanded ? "w-60" : "w-[72px]"}
         `}
+        style={{
+          transitionDuration: `${SIDEBAR_MS}ms`,
+          transitionTimingFunction: SIDEBAR_EASE,
+        }}
       >
-        {/* 顶栏：品牌 + 侧栏开关 */}
+        {/* 顶栏：品牌 + 侧栏开关（展开/收起共用同一套视觉，避免突变） */}
         <div className="shrink-0 border-b border-[var(--app-sidebar-border,rgba(0,0,0,0.05))]">
-          {expanded ? (
-            <div className="flex items-center gap-1 pl-4 pr-2 py-[18px]">
-              <Link
-                to="/app"
-                className="flex min-w-0 flex-1 items-center gap-3 no-underline"
-                title="简历筛选"
+          <div
+            className={
+              expanded
+                ? "flex items-center gap-1 pl-4 pr-2 py-[18px]"
+                : "flex flex-col items-center gap-2 px-3 py-4"
+            }
+          >
+            <Link
+              to="/app"
+              title="简历筛选"
+              className={
+                expanded
+                  ? "flex min-w-0 flex-1 items-center gap-3 no-underline"
+                  : "flex shrink-0 no-underline"
+              }
+            >
+              <div className={logoBoxClass}>
+                <BrandGlyph />
+              </div>
+              <span
+                className={`min-w-0 truncate text-[15px] font-semibold tracking-tight text-[var(--app-sidebar-text-primary,#1a1a2e)] motion-safe:transition-[opacity,max-width] motion-reduce:transition-none ${
+                  expanded
+                    ? "ml-0 max-w-[min(100%,12rem)] opacity-100"
+                    : "ml-0 max-w-0 overflow-hidden opacity-0"
+                }`}
+                style={{
+                  transitionDuration: `${SIDEBAR_MS}ms`,
+                  transitionTimingFunction: SIDEBAR_EASE,
+                }}
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] text-white shadow-[0_2px_8px_rgba(14,165,233,0.35)]">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 2L2 7l10 5 10-5-10-5z"
-                      fill="currentColor"
-                      opacity="0.9"
-                    />
-                    <path
-                      d="M2 17l10 5 10-5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      opacity="0.6"
-                    />
-                    <path
-                      d="M2 12l10 5 10-5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      opacity="0.8"
-                    />
-                  </svg>
-                </div>
-                <span className="truncate text-[15px] font-semibold tracking-tight text-[var(--app-sidebar-text-primary,#1a1a2e)]">
-                  简历筛选
-                </span>
-              </Link>
-              <button
-                type="button"
-                onClick={() => setExpanded(false)}
-                title="收起侧栏"
-                aria-label="收起侧边栏"
-                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent transition-colors hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] text-[var(--app-sidebar-text-muted,#9ca3af)] hover:text-[var(--app-sidebar-hover-text,#374151)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,rgba(14,165,233,0.25))] focus-visible:ring-offset-2"
-              >
+                简历筛选
+              </span>
+            </Link>
+            <button
+              type="button"
+              onClick={() => setExpanded((e) => !e)}
+              title={expanded ? "收起侧栏" : "展开侧栏"}
+              aria-label={expanded ? "收起侧边栏" : "展开侧边栏"}
+              aria-expanded={expanded ? "true" : "false"}
+              className={toggleBtnClass}
+            >
+              {expanded ? (
                 <PanelLeftClose
                   className="h-[18px] w-[18px]"
                   strokeWidth={2}
                   aria-hidden
                 />
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-2 px-3 py-4">
-              <Link
-                to="/app"
-                className="flex shrink-0 no-underline"
-                title="简历筛选"
-              >
-                <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-linear-to-br from-[#667eea] to-[#764ba2] text-white shadow-[0_2px_8px_rgba(102,126,234,0.35)]">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 2L2 7l10 5 10-5-10-5z"
-                      fill="currentColor"
-                      opacity="0.9"
-                    />
-                    <path
-                      d="M2 17l10 5 10-5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      opacity="0.6"
-                    />
-                    <path
-                      d="M2 12l10 5 10-5"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      opacity="0.8"
-                    />
-                  </svg>
-                </div>
-              </Link>
-              <button
-                type="button"
-                onClick={() => setExpanded(true)}
-                title="展开侧栏"
-                aria-label="展开侧边栏"
-                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent transition-colors hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] text-[var(--app-sidebar-text-muted,#9ca3af)] hover:text-[var(--app-sidebar-hover-text,#374151)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,rgba(14,165,233,0.25))] focus-visible:ring-offset-2"
-              >
+              ) : (
                 <PanelLeftOpen
-                  className="h-[17px] w-[17px]"
+                  className="h-[18px] w-[18px]"
                   strokeWidth={2}
                   aria-hidden
                 />
-              </button>
-            </div>
-          )}
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -157,10 +161,14 @@ export default function Layout() {
                 key={item.path}
                 to={item.path}
                 title={expanded ? undefined : item.label}
+                style={{
+                  transitionDuration: `${SIDEBAR_MS}ms`,
+                  transitionTimingFunction: SIDEBAR_EASE,
+                }}
                 className={`
                   flex items-center rounded-[10px] no-underline text-[14px] font-medium
-                  transition-all duration-150 group
-                  ${expanded ? "gap-3 px-3.5 py-2.5" : "justify-center px-2 py-2.5"}
+                  motion-safe:transition-[padding,gap,background-color,color] motion-reduce:transition-none group
+                  ${expanded ? "gap-3 px-3.5 py-2.5" : "justify-center gap-0 px-2 py-2.5"}
                   ${
                     isActive
                       ? "bg-linear-to-r from-[var(--app-sidebar-nav-active-from)] to-[var(--app-sidebar-nav-active-to)] text-[var(--app-sidebar-nav-active-text)]"
@@ -168,15 +176,29 @@ export default function Layout() {
                   }
                 `}
               >
-                <item.icon className="w-[18px] h-[18px] shrink-0 transition-transform duration-150 group-hover:scale-105" />
-                {expanded && <span>{item.label}</span>}
+                <item.icon className="w-[18px] h-[18px] shrink-0 motion-safe:transition-transform motion-safe:duration-150 group-hover:scale-105 motion-reduce:group-hover:scale-100" />
+                <span
+                  className={`min-w-0 overflow-hidden whitespace-nowrap motion-safe:transition-[max-width,opacity] motion-reduce:transition-none ${
+                    expanded
+                      ? "max-w-[14rem] opacity-100"
+                      : "max-w-0 opacity-0"
+                  }`}
+                  style={{
+                    transitionDuration: `${SIDEBAR_MS}ms`,
+                    transitionTimingFunction: SIDEBAR_EASE,
+                  }}
+                >
+                  {item.label}
+                </span>
               </Link>
             );
           })}
         </nav>
 
         {/* 主题切换 */}
-        <div className={`shrink-0 ${expanded ? "px-3 pt-3 pb-1" : "px-2 pt-3 pb-1"}`}>
+        <div
+          className={`shrink-0 ${expanded ? "px-3 pt-3 pb-1" : "px-2 pt-3 pb-1"}`}
+        >
           <ThemeSwitcher compact={!expanded} />
         </div>
 
@@ -192,9 +214,13 @@ export default function Layout() {
       <main
         className={`
           flex min-h-0 flex-1 flex-col overflow-y-auto
-          transition-[margin] duration-200 ease-out
+          motion-safe:transition-[margin-left] motion-reduce:transition-none
           ${expanded ? "ml-60" : "ml-[72px]"}
         `}
+        style={{
+          transitionDuration: `${SIDEBAR_MS}ms`,
+          transitionTimingFunction: SIDEBAR_EASE,
+        }}
       >
         <Outlet />
       </main>

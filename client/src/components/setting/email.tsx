@@ -58,37 +58,44 @@ interface ProviderStyle {
 const EMAIL_PROVIDERS: Record<string, ProviderStyle> = {
   "qq.com": {
     gradient: "from-orange-500 to-red-500",
-    badge: "bg-orange-100 text-orange-700",
+    badge:
+      "bg-[var(--app-warning-soft)] text-[var(--app-warning)] ring-1 ring-[var(--app-border)]",
     provider: "QQ邮箱",
   },
   "163.com": {
     gradient: "from-emerald-500 to-teal-500",
-    badge: "bg-emerald-100 text-emerald-700",
+    badge:
+      "bg-[var(--app-success-soft)] text-[var(--app-success)] ring-1 ring-[var(--app-border)]",
     provider: "163邮箱",
   },
   "126.com": {
     gradient: "from-cyan-500 to-blue-500",
-    badge: "bg-cyan-100 text-cyan-700",
+    badge:
+      "bg-[var(--app-primary-soft)] text-[var(--app-primary)] ring-1 ring-[var(--app-border)]",
     provider: "126邮箱",
   },
   "gmail.com": {
     gradient: "from-red-500 to-yellow-500",
-    badge: "bg-red-100 text-red-700",
+    badge:
+      "bg-[var(--app-danger-soft)] text-[var(--app-danger)] ring-1 ring-[var(--app-border)]",
     provider: "Gmail",
   },
   "outlook.com": {
     gradient: "from-blue-500 to-indigo-500",
-    badge: "bg-blue-100 text-blue-700",
+    badge:
+      "bg-[var(--app-accent-soft)] text-[var(--app-accent)] ring-1 ring-[var(--app-border)]",
     provider: "Outlook",
   },
   "foxmail.com": {
     gradient: "from-purple-500 to-pink-500",
-    badge: "bg-purple-100 text-purple-700",
+    badge:
+      "bg-[var(--app-violet-soft)] text-[var(--app-violet)] ring-1 ring-[var(--app-border)]",
     provider: "Foxmail",
   },
   default: {
     gradient: "from-violet-500 to-purple-500",
-    badge: "bg-violet-100 text-violet-700",
+    badge:
+      "bg-[var(--app-violet-soft)] text-[var(--app-violet)] ring-1 ring-[var(--app-border)]",
     provider: "企业邮箱",
   },
 };
@@ -162,7 +169,7 @@ const EmailCard = ({
               </div>
               <span className="font-medium text-[var(--app-text-secondary,#52525b)]">IMAP</span>
             </div>
-            <code className="rounded bg-[var(--app-surface,#fff)] px-2 py-0.5 font-mono text-[var(--app-text-muted,#a1a1aa)] shadow-sm">
+            <code className="rounded bg-[var(--app-surface)] px-2 py-0.5 font-mono text-xs text-[var(--app-text-secondary)] ring-1 ring-[var(--app-border-subtle)] shadow-sm">
               {config.imapHost}:{config.imapPort}
             </code>
           </div>
@@ -174,7 +181,7 @@ const EmailCard = ({
               </div>
               <span className="font-medium text-[var(--app-text-secondary,#52525b)]">SMTP</span>
             </div>
-            <code className="rounded bg-[var(--app-surface,#fff)] px-2 py-0.5 font-mono text-[var(--app-text-muted,#a1a1aa)] shadow-sm">
+            <code className="rounded bg-[var(--app-surface)] px-2 py-0.5 font-mono text-xs text-[var(--app-text-secondary)] ring-1 ring-[var(--app-border-subtle)] shadow-sm">
               {config.smtpHost}:{config.smtpPort}
             </code>
           </div>
@@ -396,28 +403,33 @@ export function EmailConfigList({ onRefresh }: EmailConfigListProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-zinc-200/70 bg-white shadow-[0_2px_8px_-2px_rgba(15,23,42,0.06)] ring-1 ring-zinc-950/3">
+    <div className="overflow-hidden rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle)]">
       {/* Header */}
-      <div className="border-b border-zinc-100 bg-linear-to-r from-sky-100/50 via-white to-sky-100/50 p-6">
+      <div className="border-b border-[var(--app-border)] bg-[var(--app-surface-raised)]/50 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-sky-600 to-blue-600 shadow-lg shadow-sky-500/25">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-[var(--app-primary)] to-[var(--app-accent)] shadow-lg shadow-[var(--app-primary)]/25">
               <Mail className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-zinc-900">邮箱配置</h2>
-              <p className="text-sm text-zinc-500">管理发件邮箱与 SMTP/IMAP 连接</p>
+              <h2 className="text-lg font-semibold tracking-tight text-[var(--app-text-primary)]">
+                邮箱配置
+              </h2>
+              <p className="text-sm text-[var(--app-text-secondary)]">
+                管理发件邮箱与 SMTP/IMAP 连接
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             {configs.length > 0 && (
-              <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600">
+              <span className="rounded-full bg-[var(--app-surface-raised)] px-3 py-1 text-xs font-medium text-[var(--app-text-secondary)] ring-1 ring-[var(--app-border-subtle)]">
                 {configs.length} 个配置
               </span>
             )}
             <button
+              type="button"
               onClick={() => openModal()}
-              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-sky-600 to-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 transition-all hover:shadow-xl hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-[var(--app-primary)] to-[var(--app-accent)] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[var(--app-primary)]/25 transition-all hover:opacity-95 hover:shadow-xl"
             >
               <Plus className="h-4 w-4" />
               添加邮箱
@@ -466,10 +478,10 @@ export function EmailConfigList({ onRefresh }: EmailConfigListProps) {
         onClose={closeModal}
         title={
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-sky-600 to-blue-600">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-linear-to-br from-[var(--app-primary)] to-[var(--app-accent)]">
               <Mail className="h-4 w-4 text-white" />
             </div>
-            <span className="text-base font-semibold text-zinc-900">
+            <span className="text-base font-semibold text-[var(--app-text-primary)]">
               {isEditing ? "编辑邮箱配置" : "添加邮箱配置"}
             </span>
           </div>
@@ -478,14 +490,16 @@ export function EmailConfigList({ onRefresh }: EmailConfigListProps) {
         footer={
           <div className="flex w-full items-center justify-end gap-2">
             <button
+              type="button"
               onClick={closeModal}
-              className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-600 shadow-sm transition-colors hover:bg-zinc-50"
+              className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 text-sm font-medium text-[var(--app-text-primary)] shadow-sm transition-colors hover:bg-[var(--app-surface-raised)]"
             >
               取消
             </button>
             <button
-              onClick={handleSubmit}
-              className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-sky-600 to-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5"
+              type="button"
+              onClick={() => void handleSubmit()}
+              className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[var(--app-primary)] to-[var(--app-accent)] px-5 py-2 text-sm font-semibold text-white shadow-lg transition-all hover:opacity-95"
             >
               保存配置
             </button>
@@ -494,9 +508,9 @@ export function EmailConfigList({ onRefresh }: EmailConfigListProps) {
       >
         <div className="space-y-5">
           {/* Basic info section */}
-          <div className="rounded-2xl border border-zinc-100 bg-linear-to-b from-zinc-50/50 to-white p-5">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-700">
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-sky-600 to-blue-600 shadow-sm">
+          <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-raised)]/40 p-5">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--app-text-primary)]">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-[var(--app-primary)] to-[var(--app-accent)] shadow-sm">
                 <Mail className="h-4 w-4 text-white" />
               </div>
               邮箱信息
@@ -525,9 +539,9 @@ export function EmailConfigList({ onRefresh }: EmailConfigListProps) {
           </div>
 
           {/* IMAP settings */}
-          <div className="rounded-2xl border border-zinc-100 bg-linear-to-b from-zinc-50/50 to-white p-5">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-700">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-sky-600 to-blue-600 shadow-sm">
+          <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-raised)]/40 p-5">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--app-text-primary)]">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-[var(--app-primary)] to-[var(--app-accent)] shadow-sm">
                 <Inbox className="h-4 w-4 text-white" />
               </div>
               IMAP 接收设置
@@ -552,9 +566,9 @@ export function EmailConfigList({ onRefresh }: EmailConfigListProps) {
           </div>
 
           {/* SMTP settings */}
-          <div className="rounded-2xl border border-zinc-100 bg-linear-to-b from-zinc-50/50 to-white p-5">
-            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-700">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-sky-600 to-blue-600 shadow-sm">
+          <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-raised)]/40 p-5">
+            <div className="mb-4 flex items-center gap-2 text-sm font-medium text-[var(--app-text-primary)]">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-[var(--app-primary)] to-[var(--app-accent)] shadow-sm">
                 <Send className="h-4 w-4 text-white" />
               </div>
               SMTP 发送设置

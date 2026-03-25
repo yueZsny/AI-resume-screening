@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import {
-  Sun, Moon, Monitor, Palette, Layers, LayoutGrid,
+  Palette, Layers, LayoutGrid,
   Check, Star, Heart, Zap, Shield, Activity, Eye,
   Trash2, Plus, ChevronLeft, ChevronRight,
   FileText, CheckCircle2, XCircle, AlertCircle,
   Loader2, BarChart3, Bell, X, Users,
   Clock3, Filter, ArrowUpDown, RefreshCw,
 } from "lucide-react";
-import { ThemeSwitcher } from "../components/ThemeSwitcher";
-import { useThemeStore } from "../store/theme";
+import { useThemeStore } from "../../store/theme";
 
 // ─── 1. 基础：颜色 + 排版 ───────────────────────────────────────
 
@@ -859,13 +858,10 @@ export default function ThemeDemo() {
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(14,165,233,0.06),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(88,166,255,0.05),transparent)]" aria-hidden />
 
       <div className="mx-auto max-w-[1360px] px-4 pb-16 pt-6 sm:px-6 lg:px-8 theme-demo-scroll">
-        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--color-demo-text-muted)]">Demo</p>
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-demo-text-primary)]">主题系统 & 组件库</h1>
-            <p className="mt-1 text-sm text-[var(--color-demo-text-secondary)]">浅色 / 深色主题切换，完整组件演示。</p>
-          </div>
-          <ThemeSwitcher />
+        <header className="mb-8">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--color-demo-text-muted)]">Demo</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-demo-text-primary)]">主题系统 & 组件库</h1>
+          <p className="mt-1 text-sm text-[var(--color-demo-text-secondary)]">浅色 / 深色主题切换，完整组件演示。</p>
         </header>
 
         <div className="mb-8 overflow-x-auto pb-1">
