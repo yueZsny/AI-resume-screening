@@ -400,6 +400,46 @@ export async function deleteAiConfig(userId: number, configId: number) {
 /**
  * 使用 AI 筛选简历
  */
+const DIMENSION_KEYS = [
+  "skills",
+  "projects",
+  "experience",
+  "education",
+  "fit",
+  "communication",
+  "stability",
+] as const;
+
+type AiDimensionScores = Record<(typeof DIMENSION_KEYS)[number], number>;
+
+function clampScore0to100(n: number): number {
+  return Math.min(100, Math.max(0, Math.round(n)));
+}
+
+function normalizeDimensions(
+  raw: unknown,
+  overallScore: number,
+): AiDimensionScores | undefined {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const o = raw as Record<string, unknown>;
+  const out: Partial<AiDimensionScores> = {};
+  let any = false;
+  for (const k of DIMENSION_KEYS) {
+    const v = o[k];
+    if (typeof v === "number" && !Number.isNaN(v)) {
+      out[k] = clampScore0to100(v);
+      any = true;
+    }
+  }
+  if (!any) return undefined;
+  const filled = {} as AiDimensionScores;
+  for (const k of DIMENSION_KEYS) {
+    const v = out[k];
+    filled[k] = v !== undefined ? v : clampScore0to100(overallScore);
+  }
+  return filled;
+}
+
 export async function screenResumeWithAi(
   userId: number,
   resumeId: number,
@@ -411,6 +451,7 @@ export async function screenResumeWithAi(
     recommendation: "pass" | "reject" | "pending";
     score: number;
     reasoning: string;
+    dimensions?: AiDimensionScores;
   };
   error?: string;
 }> {
@@ -467,8 +508,9 @@ ${resolvedPrompt || "(无额外筛选标准，请主要依据岗位要求评估)
 候选人简历内容：
 ${resume.parsedContent}
 
-请严格只输出 JSON（不要输出 Markdown/代码块/多余文字），格式如下：
-{"recommendation":"pass|reject|pending","score":0-100,"reasoning":"针对上述岗位要求与筛选标准，逐条或分点说明该候选人的匹配情况、符合项与不符合项，以及给分与推荐理由"}`;
+请严格只输出 JSON（不要输出 Markdown/代码块/多余文字）。字段名与 dimensions 子字段名须为英文，格式如下（示例数值仅作结构参考，请按实际评估填写具体整数）：
+{"recommendation":"pass|reject|pending","score":68,"dimensions":{"skills":73,"projects":62,"experience":70,"education":43,"fit":71,"communication":58,"stability":65},"reasoning":"针对上述岗位要求与筛选标准，逐条或分点说明该候选人的匹配情况、符合项与不符合项，以及给分与推荐理由"}
+说明：score 为综合匹配度 0-100；dimensions 七项分别为 技能 skills、项目 projects、工作经历 experience、学历 education、岗位契合 fit、沟通协作 communication、候选人稳定性 stability 的分项分（0-100 整数），须与 reasoning 中的分析一致；缺失的维度可用综合分 score 作为近似。`;
   console.log("model:", config.model);
   // 调用 AI API
   const url = config.apiUrl.replace(/\/$/, "");
@@ -541,6 +583,9 @@ ${resume.parsedContent}
         summary: result.reasoning,
         score: result.score,
         status,
+        dimensionScores: result.dimensions
+          ? JSON.stringify(result.dimensions)
+          : null,
       })
       .where(
         (and as any)(
@@ -586,6 +631,7 @@ function parseAiResponse(aiResponse: string): {
   recommendation: "pass" | "reject" | "pending";
   score: number;
   reasoning: string;
+  dimensions?: AiDimensionScores;
 } {
   const raw = (aiResponse || "").trim();
   const lowerResponse = raw.toLowerCase();
@@ -597,6 +643,7 @@ function parseAiResponse(aiResponse: string): {
         recommendation?: "pass" | "reject" | "pending";
         score?: number;
         reasoning?: string;
+        dimensions?: unknown;
       };
 
       const recommendation =
@@ -611,11 +658,14 @@ function parseAiResponse(aiResponse: string): {
           ? Math.min(100, Math.max(0, Math.round(parsed.score)))
           : 50;
 
+      const dimensions = normalizeDimensions(parsed.dimensions, score);
+
       return {
         recommendation,
         score,
         reasoning:
           typeof parsed.reasoning === "string" ? parsed.reasoning : raw,
+        ...(dimensions ? { dimensions } : {}),
       };
     } catch {
       // 忽略，走兜底解析
@@ -675,6 +725,7 @@ export async function batchScreenResumesWithAi(
       recommendation: "pass" | "reject" | "pending";
       score: number;
       reasoning: string;
+      dimensions?: AiDimensionScores;
     };
     error?: string;
   }>;
@@ -700,3 +751,4 @@ export async function batchScreenResumesWithAi(
     results,
   };
 }
+

@@ -1,3 +1,5 @@
+import type { AiDimensionScores } from "./ai";
+
 // 简历类型
 export interface Resume {
   id: number;
@@ -11,6 +13,8 @@ export interface Resume {
   summary: string | null;
   parsedContent: string | null;
   score: number | null; // AI 筛选评分 (0-100)，来自后端
+  /** 后端存 JSON 字符串；前端加载后可能规范为对象 */
+  dimensionScores?: AiDimensionScores | string | null;
   status: 'pending' | 'rejected' | 'passed';
   createdAt: string;
 }
