@@ -19,6 +19,7 @@ import {
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "../Drawer";
 import { AiScreeningSettingsModal } from "./AiScreeningSettingsModal";
 import { PreFilterModal } from "./PreFilterModal";
+import { DeleteResumeConfirmModal } from "./DeleteResumeConfirmModal";
 import { AiReasoningContent } from "./AiReasoningContent";
 import { ScreeningCandidateTable } from "./components/ScreeningCandidateTable";
 import { SCREENING_STATUS_META as STATUS_META } from "./screeningConstants";
@@ -156,9 +157,26 @@ function MatchScoreRing({ score }: { score: number }) {
   const s = Math.min(100, Math.max(0, Math.round(score)));
   const dashOffset = SCORE_RING_C - (s / 100) * SCORE_RING_C;
   const [stroke, text, gradeBg, grade] =
-    s >= 80 ? ["#2563eb", "text-blue-700", "bg-blue-600 text-white", "优秀"] as const
-    : s >= 60 ? ["#60a5fa", "text-blue-500", "bg-blue-100 text-blue-700", "良好"] as const
-    : ["#bfdbfe", "text-blue-300", "bg-blue-50 text-blue-400", "待定"] as const;
+    s >= 80
+      ? ([
+          "#2563eb",
+          "text-blue-700",
+          "bg-blue-600 text-white",
+          "优秀",
+        ] as const)
+      : s >= 60
+        ? ([
+            "#60a5fa",
+            "text-blue-500",
+            "bg-blue-100 text-blue-700",
+            "良好",
+          ] as const)
+        : ([
+            "#bfdbfe",
+            "text-blue-300",
+            "bg-blue-50 text-blue-400",
+            "待定",
+          ] as const);
   return (
     <div className="flex flex-col items-center gap-2" aria-hidden>
       <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
@@ -252,6 +270,10 @@ export function AiScreening() {
   const [preFilterConfig, setPreFilterConfig] =
     useState<PreFilterConfig>(getDefaultPreFilter);
   const [preFilterModalOpen, setPreFilterModalOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
   const [screeningTemplates, setScreeningTemplates] = useState<
     ScreeningTemplate[]
   >([]);
@@ -490,8 +512,18 @@ export function AiScreening() {
     }
   };
 
-  const handleDeleteResume = async (resumeId: number) => {
-    if (!window.confirm("确定删除该简历？此操作不可恢复。")) return;
+  const requestDeleteResume = (resumeId: number) => {
+    const r = resumes.find((x) => x.id === resumeId);
+    setDeleteConfirm({
+      id: resumeId,
+      name: (r?.name ?? "").trim() || "该候选人",
+    });
+  };
+
+  const executeDeleteResume = async () => {
+    if (deleteConfirm == null) return;
+    const resumeId = deleteConfirm.id;
+    setDeleteConfirm(null);
     try {
       await deleteResume(resumeId);
       setResumes((prev) => prev.filter((r) => r.id !== resumeId));
@@ -513,7 +545,11 @@ export function AiScreening() {
     const relativePath = resume.resumeFile
       .replace(/^.*[\\/]uploads[\\/]/, "uploads/")
       .replace(/\\/g, "/");
-    window.open(`${API_BASE_URL}/${relativePath}`, "_blank", "noopener,noreferrer");
+    window.open(
+      `${API_BASE_URL}/${relativePath}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
   };
 
   const handleUpdateStatus = async (
@@ -547,8 +583,14 @@ export function AiScreening() {
   };
 
   const handleScreenResume = async (resumeId: number) => {
-    if (!jobRequirements.trim()) { toast.error("请输入岗位要求"); return; }
-    if (!selectedAiConfigId) { toast.error("请选择 AI 配置"); return; }
+    if (!jobRequirements.trim()) {
+      toast.error("请输入岗位要求");
+      return;
+    }
+    if (!selectedAiConfigId) {
+      toast.error("请选择 AI 配置");
+      return;
+    }
     const resume = resumes.find((r) => r.id === resumeId);
     try {
       setScreeningResumeId(resumeId);
@@ -560,7 +602,13 @@ export function AiScreening() {
       setResumes((prev) =>
         prev.map((r) =>
           r.id === resumeId
-            ? { ...r, summary: result.reasoning, status: recToStatus(result.recommendation), score: result.score, dimensionScores: result.dimensions ?? r.dimensionScores ?? null }
+            ? {
+                ...r,
+                summary: result.reasoning,
+                status: recToStatus(result.recommendation),
+                score: result.score,
+                dimensionScores: result.dimensions ?? r.dimensionScores ?? null,
+              }
             : r,
         ),
       );
@@ -569,7 +617,12 @@ export function AiScreening() {
         newMap.set(resumeId, { ...result, resumeId, resume });
         return newMap;
       });
-      await logActivity({ type: "screening", resumeId, resumeName: resume?.name, description: result.reasoning });
+      await logActivity({
+        type: "screening",
+        resumeId,
+        resumeName: resume?.name,
+        description: result.reasoning,
+      });
     } catch (error) {
       console.error("AI筛选失败:", error);
       toast.error("AI 筛选失败，请重试");
@@ -659,7 +712,9 @@ export function AiScreening() {
         config={preFilterConfig}
         onConfigChange={setPreFilterConfig}
         onApply={(config) => {
-          setActiveTemplateId(findTemplateIdByConfig(screeningTemplates, config));
+          setActiveTemplateId(
+            findTemplateIdByConfig(screeningTemplates, config),
+          );
           void loadResumes(isEmptyPreFilter(config) ? undefined : config);
           setPreFilterModalOpen(false);
         }}
@@ -669,6 +724,14 @@ export function AiScreening() {
             : null
         }
         onClear={() => setActiveTemplateId(null)}
+      />
+      <DeleteResumeConfirmModal
+        open={deleteConfirm != null}
+        candidateName={deleteConfirm?.name ?? ""}
+        onOpenChange={(open) => {
+          if (!open) setDeleteConfirm(null);
+        }}
+        onConfirm={() => void executeDeleteResume()}
       />
       <AiScreeningSettingsModal
         open={jobConfigModalOpen}
@@ -852,7 +915,11 @@ export function AiScreening() {
                     <button
                       key={key}
                       type="button"
-                      aria-pressed={(statusFilter === key ? "true" : "false") as "true" | "false"}
+                      aria-pressed={
+                        (statusFilter === key ? "true" : "false") as
+                          | "true"
+                          | "false"
+                      }
                       onClick={() => setStatusFilter(key)}
                       className={`shrink-0 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                         statusFilter === key
@@ -942,7 +1009,7 @@ export function AiScreening() {
                       resumes={paginatedResumes}
                       selectedResumeId={selectedResumeId}
                       onSelect={setSelectedResumeId}
-                      onDelete={handleDeleteResume}
+                      onDelete={requestDeleteResume}
                       formatDateShort={formatDateShort}
                       screeningScores={screeningScoresMap}
                     />
@@ -1065,57 +1132,61 @@ export function AiScreening() {
                     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 sm:px-6">
                       <div className="mx-auto max-w-3xl space-y-5">
                         <div className="min-w-0 rounded-2xl border border-blue-100 bg-blue-50/40 p-5 shadow-sm backdrop-blur-sm">
-                            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-blue-950">
-                              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white ring-1 ring-blue-100">
-                                <BarChart3 className="h-4 w-4 text-blue-500" />
-                              </span>
-                              匹配度
-                            </h3>
-                            {selectedResult ? (
-                              <div className="flex flex-col gap-4">
-                                <div className="space-y-1 border-b border-blue-100/80 pb-3 text-center sm:text-left">
-                                  <p className="text-xs font-medium uppercase tracking-wide text-blue-500">
-                                    {selectedResult.dimensions
-                                      ? "简历关键点（模型分项）"
-                                      : "简历关键点（参考分布）"}
-                                  </p>
-                                  <p className="text-[11px] leading-relaxed text-blue-600/85">
-                                    {selectedResult.dimensions
-                                      ? "七项对应简历常见关键板块，由本次 AI 依据简历与岗位要求打分；与下方评估理由一致，悬停顶点查看分值"
-                                      : "尚无模型分项：以下为按综合分生成的参考图形，重新运行「AI 筛选」可生成分项"}
-                                  </p>
-                                </div>
-                                <div className="grid grid-cols-1 items-center gap-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-6">
-                                  <div className="flex justify-center sm:justify-start">
-                                    <MatchScoreRing
-                                      score={selectedResult.score}
-                                    />
-                                  </div>
-                                  <div className="min-h-[188px] min-w-0 w-full sm:min-h-[200px]">
-                                    <MatchDimensionRadar
-                                      score={selectedResult.score}
-                                      dimensions={selectedResult.dimensions}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex flex-col items-center py-6 text-center">
-                                <p className="text-sm text-blue-400">
-                                  尚未生成匹配分
+                          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-blue-950">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white ring-1 ring-blue-100">
+                              <BarChart3 className="h-4 w-4 text-blue-500" />
+                            </span>
+                            匹配度
+                          </h3>
+                          {selectedResult ? (
+                            <div className="flex flex-col gap-4">
+                              <div className="space-y-1 border-b border-blue-100/80 pb-3 text-center sm:text-left">
+                                <p className="text-xs font-medium uppercase tracking-wide text-blue-500">
+                                  {selectedResult.dimensions
+                                    ? "简历关键点（模型分项）"
+                                    : "简历关键点（参考分布）"}
                                 </p>
-                                <p className="mt-1 text-xs text-blue-300">
-                                  点击右上角「AI 筛选」运行模型
+                                <p className="text-[11px] leading-relaxed text-blue-600/85">
+                                  {selectedResult.dimensions
+                                    ? "七项对应简历常见关键板块，由本次 AI 依据简历与岗位要求打分；与下方评估理由一致，悬停顶点查看分值"
+                                    : "尚无模型分项：以下为按综合分生成的参考图形，重新运行「AI 筛选」可生成分项"}
                                 </p>
                               </div>
-                            )}
+                              <div className="grid grid-cols-1 items-center gap-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-6">
+                                <div className="flex justify-center sm:justify-start">
+                                  <MatchScoreRing
+                                    score={selectedResult.score}
+                                  />
+                                </div>
+                                <div className="min-h-[188px] min-w-0 w-full sm:min-h-[200px]">
+                                  <MatchDimensionRadar
+                                    score={selectedResult.score}
+                                    dimensions={selectedResult.dimensions}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center py-6 text-center">
+                              <p className="text-sm text-blue-400">
+                                尚未生成匹配分
+                              </p>
+                              <p className="mt-1 text-xs text-blue-300">
+                                点击右上角「AI 筛选」运行模型
+                              </p>
+                            </div>
+                          )}
                         </div>
 
                         <div className="overflow-hidden rounded-2xl border border-blue-100 bg-white/80 shadow-sm backdrop-blur-sm">
                           <button
                             type="button"
                             onClick={() => setReasoningOpen((v) => !v)}
-                            aria-expanded={(reasoningOpen ? "true" : "false") as "true" | "false"}
+                            aria-expanded={
+                              (reasoningOpen ? "true" : "false") as
+                                | "true"
+                                | "false"
+                            }
                             className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-blue-50/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-400"
                           >
                             <span className="flex items-center gap-2 text-sm font-semibold text-blue-950">

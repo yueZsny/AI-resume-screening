@@ -71,7 +71,9 @@ export function PreFilterModal({
                 id="prefilter-modal-title"
                 className="truncate text-base font-semibold text-zinc-900"
               >
-                {templateName ? `预筛选条件 · ${templateName}` : "自定义预筛选条件"}
+                {templateName
+                  ? `预筛选条件 · ${templateName}`
+                  : "自定义预筛选条件"}
               </h2>
               <p className="truncate text-xs text-zinc-500">
                 {templateName
@@ -165,7 +167,8 @@ export function PreFilterModal({
                   const v = e.target.value;
                   onConfigChange({
                     ...config,
-                    minScore: v === "" ? null : Math.min(100, Math.max(0, Number(v))),
+                    minScore:
+                      v === "" ? null : Math.min(100, Math.max(0, Number(v))),
                   });
                 }}
                 placeholder="不填则不限制"

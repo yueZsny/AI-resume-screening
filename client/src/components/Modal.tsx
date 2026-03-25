@@ -77,11 +77,16 @@ export function Modal({
         {/* 头部 */}
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-zinc-100">
-            {title && (
-              typeof title === "string"
-                ? <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
-                : <div className="text-base font-semibold text-zinc-900">{title}</div>
-            )}
+            {title &&
+              (typeof title === "string" ? (
+                <h2 className="text-base font-semibold text-zinc-900">
+                  {title}
+                </h2>
+              ) : (
+                <div className="text-base font-semibold text-zinc-900">
+                  {title}
+                </div>
+              ))}
             {showCloseButton && (
               <button
                 onClick={onClose}
@@ -105,7 +110,7 @@ export function Modal({
         )}
       </div>
     </div>
- );
+  );
 }
 
 // 常用的确认弹窗

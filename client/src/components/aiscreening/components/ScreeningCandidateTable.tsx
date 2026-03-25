@@ -77,7 +77,9 @@ export function ScreeningCandidateTable({
             </th>
             <th className="min-w-[180px] px-3 py-2.5">联系方式</th>
             <th className="whitespace-nowrap px-3 py-2.5">导入时间</th>
-            <th className="w-24 whitespace-nowrap px-3 py-2.5 pr-4 text-right">操作</th>
+            <th className="w-24 whitespace-nowrap px-3 py-2.5 pr-4 text-right">
+              操作
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-blue-100/80 bg-white/60">
@@ -101,7 +103,9 @@ export function ScreeningCandidateTable({
                   }
                 }}
                 className={`cursor-pointer transition-colors hover:bg-blue-50/50 ${
-                  selected ? "bg-blue-50/40 ring-1 ring-inset ring-blue-200/60" : ""
+                  selected
+                    ? "bg-blue-50/40 ring-1 ring-inset ring-blue-200/60"
+                    : ""
                 }`}
               >
                 <td className="align-middle px-3 py-3 pl-4">
@@ -116,7 +120,9 @@ export function ScreeningCandidateTable({
                     >
                       {getInitials(resume.name)}
                     </div>
-                    <span className="font-semibold text-slate-900">{resume.name}</span>
+                    <span className="font-semibold text-slate-900">
+                      {resume.name}
+                    </span>
                   </div>
                 </td>
                 <td className="align-middle px-3 py-3">
@@ -142,7 +148,10 @@ export function ScreeningCandidateTable({
                     <span
                       className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-semibold ${meta.badge}`}
                     >
-                      <Icon className="h-3 w-3 shrink-0 opacity-90" aria-hidden />
+                      <Icon
+                        className="h-3 w-3 shrink-0 opacity-90"
+                        aria-hidden
+                      />
                       {meta.label}
                     </span>
                   </div>
@@ -150,18 +159,27 @@ export function ScreeningCandidateTable({
                 <td className="align-middle px-3 py-3">
                   <div className="flex flex-col gap-1 text-[11px] text-slate-600">
                     <span className="flex min-w-0 items-center gap-1.5">
-                      <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+                      <Mail
+                        className="h-3.5 w-3.5 shrink-0 text-slate-400"
+                        aria-hidden
+                      />
                       <span className="truncate">{resume.email || "—"}</span>
                     </span>
                     <span className="flex min-w-0 items-center gap-1.5">
-                      <Phone className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+                      <Phone
+                        className="h-3.5 w-3.5 shrink-0 text-slate-400"
+                        aria-hidden
+                      />
                       <span className="truncate">{resume.phone || "—"}</span>
                     </span>
                   </div>
                 </td>
                 <td className="align-middle whitespace-nowrap px-3 py-3 text-[11px] tabular-nums text-slate-500">
                   <span className="inline-flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+                    <Calendar
+                      className="h-3.5 w-3.5 shrink-0 text-slate-400"
+                      aria-hidden
+                    />
                     {formatDateShort(resume.createdAt)}
                   </span>
                 </td>
