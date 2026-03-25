@@ -60,7 +60,7 @@ function BrandGlyph() {
 }
 
 const toggleBtnClass =
-  "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent transition-[color,background-color,transform] duration-150 hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] text-[var(--app-sidebar-text-muted,#9ca3af)] hover:text-[var(--app-sidebar-hover-text,#374151)] active:scale-[0.94] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,rgba(14,165,233,0.25))] focus-visible:ring-offset-2 motion-reduce:active:scale-100";
+  "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent transition-[color,background-color,transform] duration-150 hover:bg-(--app-sidebar-hover-bg) text-(--app-sidebar-text-muted) hover:text-(--app-sidebar-hover-text) active:scale-[0.94] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) focus-visible:ring-offset-2 motion-reduce:active:scale-100";
 
 export default function Layout() {
   const location = useLocation();
@@ -75,13 +75,13 @@ export default function Layout() {
   }, [expanded]);
 
   return (
-    <div className="flex h-screen min-h-0 overflow-hidden bg-[var(--app-page-bg,#f8f9fc)]">
+    <div className="flex h-screen min-h-0 overflow-hidden bg-(--app-page-bg)">
       {/* Sidebar */}
       <aside
         aria-label="主导航"
         className={`
           fixed left-0 top-0 bottom-0 flex flex-col z-40 overflow-hidden
-          bg-[var(--app-sidebar-bg,#ffffff)] border-r border-[var(--app-sidebar-border,rgba(0,0,0,0.05))]
+          bg-(--app-sidebar-bg) border-r border-(--app-sidebar-border)
           motion-safe:transition-[width] motion-reduce:transition-none
           ${expanded ? "w-60" : "w-[72px]"}
         `}
@@ -91,7 +91,7 @@ export default function Layout() {
         }}
       >
         {/* 顶栏：品牌 + 侧栏开关（展开/收起共用同一套视觉，避免突变） */}
-        <div className="shrink-0 border-b border-[var(--app-sidebar-border,rgba(0,0,0,0.05))]">
+        <div className="shrink-0 border-b border-(--app-sidebar-border)">
           <div
             className={
               expanded
@@ -112,7 +112,7 @@ export default function Layout() {
                 <BrandGlyph />
               </div>
               <span
-                className={`min-w-0 truncate text-[15px] font-semibold tracking-tight text-[var(--app-sidebar-text-primary,#1a1a2e)] motion-safe:transition-[opacity,max-width] motion-reduce:transition-none ${
+                className={`min-w-0 truncate text-[15px] font-semibold tracking-tight text-(--app-sidebar-text-primary) motion-safe:transition-[opacity,max-width] motion-reduce:transition-none ${
                   expanded
                     ? "ml-0 max-w-[min(100%,12rem)] opacity-100"
                     : "ml-0 max-w-0 overflow-hidden opacity-0"
@@ -171,8 +171,8 @@ export default function Layout() {
                   ${expanded ? "gap-3 px-3.5 py-2.5" : "justify-center gap-0 px-2 py-2.5"}
                   ${
                     isActive
-                      ? "bg-linear-to-r from-[var(--app-sidebar-nav-active-from)] to-[var(--app-sidebar-nav-active-to)] text-[var(--app-sidebar-nav-active-text)]"
-                      : "text-[var(--app-sidebar-text-secondary)] hover:bg-[var(--app-sidebar-hover-bg)] hover:text-[var(--app-sidebar-hover-text)]"
+                      ? "bg-linear-to-r from-(--app-sidebar-nav-active-from) to-(--app-sidebar-nav-active-to) text-(--app-sidebar-nav-active-text)"
+                      : "text-(--app-sidebar-text-secondary) hover:bg-(--app-sidebar-hover-bg) hover:text-(--app-sidebar-hover-text)"
                   }
                 `}
               >
@@ -204,7 +204,7 @@ export default function Layout() {
 
         {/* User */}
         <div
-          className={`border-t border-[var(--app-sidebar-border,rgba(0,0,0,0.05))] shrink-0 ${expanded ? "px-3 py-3" : "px-2 py-3"}`}
+          className={`border-t border-(--app-sidebar-border) shrink-0 ${expanded ? "px-3 py-3" : "px-2 py-3"}`}
         >
           <UserInfo username={user?.username} compact={!expanded} />
         </div>

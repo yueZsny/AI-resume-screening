@@ -40,7 +40,7 @@ export function UserInfo({
 
   const avatarBlock = (
     <div className="h-9 w-9 shrink-0 rounded-full bg-linear-to-br from-[#0ea5e9] to-[#3b82f6] p-[2px]">
-      <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-[var(--app-surface,#fff)]">
+      <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-(--app-surface)">
         {displayAvatar ? (
           <img
             src={displayAvatar}
@@ -58,7 +58,7 @@ export function UserInfo({
   );
 
   const logoutButtonClass =
-    "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent text-[var(--app-danger,#ef4444)] transition-all duration-150 hover:bg-[var(--app-danger-soft,#fef2f2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-sidebar-bg)]";
+    "flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent text-(--app-danger) transition-all duration-150 hover:bg-(--app-danger-soft) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--app-sidebar-bg)";
 
   if (compact) {
     return (
@@ -67,7 +67,7 @@ export function UserInfo({
           to="/app/settings"
           title={displayUsername}
           aria-label={`账号设置：${displayUsername}`}
-          className="flex cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent transition-all duration-150 hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-sidebar-bg)]"
+          className="flex cursor-pointer items-center justify-center rounded-[10px] border-none bg-transparent transition-all duration-150 hover:bg-(--app-sidebar-hover-bg) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--app-sidebar-bg)"
         >
           {avatarBlock}
         </Link>
@@ -81,14 +81,14 @@ export function UserInfo({
         to="/app/settings"
         title="账号设置"
         aria-label={`账号设置：${displayUsername}`}
-        className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[10px] bg-transparent px-3 py-2 no-underline transition-all duration-150 hover:bg-[var(--app-sidebar-hover-bg,#f3f4f6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--app-sidebar-bg)]"
+        className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-[10px] bg-transparent px-3 py-2 no-underline transition-all duration-150 hover:bg-(--app-sidebar-hover-bg) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-ring) focus-visible:ring-offset-2 focus-visible:ring-offset-(--app-sidebar-bg)"
       >
         {avatarBlock}
         <div className="flex min-w-0 flex-1 flex-col">
-          <span className="truncate text-[13px] font-semibold leading-tight text-[var(--app-sidebar-text-primary,#1a1a2e)]">
+          <span className="truncate text-[13px] font-semibold leading-tight text-(--app-sidebar-text-primary)">
             {displayUsername}
           </span>
-          <span className="text-[11px] leading-tight text-[var(--app-sidebar-text-muted,#9ca3af)]">
+          <span className="text-[11px] leading-tight text-(--app-sidebar-text-muted)">
             管理员
           </span>
         </div>

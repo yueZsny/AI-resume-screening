@@ -25,24 +25,24 @@ import type { EmailConfig } from "../../types/email";
 // ─── 常量 ────────────────────────────────────────────────────────────────
 
 const CARD =
-  "overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]";
+  "overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow-sm) ring-1 ring-(--app-border-subtle)";
 
 /** 列表行状态：简洁字牌（无圆点、无描边，靠浅色底区分） */
 const STATUS_META = {
   pending: {
-    pill: "bg-[var(--app-warning-soft,#fef3c7)] text-[var(--app-warning,#f59e0b)]",
+    pill: "bg-(--app-warning-soft) text-(--app-warning)",
     label: "待筛选",
   },
   passed: {
-    pill: "bg-[var(--app-success-soft,#dcfce7)] text-[var(--app-success,#22c55e)]",
+    pill: "bg-(--app-success-soft) text-(--app-success)",
     label: "已通过",
   },
   rejected: {
-    pill: "bg-[var(--app-danger-soft,#fee2e2)] text-[var(--app-danger,#ef4444)]",
+    pill: "bg-(--app-danger-soft) text-(--app-danger)",
     label: "已拒绝",
   },
   sent: {
-    pill: "bg-[var(--app-success-soft,#dcfce7)] text-[var(--app-success,#22c55e)]",
+    pill: "bg-(--app-success-soft) text-(--app-success)",
     label: "发送成功",
   },
 } as const;
@@ -95,7 +95,7 @@ function NativeSelect({
   return (
     <div>
       {label && (
-        <label htmlFor={id} className="mb-1.5 block text-xs font-semibold text-[var(--app-text-secondary,#52525b)]">
+        <label htmlFor={id} className="mb-1.5 block text-xs font-semibold text-(--app-text-secondary)">
           {label}
         </label>
       )}
@@ -107,7 +107,7 @@ function NativeSelect({
           onChange={(e) => onChange(Number(e.target.value))}
           disabled={disabled}
           aria-label={typeof label === "string" ? label : undefined}
-          className="w-full appearance-none rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-4 py-2.5 pr-9 text-sm text-[var(--app-text-primary,#18181b)] shadow-sm ring-1 ring-inset ring-[var(--app-border,#e4e4e7)] transition-all focus:border-[var(--app-primary,#0ea5e9)] focus:outline-none focus:ring-2 focus:ring-[var(--app-ring,#rgba(14,165,233,0.2))] disabled:cursor-not-allowed disabled:bg-[var(--app-surface-raised,#fafafa)] disabled:text-[var(--app-text-muted,#a1a1aa)]"
+          className="w-full appearance-none rounded-2xl border border-(--app-border) bg-(--app-surface) px-4 py-2.5 pr-9 text-sm text-(--app-text-primary) shadow-sm ring-1 ring-inset ring-(--app-border) transition-all focus:border-(--app-primary) focus:outline-none focus:ring-2 focus:ring-(--app-ring) disabled:cursor-not-allowed disabled:bg-(--app-surface-raised) disabled:text-(--app-text-muted)"
         >
           {placeholder && (
             <option value={0} disabled>
@@ -121,7 +121,7 @@ function NativeSelect({
           ))}
         </select>
         <ChevronDown
-          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-text-muted,#a1a1aa)]"
+          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--app-text-muted)"
           strokeWidth={2}
           aria-hidden
         />
@@ -148,15 +148,15 @@ function RecipientRow({
     <label
       className={`group flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2.5 transition-all duration-150 sm:gap-3 ${
         checked
-          ? "bg-[var(--app-primary-soft,rgba(14,165,233,0.1))]/90 ring-1 ring-[var(--app-primary,#0ea5e9)]/20"
-          : "hover:bg-[var(--app-surface,#fff)]/80"
+          ? "bg-(--app-primary-soft)/90 ring-1 ring-(--app-primary)/20"
+          : "hover:bg-(--app-surface)/80"
       }`}
     >
       <div
         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-lg border-2 transition-all duration-150 ${
           checked
-            ? "border-[var(--app-primary,#0ea5e9)] bg-[var(--app-primary,#0ea5e9)] shadow-sm"
-            : "border-[var(--app-border-strong,#d4d4d8)] bg-[var(--app-surface,#fff)] group-hover:border-[var(--app-primary,#0ea5e9)]/30"
+            ? "border-(--app-primary) bg-(--app-primary) shadow-sm"
+            : "border-(--app-border-strong) bg-(--app-surface) group-hover:border-(--app-primary)/30"
         }`}
       >
         {checked && (
@@ -168,7 +168,7 @@ function RecipientRow({
       <div className="min-w-0 flex-1">
         {/* 姓名 + 标签行 */}
         <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-          <span className="truncate text-sm font-semibold text-[var(--app-text-primary,#18181b)]">
+          <span className="truncate text-sm font-semibold text-(--app-text-primary)">
             {recipient.name}
           </span>
           <span
@@ -179,7 +179,7 @@ function RecipientRow({
           </span>
         </div>
         {/* 联系信息 */}
-        <div className="mt-0.5 flex min-w-0 items-center gap-2 overflow-hidden text-[11px] text-[var(--app-text-muted,#a1a1aa)] sm:gap-3">
+        <div className="mt-0.5 flex min-w-0 items-center gap-2 overflow-hidden text-[11px] text-(--app-text-muted) sm:gap-3">
           {recipient.email && (
             <span className="flex min-w-0 flex-1 items-center gap-1">
               <Mail size={10} strokeWidth={1.5} className="shrink-0" />
@@ -204,7 +204,7 @@ function RecipientRow({
       {recipient.resumeFile && (
         <FileText
           size={13}
-          className="ml-0.5 shrink-0 text-[var(--app-text-muted,#a1a1aa)]"
+          className="ml-0.5 shrink-0 text-(--app-text-muted)"
           strokeWidth={1.5}
           aria-hidden
         />
@@ -226,15 +226,15 @@ function ProgressStepper({
           <span
             className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold transition-colors ${
               ok
-                ? "bg-[var(--app-success-soft,#dcfce7)] text-[var(--app-success,#22c55e)]"
-                : "bg-[var(--app-border,#e4e4e7)]/80 text-[var(--app-text-muted,#a1a1aa)]"
+                ? "bg-(--app-success-soft) text-(--app-success)"
+                : "bg-(--app-border)/80 text-(--app-text-muted)"
             }`}
           >
             {ok ? <Check className="h-2 w-2" strokeWidth={3} /> : i + 1}
           </span>
           {i < steps.length - 1 && (
             <span
-              className={`h-px w-4 ${ok ? "bg-[var(--app-success,#22c55e)]" : "bg-[var(--app-border,#e4e4e7)]"}`}
+              className={`h-px w-4 ${ok ? "bg-(--app-success)" : "bg-(--app-border)"}`}
             />
           )}
         </span>
@@ -252,38 +252,38 @@ function SenderSkeleton() {
     >
       <div className="flex min-h-0 flex-col lg:col-span-7">
         <div className={`${CARD} flex h-full min-h-112 flex-col`}>
-          <div className="border-b border-[var(--app-border,#e4e4e7)] px-6 py-5">
+          <div className="border-b border-(--app-border) px-6 py-5">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-10 w-10 rounded-2xl bg-(--app-skeleton)" />
               <div className="space-y-2">
-                <div className="h-4 w-28 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-                <div className="h-3 w-20 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+                <div className="h-4 w-28 rounded bg-(--app-skeleton)" />
+                <div className="h-3 w-20 rounded bg-(--app-skeleton)" />
               </div>
             </div>
           </div>
           <div className="space-y-5 p-6">
             <div className="grid grid-cols-2 gap-3">
-              <div className="h-10 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]" />
-              <div className="h-10 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-10 rounded-2xl bg-(--app-skeleton)" />
+              <div className="h-10 rounded-2xl bg-(--app-skeleton)" />
             </div>
-            <div className="h-10 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]" />
-            <div className="h-48 rounded-2xl bg-[var(--app-border,#e4e4e7)]" />
+            <div className="h-10 rounded-2xl bg-(--app-skeleton)" />
+            <div className="h-48 rounded-2xl bg-(--app-border)" />
           </div>
         </div>
       </div>
       <div className="flex min-h-0 flex-col lg:col-span-5">
         <div className={`${CARD} flex h-full min-h-112 flex-col`}>
-          <div className="border-b border-[var(--app-border,#e4e4e7)] px-5 py-4">
-            <div className="h-4 w-24 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+          <div className="border-b border-(--app-border) px-5 py-4">
+            <div className="h-4 w-24 rounded bg-(--app-skeleton)" />
           </div>
           <div className="space-y-3 p-5">
-            <div className="h-10 rounded-xl bg-[var(--app-skeleton,#f4f4f6)]" />
+            <div className="h-10 rounded-xl bg-(--app-skeleton)" />
             <div className="flex gap-2">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-8 flex-1 rounded-lg bg-[var(--app-skeleton,#f4f4f6)]" />
+                <div key={i} className="h-8 flex-1 rounded-lg bg-(--app-skeleton)" />
               ))}
             </div>
-            <div className="h-56 rounded-2xl bg-[var(--app-border,#e4e4e7)]" />
+            <div className="h-56 rounded-2xl bg-(--app-border)" />
           </div>
         </div>
       </div>
@@ -488,14 +488,14 @@ export function EmailSender({
       <section className="flex min-h-0 flex-col lg:col-span-7">
         <div className={`${CARD} flex h-full min-h-0 flex-col`}>
           {/* 卡片头部：简洁图标 + 标题 + 发送按钮 */}
-          <div className="flex shrink-0 items-center justify-between border-b border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/80 px-6 py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-(--app-border) bg-(--app-surface-raised)/80 px-6 py-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary-hover,#0284c7)] text-[var(--app-surface,#fff)] shadow-sm">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-(--app-primary) to-(--app-primary-hover) text-(--app-surface) shadow-sm">
                 <Mail className="h-4 w-4" strokeWidth={1.75} />
               </div>
               <div>
-                <h1 className="text-sm font-semibold text-[var(--app-text-primary,#18181b)]">撰写邮件</h1>
-                <p className="text-xs text-[var(--app-text-muted,#a1a1aa)]">
+                <h1 className="text-sm font-semibold text-(--app-text-primary)">撰写邮件</h1>
+                <p className="text-xs text-(--app-text-muted)">
                   {templates.length > 0
                     ? `${templates.length} 个模板可用`
                     : "暂无模板"}
@@ -508,7 +508,7 @@ export function EmailSender({
               type="button"
               onClick={handleSend}
               disabled={!canSend}
-              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary-hover,#0284c7)] px-5 py-2.5 text-sm font-semibold text-[var(--app-surface,#fff)] shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-(--app-primary) to-(--app-primary-hover) px-5 py-2.5 text-sm font-semibold text-(--app-surface) shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {sending ? (
                 <><Loader2 className="h-4 w-4 animate-spin" />发送中…</>
@@ -539,7 +539,7 @@ export function EmailSender({
                   <NativeSelect
                     label={
                       <span>
-                        发件邮箱 <span className="text-[var(--app-danger,#ef4444)]">*</span>
+                        发件邮箱 <span className="text-(--app-danger)">*</span>
                       </span>
                     }
                     value={sendForm.fromEmailId}
@@ -553,7 +553,7 @@ export function EmailSender({
                 </div>
 
                 {emailConfigs.length === 0 && (
-                  <div className="flex items-center gap-2 rounded-xl border border-[var(--app-warning-soft,#fde68a)] bg-[var(--app-warning-soft,#fef3c7)]/60 px-4 py-2.5 text-xs text-[var(--app-warning,#f59e0b)]">
+                  <div className="flex items-center gap-2 rounded-xl border border-(--app-warning-soft) bg-(--app-warning-soft)/60 px-4 py-2.5 text-xs text-(--app-warning)">
                     <Settings size={13} strokeWidth={1.75} className="shrink-0" />
                     请先在「设置 → 邮箱配置」中添加发件邮箱。
                   </div>
@@ -561,12 +561,12 @@ export function EmailSender({
 
                 {/* 邮件主题 */}
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold text-[var(--app-text-secondary,#52525b)]">
-                    邮件主题 <span className="text-[var(--app-danger,#ef4444)]">*</span>
+                  <label className="mb-1.5 block text-xs font-semibold text-(--app-text-secondary)">
+                    邮件主题 <span className="text-(--app-danger)">*</span>
                   </label>
                   <div className="relative">
                     <Mail
-                      className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-text-muted,#a1a1aa)]"
+                      className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-(--app-text-muted)"
                       strokeWidth={1.75}
                     />
                     <input
@@ -575,7 +575,7 @@ export function EmailSender({
                       onChange={(e) =>
                         setSendForm((p) => ({ ...p, subject: e.target.value }))
                       }
-                      className="w-full rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] py-2.5 pl-11 pr-4 text-sm text-[var(--app-text-primary,#18181b)] shadow-sm ring-1 ring-inset ring-[var(--app-border,#e4e4e7)] transition-all focus:border-[var(--app-primary,#0ea5e9)] focus:outline-none focus:ring-2 focus:ring-[var(--app-ring,#rgba(14,165,233,0.2))]"
+                      className="w-full rounded-2xl border border-(--app-border) bg-(--app-surface) py-2.5 pl-11 pr-4 text-sm text-(--app-text-primary) shadow-sm ring-1 ring-inset ring-(--app-border) transition-all focus:border-(--app-primary) focus:outline-none focus:ring-2 focus:ring-(--app-ring)"
                       placeholder="支持变量，如 {{name}}、{{position}}"
                     />
                   </div>
@@ -584,23 +584,23 @@ export function EmailSender({
 
               {/* 正文区吃掉卡片剩余高度，减少「发送条件」下方空白感 */}
               <div className="mt-6 flex min-h-0 flex-1 flex-col pb-2">
-                <label className="mb-1.5 block shrink-0 text-xs font-semibold text-[var(--app-text-secondary,#52525b)]">
-                  邮件正文 <span className="text-[var(--app-danger,#ef4444)]">*</span>
+                <label className="mb-1.5 block shrink-0 text-xs font-semibold text-(--app-text-secondary)">
+                  邮件正文 <span className="text-(--app-danger)">*</span>
                 </label>
                 <textarea
                   value={sendForm.body}
                   onChange={(e) =>
                     setSendForm((p) => ({ ...p, body: e.target.value }))
                   }
-                  className="min-h-44 w-full flex-1 resize-y overflow-y-auto rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-4 py-3 font-mono text-sm leading-relaxed text-[var(--app-text-primary,#18181b)] shadow-sm ring-1 ring-inset ring-[var(--app-border,#e4e4e7)] transition-all focus:border-[var(--app-primary,#0ea5e9)] focus:outline-none focus:ring-2 focus:ring-[var(--app-ring,#rgba(14,165,233,0.2))]"
+                  className="min-h-44 w-full flex-1 resize-y overflow-y-auto rounded-2xl border border-(--app-border) bg-(--app-surface) px-4 py-3 font-mono text-sm leading-relaxed text-(--app-text-primary) shadow-sm ring-1 ring-inset ring-(--app-border) transition-all focus:border-(--app-primary) focus:outline-none focus:ring-2 focus:ring-(--app-ring)"
                   placeholder={"尊敬的 {{name}} 您好：\n\n感谢您投递我们公司的 {{position}} 职位…"}
                 />
               </div>
             </div>
 
             {/* 底部就绪步骤条：固定在卡片底部 */}
-            <div className="flex shrink-0 items-center justify-between border-t border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/40 px-6 py-3">
-              <span className="text-xs text-[var(--app-text-muted,#a1a1aa)]">发送条件</span>
+            <div className="flex shrink-0 items-center justify-between border-t border-(--app-border) bg-(--app-surface-raised)/40 px-6 py-3">
+              <span className="text-xs text-(--app-text-muted)">发送条件</span>
               <ProgressStepper steps={readySteps} />
             </div>
           </div>
@@ -611,15 +611,15 @@ export function EmailSender({
       <aside className="flex min-h-0 flex-col lg:col-span-5">
         <div className={`flex h-full min-h-0 flex-col ${CARD}`}>
           {/* 头部 */}
-          <div className="shrink-0 border-b border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/80 px-5 py-4">
+          <div className="shrink-0 border-b border-(--app-border) bg-(--app-surface-raised)/80 px-5 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 ring-1 ring-inset ring-blue-400/20">
                   <User className="h-4 w-4 text-blue-600" strokeWidth={1.75} />
                 </div>
                 <div>
-                  <h2 className="text-sm font-semibold text-[var(--app-text-primary,#18181b)]">收件人</h2>
-                  <p className="text-xs text-[var(--app-text-muted,#a1a1aa)]">
+                  <h2 className="text-sm font-semibold text-(--app-text-primary)">收件人</h2>
+                  <p className="text-xs text-(--app-text-muted)">
                     {selectedCount > 0
                       ? `已选 ${selectedCount} / ${stats.all} 人`
                       : `${stats.all} 位候选人`}
@@ -632,7 +632,7 @@ export function EmailSender({
                   onClick={() =>
                     setSendForm((p) => ({ ...p, candidateIds: [] }))
                   }
-                  className="rounded-lg border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-2.5 py-1.5 text-xs font-medium text-[var(--app-text-secondary,#52525b)] shadow-sm transition-colors hover:border-[var(--app-border-strong,#d4d4d8)] hover:text-[var(--app-text-primary,#18181b)]"
+                  className="rounded-lg border border-(--app-border) bg-(--app-surface) px-2.5 py-1.5 text-xs font-medium text-(--app-text-secondary) shadow-sm transition-colors hover:border-(--app-border-strong) hover:text-(--app-text-primary)"
                 >
                   清空
                 </button>
@@ -645,7 +645,7 @@ export function EmailSender({
             {/* 搜索框 */}
             <div className="relative">
               <Search
-                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-text-muted,#a1a1aa)]"
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-(--app-text-muted)"
                 strokeWidth={1.75}
               />
               <input
@@ -653,14 +653,14 @@ export function EmailSender({
                 placeholder="搜索姓名、邮箱或电话"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/60 py-2 pl-11 pr-9 text-sm text-[var(--app-text-primary,#18181b)] transition-all focus:border-[var(--app-primary,#0ea5e9)] focus:bg-[var(--app-surface,#fff)] focus:outline-none focus:ring-2 focus:ring-[var(--app-ring,#rgba(14,165,233,0.2))]"
+                className="w-full rounded-2xl border border-(--app-border) bg-(--app-surface-raised)/60 py-2 pl-11 pr-9 text-sm text-(--app-text-primary) transition-all focus:border-(--app-primary) focus:bg-(--app-surface) focus:outline-none focus:ring-2 focus:ring-(--app-ring)"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery("")}
                   aria-label="清除搜索"
-                  className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-lg text-[var(--app-text-muted,#a1a1aa)] transition-colors hover:bg-[var(--app-border,#e4e4e7)]/60 hover:text-[var(--app-text-secondary,#52525b)]"
+                  className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-lg text-(--app-text-muted) transition-colors hover:bg-(--app-border)/60 hover:text-(--app-text-secondary)"
                 >
                   <X className="h-3.5 w-3.5" strokeWidth={2} />
                 </button>
@@ -682,12 +682,12 @@ export function EmailSender({
                     onClick={() => setStatusFilter(value)}
                     className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-all ${
                       active
-                        ? "bg-[var(--app-primary,#0ea5e9)] text-[var(--app-surface,#fff)] shadow-sm"
-                        : "border border-[var(--app-border,#e4e4e7)]/90 bg-[var(--app-surface,#fff)] text-[var(--app-text-secondary,#52525b)] hover:border-[var(--app-primary,#0ea5e9)]/20 hover:bg-[var(--app-primary-soft,rgba(14,165,233,0.1))]/50"
+                        ? "bg-(--app-primary) text-(--app-surface) shadow-sm"
+                        : "border border-(--app-border)/90 bg-(--app-surface) text-(--app-text-secondary) hover:border-(--app-primary)/20 hover:bg-(--app-primary-soft)/50"
                     }`}
                   >
                     {label}
-                    <span className={active ? "text-[var(--app-primary,#0ea5e9)]/20" : "text-[var(--app-text-muted,#a1a1aa)]"}>
+                    <span className={active ? "text-(--app-primary)/20" : "text-(--app-text-muted)"}>
                       {count}
                     </span>
                   </button>
@@ -700,17 +700,17 @@ export function EmailSender({
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-b-2xl">
             {filteredRecipients.length === 0 ? (
               <div className="flex min-h-48 flex-1 flex-col items-center justify-center px-4 py-14 text-center">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--app-skeleton,#f4f4f6)] shadow-sm ring-1 ring-[var(--app-border,#e4e4e7)]/80">
-                  <User className="h-6 w-6 text-[var(--app-text-muted,#a1a1aa)]" strokeWidth={1.25} />
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-(--app-skeleton) shadow-sm ring-1 ring-(--app-border)/80">
+                  <User className="h-6 w-6 text-(--app-text-muted)" strokeWidth={1.25} />
                 </div>
-                <p className="text-sm font-medium text-[var(--app-text-secondary,#52525b)]">
+                <p className="text-sm font-medium text-(--app-text-secondary)">
                   {searchQuery
                     ? "没有匹配的候选人"
                     : statusFilter === "sent"
                       ? "暂无发送成功记录"
                       : "暂无候选人"}
                 </p>
-                <p className="mt-1 max-w-[200px] text-xs text-[var(--app-text-muted,#a1a1aa)]">
+                <p className="mt-1 max-w-[200px] text-xs text-(--app-text-muted)">
                   {searchQuery
                     ? "更换关键词或筛选条件"
                     : statusFilter === "sent"
@@ -721,17 +721,17 @@ export function EmailSender({
             ) : (
               <div className="flex min-h-0 flex-1 flex-col">
                 {/* 全选操作栏 */}
-                <div className="flex shrink-0 items-center justify-between border-b border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]/90 px-3 py-2.5 backdrop-blur-sm">
+                <div className="flex shrink-0 items-center justify-between border-b border-(--app-border) bg-(--app-surface)/90 px-3 py-2.5 backdrop-blur-sm">
                   <button
                     type="button"
                     onClick={handleToggleAll}
-                    className="inline-flex items-center gap-2 rounded-lg px-2 py-1 text-[11px] font-semibold text-[var(--app-primary-hover,#0284c7)] transition-colors hover:bg-[var(--app-primary-soft,rgba(14,165,233,0.1))]"
+                    className="inline-flex items-center gap-2 rounded-lg px-2 py-1 text-[11px] font-semibold text-(--app-primary-hover) transition-colors hover:bg-(--app-primary-soft)"
                   >
                     <span
                       className={`flex h-4 w-4 items-center justify-center rounded border ${
                         allFilteredSelected
-                          ? "border-[var(--app-primary,#0ea5e9)] bg-[var(--app-primary,#0ea5e9)] text-[var(--app-surface,#fff)]"
-                          : "border-[var(--app-border-strong,#d4d4d8)] bg-[var(--app-surface,#fff)]"
+                          ? "border-(--app-primary) bg-(--app-primary) text-(--app-surface)"
+                          : "border-(--app-border-strong) bg-(--app-surface)"
                       }`}
                     >
                       {allFilteredSelected && (
@@ -740,7 +740,7 @@ export function EmailSender({
                     </span>
                     {allFilteredSelected ? "取消全选" : "全选"}
                   </button>
-                  <span className="text-[10px] tabular-nums text-[var(--app-text-muted,#a1a1aa)]">
+                  <span className="text-[10px] tabular-nums text-(--app-text-muted)">
                     {filteredRecipients.length} 条
                   </span>
                 </div>

@@ -172,37 +172,37 @@ const providerColors: Record<
     bg: "from-[#10a37f]/20 to-[#10a37f]/8",
     text: "text-[#10a37f]",
     badge:
-      "bg-[#10a37f]/15 text-[#34d399] ring-1 ring-[var(--app-border)] dark:text-[#6ee7b7]",
+      "bg-[#10a37f]/15 text-[#34d399] ring-1 ring-(--app-border) dark:text-[#6ee7b7]",
   },
   anthropic: {
     bg: "from-orange-500/15 to-orange-400/8",
     text: "text-orange-500",
     badge:
-      "bg-[var(--app-warning-soft)] text-[var(--app-warning)] ring-1 ring-[var(--app-border)]",
+      "bg-(--app-warning-soft) text-(--app-warning) ring-1 ring-(--app-border)",
   },
   deepseek: {
-    bg: "from-[var(--app-primary)]/15 to-[var(--app-accent)]/8",
-    text: "text-[var(--app-primary)]",
+    bg: "from-(--app-primary)/15 to-(--app-accent)/8",
+    text: "text-(--app-primary)",
     badge:
-      "bg-[var(--app-primary-soft)] text-[var(--app-primary)] ring-1 ring-[var(--app-border)]",
+      "bg-(--app-primary-soft) text-(--app-primary) ring-1 ring-(--app-border)",
   },
   moonshot: {
-    bg: "from-[var(--app-violet)]/15 to-[var(--app-primary)]/8",
-    text: "text-[var(--app-violet)]",
+    bg: "from-(--app-violet)/15 to-(--app-primary)/8",
+    text: "text-(--app-violet)",
     badge:
-      "bg-[var(--app-violet-soft)] text-[var(--app-violet)] ring-1 ring-[var(--app-border)]",
+      "bg-(--app-violet-soft) text-(--app-violet) ring-1 ring-(--app-border)",
   },
   alibaba: {
     bg: "from-orange-600/15 to-orange-500/8",
     text: "text-orange-500",
     badge:
-      "bg-[var(--app-warning-soft)] text-[var(--app-warning)] ring-1 ring-[var(--app-border)]",
+      "bg-(--app-warning-soft) text-(--app-warning) ring-1 ring-(--app-border)",
   },
   default: {
-    bg: "from-[var(--app-primary)]/15 to-[var(--app-accent)]/8",
-    text: "text-[var(--app-primary)]",
+    bg: "from-(--app-primary)/15 to-(--app-accent)/8",
+    text: "text-(--app-primary)",
     badge:
-      "bg-[var(--app-primary-soft)] text-[var(--app-primary)] ring-1 ring-[var(--app-border)]",
+      "bg-(--app-primary-soft) text-(--app-primary) ring-1 ring-(--app-border)",
   },
 };
 
@@ -280,8 +280,8 @@ const ModelIcon = ({ apiUrl }: { apiUrl: string }) => {
     );
   }
   return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--app-primary-soft)]">
-      <Bot className="h-5 w-5 text-[var(--app-primary)]" />
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--app-primary-soft)">
+      <Bot className="h-5 w-5 text-(--app-primary)" />
     </div>
   );
 };
@@ -306,7 +306,7 @@ const AiConfigCard = ({
   const provider = getProviderStyle(config.apiUrl);
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--app-shadow-sm)] transition-all duration-300 hover:border-[var(--app-border-strong)] hover:shadow-[var(--app-shadow)] hover:-translate-y-0.5">
+    <div className="group relative overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow-sm) transition-all duration-300 hover:border-(--app-border-strong) hover:shadow-(--app-shadow) hover:-translate-y-0.5">
       {/* Gradient top accent */}
       <div className={`h-1 w-full bg-linear-to-r ${provider.bg}`} />
 
@@ -318,17 +318,17 @@ const AiConfigCard = ({
             <ModelIcon apiUrl={config.apiUrl} />
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h3 className="truncate text-sm font-semibold text-[var(--app-text-primary)]">
+                <h3 className="truncate text-sm font-semibold text-(--app-text-primary)">
                   {config.name}
                 </h3>
                 {config.isDefault && (
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[var(--app-primary-soft)] px-2 py-0.5 text-[10px] font-semibold text-[var(--app-primary)] ring-1 ring-inset ring-[var(--app-border)]">
-                    <Star className="h-2.5 w-2.5 fill-[var(--app-primary)]" />
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-(--app-primary-soft) px-2 py-0.5 text-[10px] font-semibold text-(--app-primary) ring-1 ring-inset ring-(--app-border)">
+                    <Star className="h-2.5 w-2.5 fill-(--app-primary)" />
                     默认
                   </span>
                 )}
               </div>
-              <p className="mt-0.5 truncate font-mono text-xs text-[var(--app-text-muted)]">
+              <p className="mt-0.5 truncate font-mono text-xs text-(--app-text-muted)">
                 {config.model}
               </p>
             </div>
@@ -337,24 +337,24 @@ const AiConfigCard = ({
 
         {/* Info List */}
         <div className="space-y-2.5">
-          <div className="flex items-center gap-2 text-xs text-[var(--app-text-secondary)]">
+          <div className="flex items-center gap-2 text-xs text-(--app-text-secondary)">
             <span className="truncate font-mono">{config.apiUrl}</span>
           </div>
           {config.prompt && (
-            <p className="line-clamp-2 text-xs leading-relaxed text-[var(--app-text-secondary)]">
+            <p className="line-clamp-2 text-xs leading-relaxed text-(--app-text-secondary)">
               {config.prompt.replace(/\n+/g, " ").trim()}
             </p>
           )}
         </div>
 
         {/* Actions */}
-        <div className="mt-4 flex items-center justify-between border-t border-[var(--app-border-subtle)] pt-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <div className="mt-4 flex items-center justify-between border-t border-(--app-border-subtle) pt-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <div className="flex items-center gap-1">
             {!config.isDefault && (
               <button
                 onClick={onSetDefault}
                 disabled={loading}
-                className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[var(--app-text-muted)] transition-all hover:bg-[var(--app-warning-soft)] hover:text-[var(--app-warning)] disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-(--app-text-muted) transition-all hover:bg-(--app-warning-soft) hover:text-(--app-warning) disabled:cursor-not-allowed"
               >
                 <StarOff className="h-3.5 w-3.5" />
                 设为默认
@@ -366,7 +366,7 @@ const AiConfigCard = ({
               onClick={onEdit}
               disabled={loading}
               title="编辑"
-              className="rounded-lg p-1.5 text-[var(--app-text-secondary)] transition-all hover:bg-[var(--app-primary-soft)] hover:text-[var(--app-primary)] disabled:cursor-not-allowed"
+              className="rounded-lg p-1.5 text-(--app-text-secondary) transition-all hover:bg-(--app-primary-soft) hover:text-(--app-primary) disabled:cursor-not-allowed"
             >
               <svg
                 className="h-4 w-4"
@@ -383,7 +383,7 @@ const AiConfigCard = ({
               onClick={onDelete}
               disabled={loading}
               title="删除"
-              className="rounded-lg p-1.5 text-[var(--app-text-secondary)] transition-all hover:bg-[var(--app-danger-soft)] hover:text-[var(--app-danger)] disabled:cursor-not-allowed"
+              className="rounded-lg p-1.5 text-(--app-text-secondary) transition-all hover:bg-(--app-danger-soft) hover:text-(--app-danger) disabled:cursor-not-allowed"
             >
               <Trash2 className="h-4 w-4" />
             </button>
@@ -642,7 +642,7 @@ export function AiSettings() {
 
       {/* Default config warning */}
       {defaultConfigId && !formData.isDefault && (
-        <div className="flex items-start gap-3 rounded-xl border border-[var(--app-warning)]/35 bg-[var(--app-warning-soft)] px-4 py-3 text-sm text-[var(--app-warning)]">
+        <div className="flex items-start gap-3 rounded-xl border border-(--app-warning)/35 bg-(--app-warning-soft) px-4 py-3 text-sm text-(--app-warning)">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <p>
             当前默认配置 ID:{" "}
@@ -653,7 +653,7 @@ export function AiSettings() {
       )}
 
       {/* Basic config */}
-      <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-raised)]/80 p-5">
+      <div className="rounded-2xl border border-(--app-border) bg-(--app-surface-raised)/80 p-5">
         <div className="grid gap-4 md:grid-cols-2">
           <FormInput
             label="配置名称"
@@ -706,9 +706,9 @@ export function AiSettings() {
       </div>
 
       {/* Prompt section */}
-      <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-5">
+      <div className="rounded-2xl border border-(--app-border) bg-(--app-surface) p-5">
         <div className="mb-3 flex items-center justify-between">
-          <label className="flex items-center gap-1 text-sm font-medium text-[var(--app-text-primary)]">
+          <label className="flex items-center gap-1 text-sm font-medium text-(--app-text-primary)">
             <Bot className="h-4 w-4" />
             AI 提示词
           </label>
@@ -718,7 +718,7 @@ export function AiSettings() {
               <button
                 type="button"
                 onClick={() => setShowPromptTemplates((v) => !v)}
-                className="inline-flex items-center gap-1 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] px-3 py-1.5 text-xs font-medium text-[var(--app-text-secondary)] shadow-sm transition-colors hover:bg-[var(--app-surface)]"
+                className="inline-flex items-center gap-1 rounded-lg border border-(--app-border) bg-(--app-surface-raised) px-3 py-1.5 text-xs font-medium text-(--app-text-secondary) shadow-sm transition-colors hover:bg-(--app-surface)"
               >
                 <Bot className="h-3.5 w-3.5" />
                 模板
@@ -731,27 +731,27 @@ export function AiSettings() {
                     className="fixed inset-0 z-10"
                     onClick={() => setShowPromptTemplates(false)}
                   />
-                  <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--app-shadow)]">
+                  <div className="absolute right-0 top-full z-20 mt-1 w-64 rounded-xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow)">
                     {PROMPT_TEMPLATES.map((t) => (
                       <button
                         key={t.id}
                         type="button"
                         onClick={() => applyTemplate(t.id)}
-                        className={`flex w-full flex-col items-start gap-0.5 border-b border-[var(--app-border-subtle)] px-4 py-3 text-left transition-colors hover:bg-[var(--app-surface-raised)] ${
+                        className={`flex w-full flex-col items-start gap-0.5 border-b border-(--app-border-subtle) px-4 py-3 text-left transition-colors hover:bg-(--app-surface-raised) ${
                           activeTemplateId === t.id
-                            ? "bg-[var(--app-primary-soft)]"
+                            ? "bg-(--app-primary-soft)"
                             : ""
                         }`}
                       >
                         <div className="flex w-full items-center justify-between">
-                          <span className="text-sm font-medium text-[var(--app-text-primary)]">
+                          <span className="text-sm font-medium text-(--app-text-primary)">
                             {t.label}
                           </span>
                           {activeTemplateId === t.id && (
-                            <CheckCircle2 className="h-4 w-4 text-[var(--app-primary)]" />
+                            <CheckCircle2 className="h-4 w-4 text-(--app-primary)" />
                           )}
                         </div>
-                        <span className="text-xs text-[var(--app-text-muted)]">
+                        <span className="text-xs text-(--app-text-muted)">
                           {t.description}
                         </span>
                       </button>
@@ -766,7 +766,7 @@ export function AiSettings() {
               onClick={() =>
                 setFormData((p) => ({ ...p, prompt: defaultPrompt }))
               }
-              className="inline-flex items-center gap-1 rounded-lg border border-[var(--app-border)] bg-[var(--app-surface-raised)] px-2 py-1.5 text-xs text-[var(--app-text-secondary)] shadow-sm transition-colors hover:bg-[var(--app-surface)]"
+              className="inline-flex items-center gap-1 rounded-lg border border-(--app-border) bg-(--app-surface-raised) px-2 py-1.5 text-xs text-(--app-text-secondary) shadow-sm transition-colors hover:bg-(--app-surface)"
               title="恢复默认提示词"
             >
               <RefreshCw className="h-3 w-3" />
@@ -779,17 +779,17 @@ export function AiSettings() {
           onChange={(e) =>
             setFormData((p) => ({ ...p, prompt: e.target.value }))
           }
-          className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-3.5 py-3 text-sm text-[var(--app-text-primary)] transition-colors placeholder:text-[var(--app-text-muted)] focus:border-[var(--app-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--app-ring)]"
+          className="w-full rounded-xl border border-(--app-border) bg-(--app-surface) px-3.5 py-3 text-sm text-(--app-text-primary) transition-colors placeholder:text-(--app-text-muted) focus:border-(--app-primary) focus:outline-none focus:ring-2 focus:ring-(--app-ring)"
           placeholder="请输入 AI 提示词"
           rows={8}
         />
         <div className="mt-2 flex items-center justify-between">
-          <p className="text-xs text-[var(--app-text-muted)]">
+          <p className="text-xs text-(--app-text-muted)">
             可用变量：
-            <code className="rounded bg-[var(--app-surface-raised)] px-1 font-mono text-[var(--app-primary)]">
+            <code className="rounded bg-(--app-surface-raised) px-1 font-mono text-(--app-primary)">
               {"{job_requirements}"}
             </code>{" "}
-            <code className="rounded bg-[var(--app-surface-raised)] px-1 font-mono text-[var(--app-primary)]">
+            <code className="rounded bg-(--app-surface-raised) px-1 font-mono text-(--app-primary)">
               {"{resume_content}"}
             </code>
           </p>
@@ -799,7 +799,7 @@ export function AiSettings() {
               void navigator.clipboard.writeText(formData.prompt);
               toast.success("提示词已复制");
             }}
-            className="inline-flex items-center gap-1 text-xs text-[var(--app-text-muted)] transition-colors hover:text-[var(--app-primary)]"
+            className="inline-flex items-center gap-1 text-xs text-(--app-text-muted) transition-colors hover:text-(--app-primary)"
           >
             <Copy className="h-3 w-3" />
             复制
@@ -810,17 +810,17 @@ export function AiSettings() {
   );
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle)]">
+    <div className="overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow-sm) ring-1 ring-(--app-border-subtle)">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between p-6 pb-0">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-[var(--app-text-primary)]">
+          <h2 className="text-lg font-semibold tracking-tight text-(--app-text-primary)">
             AI 配置
           </h2>
-          <p className="mt-1 text-sm text-[var(--app-text-secondary)]">
+          <p className="mt-1 text-sm text-(--app-text-secondary)">
             配置多个 AI 模型用于简历筛选
             {configs.length > 0 && (
-              <span className="ml-2 rounded-full bg-[var(--app-surface-raised)] px-2 py-0.5 text-xs font-medium text-[var(--app-text-secondary)] ring-1 ring-[var(--app-border-subtle)]">
+              <span className="ml-2 rounded-full bg-(--app-surface-raised) px-2 py-0.5 text-xs font-medium text-(--app-text-secondary) ring-1 ring-(--app-border-subtle)">
                 {configs.length} 个配置
               </span>
             )}
@@ -829,7 +829,7 @@ export function AiSettings() {
         <button
           type="button"
           onClick={handleAdd}
-          className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-[var(--app-primary)] to-[var(--app-accent)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95"
+          className="inline-flex items-center gap-2 rounded-2xl bg-linear-to-r from-(--app-primary) to-(--app-accent) px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95"
         >
           <Plus className="h-4 w-4" />
           添加配置
@@ -877,15 +877,15 @@ export function AiSettings() {
         onClose={closeModal}
         title={
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--app-primary-soft)]">
-              <Bot className="h-4 w-4 text-[var(--app-primary)]" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-(--app-primary-soft)">
+              <Bot className="h-4 w-4 text-(--app-primary)" />
             </div>
             <div>
-              <span className="text-base font-semibold text-[var(--app-text-primary)]">
+              <span className="text-base font-semibold text-(--app-text-primary)">
                 {modalTitle}
               </span>
               {isDirty && (
-                <span className="ml-2 rounded-full bg-[var(--app-warning-soft)] px-2 py-0.5 text-xs font-medium text-[var(--app-warning)]">
+                <span className="ml-2 rounded-full bg-(--app-warning-soft) px-2 py-0.5 text-xs font-medium text-(--app-warning)">
                   有未保存的更改
                 </span>
               )}
@@ -900,7 +900,7 @@ export function AiSettings() {
               type="button"
               onClick={closeModal}
               disabled={saving || testResult.status === "testing"}
-              className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 text-sm font-medium text-[var(--app-text-primary)] shadow-sm transition-colors hover:bg-[var(--app-surface-raised)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl border border-(--app-border) bg-(--app-surface) px-4 py-2 text-sm font-medium text-(--app-text-primary) shadow-sm transition-colors hover:bg-(--app-surface-raised) disabled:cursor-not-allowed disabled:opacity-50"
             >
               取消
             </button>
@@ -915,14 +915,14 @@ export function AiSettings() {
                   testResult.status === "testing" ||
                   saving
                 }
-                className="inline-flex items-center gap-2 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-2 text-sm font-medium text-[var(--app-text-primary)] shadow-sm transition-colors hover:bg-[var(--app-surface-raised)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-(--app-border) bg-(--app-surface) px-4 py-2 text-sm font-medium text-(--app-text-primary) shadow-sm transition-colors hover:bg-(--app-surface-raised) disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {testResult.status === "testing" ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : testResult.status === "success" ? (
-                  <CheckCircle2 className="h-4 w-4 text-[var(--app-success)]" />
+                  <CheckCircle2 className="h-4 w-4 text-(--app-success)" />
                 ) : testResult.status === "error" ? (
-                  <AlertCircle className="h-4 w-4 text-[var(--app-danger)]" />
+                  <AlertCircle className="h-4 w-4 text-(--app-danger)" />
                 ) : (
                   <Bot className="h-4 w-4" />
                 )}
@@ -933,7 +933,7 @@ export function AiSettings() {
                 type="button"
                 onClick={() => void handleSave()}
                 disabled={!formData.name.trim() || !formData.apiUrl || saving}
-                className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[var(--app-primary)] to-[var(--app-accent)] px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-(--app-primary) to-(--app-accent) px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {saving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />

@@ -31,13 +31,13 @@ const RECENT_IMPORT_LIMIT = 3;
 
 function SkeletonPie() {
   return (
-    <div className="flex min-h-[240px] animate-pulse flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
-      <div className="border-b border-[var(--app-border,#e4e4e7)] px-6 py-4">
-        <div className="h-4 w-32 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-        <div className="mt-2 h-3 w-48 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+    <div className="flex min-h-[240px] animate-pulse flex-col overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface)">
+      <div className="border-b border-(--app-border) px-6 py-4">
+        <div className="h-4 w-32 rounded bg-(--app-skeleton)" />
+        <div className="mt-2 h-3 w-48 rounded bg-(--app-skeleton)" />
       </div>
       <div className="m-4 flex flex-1 items-center justify-center">
-        <div className="h-40 w-40 rounded-full bg-[var(--app-skeleton,#f4f4f6)]" />
+        <div className="h-40 w-40 rounded-full bg-(--app-skeleton)" />
       </div>
     </div>
   );
@@ -45,27 +45,27 @@ function SkeletonPie() {
 
 function SkeletonTable() {
   return (
-    <div className="flex animate-pulse flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
-      <div className="border-b border-[var(--app-border,#e4e4e7)] px-6 py-4">
-        <div className="h-4 w-24 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-        <div className="mt-2 h-3 w-32 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+    <div className="flex animate-pulse flex-col overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface)">
+      <div className="border-b border-(--app-border) px-6 py-4">
+        <div className="h-4 w-24 rounded bg-(--app-skeleton)" />
+        <div className="mt-2 h-3 w-32 rounded bg-(--app-skeleton)" />
       </div>
       <div className="flex flex-1 flex-col gap-px">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-4 border-b border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-6 py-4 last:border-b-0"
+            className="flex items-center gap-4 border-b border-(--app-border) bg-(--app-surface) px-6 py-4 last:border-b-0"
           >
             <div className="flex items-center gap-3 flex-1">
-              <div className="h-9 w-9 shrink-0 rounded-lg bg-[var(--app-skeleton,#f4f4f6)]" />
-              <div className="h-3 w-28 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-9 w-9 shrink-0 rounded-lg bg-(--app-skeleton)" />
+              <div className="h-3 w-28 rounded bg-(--app-skeleton)" />
             </div>
-            <div className="h-5 w-16 rounded-full bg-[var(--app-skeleton,#f4f4f6)]" />
-            <div className="h-3 w-40 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-            <div className="h-3 w-28 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+            <div className="h-5 w-16 rounded-full bg-(--app-skeleton)" />
+            <div className="h-3 w-40 rounded bg-(--app-skeleton)" />
+            <div className="h-3 w-28 rounded bg-(--app-skeleton)" />
             <div className="ml-auto flex gap-2">
-              <div className="h-8 w-8 rounded-md bg-[var(--app-skeleton,#f4f4f6)]" />
-              <div className="h-8 w-8 rounded-md bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-8 w-8 rounded-md bg-(--app-skeleton)" />
+              <div className="h-8 w-8 rounded-md bg-(--app-skeleton)" />
             </div>
           </div>
         ))}
@@ -338,16 +338,16 @@ export default function Resumes() {
         {/* 页头：与 Dashboard 完全对齐 */}
         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--app-text-muted,#a1a1aa)]">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-(--app-text-muted)">
               Resume Management
             </p>
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--app-text-primary,#18181b)] sm:text-[1.75rem]">
+            <h1 className="text-2xl font-semibold tracking-tight text-(--app-text-primary) sm:text-[1.75rem]">
               简历管理
             </h1>
           </div>
           <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center sm:justify-end">
             <div
-              className="inline-flex rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/80 p-1"
+              className="inline-flex rounded-xl border border-(--app-border) bg-(--app-surface-raised)/80 p-1"
               role="group"
               aria-label="切换视图"
             >
@@ -358,8 +358,8 @@ export default function Resumes() {
                   rounded-lg px-4 py-2 text-sm font-medium transition-colors
                   ${
                     viewMode === "overview"
-                      ? "bg-[var(--app-surface,#fff)] text-[var(--app-text-primary,#18181b)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border,#e4e4e7)]"
-                      : "text-[var(--app-text-secondary,#52525b)] hover:text-[var(--app-text-primary,#18181b)]"
+                      ? "bg-(--app-surface) text-(--app-text-primary) shadow-(--app-shadow-sm) ring-1 ring-(--app-border)"
+                      : "text-(--app-text-secondary) hover:text-(--app-text-primary)"
                   }
                 `}
               >
@@ -372,8 +372,8 @@ export default function Resumes() {
                   rounded-lg px-4 py-2 text-sm font-medium transition-colors
                   ${
                     viewMode === "all"
-                      ? "bg-[var(--app-surface,#fff)] text-[var(--app-text-primary,#18181b)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border,#e4e4e7)]"
-                      : "text-[var(--app-text-secondary,#52525b)] hover:text-[var(--app-text-primary,#18181b)]"
+                      ? "bg-(--app-surface) text-(--app-text-primary) shadow-(--app-shadow-sm) ring-1 ring-(--app-border)"
+                      : "text-(--app-text-secondary) hover:text-(--app-text-primary)"
                   }
                 `}
               >
@@ -402,12 +402,12 @@ export default function Resumes() {
               )}
             </div>
             <div className="lg:col-span-4">
-              <div className="flex h-full flex-col rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] p-5 shadow-[var(--app-shadow-sm)]">
+              <div className="flex h-full flex-col rounded-3xl border border-(--app-border) bg-(--app-surface) p-5 shadow-(--app-shadow-sm)">
                 <div className="mb-auto space-y-1.5">
-                  <h2 className="text-sm font-semibold tracking-tight text-[var(--app-text-primary,#18181b)]">
+                  <h2 className="text-sm font-semibold tracking-tight text-(--app-text-primary)">
                     操作
                   </h2>
-                  <p className="text-xs leading-relaxed text-[var(--app-text-secondary,#52525b)]">
+                  <p className="text-xs leading-relaxed text-(--app-text-secondary)">
                     上传文件或从已绑定邮箱拉取附件，快速进入智能筛选。
                   </p>
                 </div>
@@ -415,15 +415,15 @@ export default function Resumes() {
                   <button
                     type="button"
                     onClick={handleOpenImportModal}
-                    className="group flex h-11 w-full items-center justify-center gap-2.5 rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/60 text-sm font-medium text-[var(--app-text-secondary,#52525b)] backdrop-blur-sm transition-all hover:border-[var(--app-primary,#0ea5e9)]/20 hover:bg-[var(--app-primary-soft,rgba(14,165,233,0.1))]/70 hover:text-[var(--app-primary-hover,#0284c7)]"
+                    className="group flex h-11 w-full items-center justify-center gap-2.5 rounded-2xl border border-(--app-border) bg-(--app-surface-raised)/60 text-sm font-medium text-(--app-text-secondary) backdrop-blur-sm transition-all hover:border-(--app-primary)/20 hover:bg-(--app-primary-soft)/70 hover:text-(--app-primary-hover)"
                   >
-                    <Mail className="h-4 w-4 shrink-0 text-[var(--app-text-muted,#a1a1aa)] transition-colors group-hover:text-[var(--app-primary,#0ea5e9)]" />
+                    <Mail className="h-4 w-4 shrink-0 text-(--app-text-muted) transition-colors group-hover:text-(--app-primary)" />
                     邮箱导入
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowModal(true)}
-                    className="group flex h-11 w-full items-center justify-center gap-2.5 rounded-2xl bg-[var(--app-primary,#0ea5e9)] text-sm font-semibold text-white shadow-[var(--app-shadow-primary)] transition-all hover:bg-[var(--app-primary-hover,#0284c7)]"
+                    className="group flex h-11 w-full items-center justify-center gap-2.5 rounded-2xl bg-(--app-primary) text-sm font-semibold text-white shadow-(--app-shadow-primary) transition-all hover:bg-(--app-primary-hover)"
                   >
                     <Upload className="h-4 w-4 shrink-0 transition-transform group-hover:scale-110" />
                     上传简历
@@ -436,15 +436,15 @@ export default function Resumes() {
 
         {/* 列表 */}
         <section
-          className="overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]"
+          className="overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow-sm) ring-1 ring-(--app-border-subtle)"
           aria-label="简历列表"
         >
-          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--app-border,#e4e4e7)]/80 px-6 py-4 sm:flex-row sm:items-end">
+          <div className="flex flex-wrap items-start justify-between gap-3 border-b border-(--app-border)/80 px-6 py-4 sm:flex-row sm:items-end">
             <div>
-              <h2 className="text-base font-semibold tracking-tight text-[var(--app-text-primary,#18181b)]">
+              <h2 className="text-base font-semibold tracking-tight text-(--app-text-primary)">
                 {viewMode === "overview" ? "最近导入" : "全部列表"}
               </h2>
-              <p className="mt-0.5 text-xs text-[var(--app-text-secondary,#52525b)]">
+              <p className="mt-0.5 text-xs text-(--app-text-secondary)">
                 {viewMode === "overview"
                   ? `仅展示最近导入的前 ${RECENT_IMPORT_LIMIT} 份 · 当前 ${displayedResumes.length} 份`
                   : `共 ${resumes.length} 份 · 每页 ${listPageSize} 条 · 按导入时间从新到旧`}

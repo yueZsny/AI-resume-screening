@@ -48,11 +48,11 @@ export function ResumeStatusPieChart({
     const item = payload[0].payload;
     const pct = total > 0 ? ((item.value / total) * 100).toFixed(1) : "0";
     return (
-      <div className="rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]/95 px-3.5 py-2.5 text-sm shadow-[var(--app-shadow)] backdrop-blur-sm">
-        <p className="text-xs font-medium text-[var(--app-text-muted,#a1a1aa)]">{item.name}</p>
-        <p className="text-base font-semibold tabular-nums text-[var(--app-text-primary,#18181b)]">
+      <div className="rounded-xl border border-(--app-border) bg-(--app-surface)/95 px-3.5 py-2.5 text-sm shadow-(--app-shadow) backdrop-blur-sm">
+        <p className="text-xs font-medium text-(--app-text-muted)">{item.name}</p>
+        <p className="text-base font-semibold tabular-nums text-(--app-text-primary)">
           {item.value} 份
-          <span className="ml-1.5 text-xs font-normal text-[var(--app-text-muted,#a1a1aa)]">
+          <span className="ml-1.5 text-xs font-normal text-(--app-text-muted)">
             ({pct}%)
           </span>
         </p>
@@ -62,40 +62,40 @@ export function ResumeStatusPieChart({
 
   if (total === 0) {
     return (
-      <div className="flex min-h-[240px] flex-col items-center justify-center rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)]">
-        <p className="text-sm text-[var(--app-text-muted,#a1a1aa)]">暂无数据</p>
+      <div className="flex min-h-[240px] flex-col items-center justify-center rounded-3xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow-sm)">
+        <p className="text-sm text-(--app-text-muted)">暂无数据</p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-[240px] flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)]">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--app-border,#e4e4e7)]/80 px-5 py-4 sm:px-6">
+    <div className="flex min-h-[240px] flex-col overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow-sm)">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-(--app-border)/80 px-5 py-4 sm:px-6">
         <div>
-          <h2 className="text-base font-semibold tracking-tight text-[var(--app-text-primary,#18181b)]">
+          <h2 className="text-base font-semibold tracking-tight text-(--app-text-primary)">
             简历状态分布
           </h2>
-          <p className="mt-0.5 text-xs text-[var(--app-text-secondary,#52525b)]">
+          <p className="mt-0.5 text-xs text-(--app-text-secondary)">
             共 {total.toLocaleString()} 份 · 按状态统计
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--app-warning-soft,#fef3c7)] px-2.5 py-1 text-[11px] font-medium text-[var(--app-warning,#f59e0b)]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-(--app-warning-soft) px-2.5 py-1 text-[11px] font-medium text-(--app-warning)"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-warning,#f59e0b)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-(--app-warning)" />
             待筛选 {pending}
           </span>
           <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--app-success-soft,#dcfce7)] px-2.5 py-1 text-[11px] font-medium text-[var(--app-success,#22c55e)]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-(--app-success-soft) px-2.5 py-1 text-[11px] font-medium text-(--app-success)"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-success,#22c55e)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-(--app-success)" />
             已通过 {passed}
           </span>
           <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-[var(--app-danger-soft,#fee2e2)] px-2.5 py-1 text-[11px] font-medium text-[var(--app-danger,#ef4444)]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-(--app-danger-soft) px-2.5 py-1 text-[11px] font-medium text-(--app-danger)"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--app-danger,#ef4444)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-(--app-danger)" />
             已拒绝 {rejected}
           </span>
         </div>
@@ -132,10 +132,10 @@ export function ResumeStatusPieChart({
           </ResponsiveContainer>
           {total > 0 && (
             <div className="pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
-              <span className="text-2xl font-bold tabular-nums text-[var(--app-text-primary,#18181b)]">
+              <span className="text-2xl font-bold tabular-nums text-(--app-text-primary)">
                 {total}
               </span>
-              <span className="text-xs text-[var(--app-text-secondary,#52525b)]">全部</span>
+              <span className="text-xs text-(--app-text-secondary)">全部</span>
             </div>
           )}
         </div>

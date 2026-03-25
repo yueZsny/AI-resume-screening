@@ -78,10 +78,10 @@ export default function EmailTemplates() {
         {/* 页面头部：标题在左，分段控件靠右 */}
         <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--app-text-muted,#a1a1aa)]">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-(--app-text-muted)">
               Email Hub
             </p>
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--app-text-primary,#18181b)] sm:text-[1.75rem]">
+            <h1 className="text-2xl font-semibold tracking-tight text-(--app-text-primary) sm:text-[1.75rem]">
               邮件管理
             </h1>
           </div>
@@ -91,7 +91,7 @@ export default function EmailTemplates() {
             <div
               role="group"
               aria-label="邮件功能切换"
-              className="flex w-full max-w-md items-stretch gap-1 rounded-2xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)] p-1 shadow-[inset_0_1px_0_var(--app-border,rgba(255,255,255,0.5))] sm:ml-auto sm:w-auto sm:max-w-none"
+              className="flex w-full max-w-md items-stretch gap-1 rounded-2xl border border-(--app-border) bg-(--app-surface-raised) p-1 shadow-[inset_0_1px_0_var(--app-border,rgba(255,255,255,0.5))] sm:ml-auto sm:w-auto sm:max-w-none"
             >
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -114,8 +114,8 @@ export default function EmailTemplates() {
                       text-sm font-medium transition-all duration-200 sm:flex-none sm:justify-start sm:px-4
                       ${
                         isActive
-                          ? "bg-[var(--app-surface,#fff)] text-[var(--app-text-primary,#18181b)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border,#e4e4e7)]"
-                          : "text-[var(--app-text-secondary,#52525b)] hover:bg-[var(--app-surface,#fff)]/55 hover:text-[var(--app-text-primary,#18181b)]"
+                          ? "bg-(--app-surface) text-(--app-text-primary) shadow-(--app-shadow-sm) ring-1 ring-(--app-border)"
+                          : "text-(--app-text-secondary) hover:bg-(--app-surface)/55 hover:text-(--app-text-primary)"
                       }
                     `}
                   >
@@ -123,7 +123,7 @@ export default function EmailTemplates() {
                       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${
                         isActive
                           ? `bg-linear-to-br ${tab.accent} text-white shadow-[0_2px_8px_-2px_rgba(14,165,233,0.4)]`
-                          : "bg-[var(--app-surface-raised,#fafafa)] text-[var(--app-text-muted,#a1a1aa)] group-hover/tab:bg-[var(--app-surface,#fff)] group-hover/tab:text-[var(--app-text-secondary,#52525b)]"
+                          : "bg-(--app-surface-raised) text-(--app-text-muted) group-hover/tab:bg-(--app-surface) group-hover/tab:text-(--app-text-secondary)"
                       }`}
                     >
                       <Icon className="h-[15px] w-[15px]" strokeWidth={1.85} />
@@ -182,18 +182,18 @@ export default function EmailTemplates() {
                   key={m.desc}
                   className={`
                     group relative flex flex-col rounded-2xl border
-                    bg-[var(--app-surface,#fff)] dark:bg-[var(--app-surface,#161b22)]
-                    border-[var(--app-border,#e4e4e7)] dark:border-[var(--app-border,rgba(255,255,255,0.10))]
-                    px-5 py-5 shadow-[var(--app-shadow-sm)]
-                    ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] dark:ring-[var(--app-border-subtle,rgba(255,255,255,0.06))]
+                    bg-(--app-surface) dark:bg-(--app-surface)
+                    border-(--app-border) dark:border-(--app-border)
+                    px-5 py-5 shadow-(--app-shadow-sm)
+                    ring-1 ring-(--app-border-subtle) dark:ring-(--app-border-subtle)
                     transition-all duration-300 ease-out
-                    hover:-translate-y-0.5 hover:shadow-[var(--app-shadow)]
+                    hover:-translate-y-0.5 hover:shadow-(--app-shadow)
                     sm:px-6 sm:py-6
                     ${m.bar} border-t-[3px]
                   `}
                 >
                   <div className="mb-4 flex items-start justify-between gap-2">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--app-text-muted,#a1a1aa)]">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-(--app-text-muted)">
                       {m.desc}
                     </span>
                     <div
@@ -205,7 +205,7 @@ export default function EmailTemplates() {
                       />
                     </div>
                   </div>
-                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-[var(--app-text-primary,#18181b)] lg:text-[2rem]">
+                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-(--app-text-primary) lg:text-[2rem]">
                     {m.value.toLocaleString()}
                   </p>
                 </div>

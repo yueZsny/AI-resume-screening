@@ -95,9 +95,9 @@ function MatchRadarTooltip({
   if (!active || !payload?.[0]?.payload) return null;
   const row = payload[0].payload;
   return (
-    <div className="rounded-lg border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)]/95 px-2.5 py-2 text-xs shadow-[var(--app-shadow)]">
-      <p className="font-semibold text-[var(--app-ai-text,#1e40af)]">{row.dimension}</p>
-      <p className="mt-0.5 tabular-nums text-[var(--app-primary,#0ea5e9)]">{row.value}%</p>
+    <div className="rounded-lg border border-(--app-ai-border) bg-(--app-surface)/95 px-2.5 py-2 text-xs shadow-(--app-shadow)">
+      <p className="font-semibold text-(--app-ai-text)">{row.dimension}</p>
+      <p className="mt-0.5 tabular-nums text-(--app-primary)">{row.value}%</p>
     </div>
   );
 }
@@ -160,21 +160,21 @@ function MatchScoreRing({ score }: { score: number }) {
     s >= 80
       ? ([
           "#2563eb",
-          "text-[var(--app-primary-hover,#0284c7)]",
-          "bg-[var(--app-primary,#0ea5e9)] text-white",
+          "text-(--app-primary-hover)",
+          "bg-(--app-primary) text-white",
           "优秀",
         ] as const)
       : s >= 60
         ? ([
             "#60a5fa",
-            "text-[var(--app-primary,#0ea5e9)]",
-            "bg-[var(--app-ai-soft,#eff6ff)] text-[var(--app-primary-hover,#0284c7)]",
+            "text-(--app-primary)",
+            "bg-(--app-ai-soft) text-(--app-primary-hover)",
             "良好",
           ] as const)
         : ([
             "#bfdbfe",
-            "text-[var(--app-primary,#0ea5e9)]/40",
-            "bg-[var(--app-ai-soft,#eff6ff)] text-[var(--app-primary,#0ea5e9)]",
+            "text-(--app-primary)/40",
+            "bg-(--app-ai-soft) text-(--app-primary)",
             "待定",
           ] as const);
   return (
@@ -208,7 +208,7 @@ function MatchScoreRing({ score }: { score: number }) {
           >
             {s}
           </span>
-          <span className="mt-1 text-[9px] font-bold uppercase tracking-widest text-[var(--app-text-muted,#a1a1aa)]">
+          <span className="mt-1 text-[9px] font-bold uppercase tracking-widest text-(--app-text-muted)">
             分
           </span>
         </div>
@@ -768,7 +768,7 @@ export function AiScreening() {
       />
 
       <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[var(--app-ai-bg,#f0f6ff)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-(--app-ai-bg)"
         aria-hidden
       />
 
@@ -776,15 +776,15 @@ export function AiScreening() {
         <header className="mb-6 flex flex-col gap-4 sm:mb-7 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--app-ai-soft,#eff6ff)] px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-[var(--app-primary,#0ea5e9)] ring-1 ring-inset ring-[var(--app-ai-border,rgba(59,130,246,0.2))]">
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-(--app-ai-soft) px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-(--app-primary) ring-1 ring-inset ring-(--app-ai-border)">
                 <Sparkles className="h-3 w-3" />
                 AI Screening
               </span>
             </div>
-            <h1 className="mt-2.5 text-[1.6rem] font-black tracking-tight text-[var(--app-ai-text,#1e40af)] sm:text-[1.85rem]">
+            <h1 className="mt-2.5 text-[1.6rem] font-black tracking-tight text-(--app-ai-text) sm:text-[1.85rem]">
               智能筛选工作台
             </h1>
-            <p className="mt-1 max-w-lg text-sm leading-relaxed text-[var(--app-ai-text,#1e40af)]/60">
+            <p className="mt-1 max-w-lg text-sm leading-relaxed text-(--app-ai-text)/60">
               点击列表中的候选人，在侧滑抽屉中查看 AI
               评分与推荐理由，一键决策通过或拒绝。
             </p>
@@ -792,21 +792,21 @@ export function AiScreening() {
           <button
             type="button"
             onClick={() => setJobConfigModalOpen(true)}
-            className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl border border-[var(--app-surface,#fff)]/70 bg-[var(--app-surface,#fff)]/35 px-4 py-2.5 text-sm font-semibold text-[var(--app-primary-hover,#0284c7)] shadow-[var(--app-shadow-primary)] backdrop-blur-xl transition-all hover:bg-[var(--app-surface,#fff)]/50 hover:border-[var(--app-ai-border,rgba(59,130,246,0.2))]/70 hover:shadow-[var(--app-shadow-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)] focus-visible:ring-offset-2 lg:self-auto"
+            className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl border border-(--app-surface)/70 bg-(--app-surface)/35 px-4 py-2.5 text-sm font-semibold text-(--app-primary-hover) shadow-(--app-shadow-primary) backdrop-blur-xl transition-all hover:bg-(--app-surface)/50 hover:border-(--app-ai-border)/70 hover:shadow-(--app-shadow-primary) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) focus-visible:ring-offset-2 lg:self-auto"
           >
             <Settings2 className="h-4 w-4" aria-hidden />
             岗位与 AI 配置
           </button>
         </header>
         <section
-          className="flex min-h-[min(820px,calc(100dvh-5.5rem))] w-full min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)]/80 shadow-[var(--app-shadow-sm)] backdrop-blur-md"
+          className="flex min-h-[min(820px,calc(100dvh-5.5rem))] w-full min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-(--app-ai-border) bg-(--app-surface)/80 shadow-(--app-shadow-sm) backdrop-blur-md"
           aria-label="AI 筛选工作台"
         >
           <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col">
-            <aside className="flex min-h-0 min-w-0 flex-1 flex-col border-r border-[var(--app-ai-border,rgba(59,130,246,0.2))]/80 bg-linear-to-b from-[var(--app-ai-soft,#eff6ff)]/50 to-[var(--app-surface,#fff)]/40">
-              <div className="shrink-0 border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 px-4 pb-3 pt-4">
+            <aside className="flex min-h-0 min-w-0 flex-1 flex-col border-r border-(--app-ai-border)/80 bg-linear-to-b from-(--app-ai-soft)/50 to-(--app-surface)/40">
+              <div className="shrink-0 border-b border-(--app-ai-border)/90 px-4 pb-3 pt-4">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                  <h2 className="text-sm font-bold tracking-tight text-[var(--app-ai-text,#1e40af)]">
+                  <h2 className="text-sm font-bold tracking-tight text-(--app-ai-text)">
                     候选人列表
                   </h2>
                   <div className="flex min-w-0 max-w-full flex-wrap items-center justify-end gap-2">
@@ -845,7 +845,7 @@ export function AiScreening() {
                         );
                         toast.success(`已选用「${tpl.name}」`);
                       }}
-                      className="h-8 max-w-full min-w-0 flex-1 rounded-lg border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)] px-2 text-xs font-medium text-[var(--app-ai-text,#1e40af)] shadow-sm focus:border-[var(--app-primary,#0ea5e9)] focus:outline-none focus:ring-2 focus:ring-[var(--app-ai-border,rgba(59,130,246,0.2))] sm:max-w-44 sm:flex-none"
+                      className="h-8 max-w-full min-w-0 flex-1 rounded-lg border border-(--app-ai-border) bg-(--app-surface) px-2 text-xs font-medium text-(--app-ai-text) shadow-sm focus:border-(--app-primary) focus:outline-none focus:ring-2 focus:ring-(--app-ai-border) sm:max-w-44 sm:flex-none"
                     >
                       <option value="">无模版（清空条件）</option>
                       <option value="__custom__">
@@ -861,29 +861,29 @@ export function AiScreening() {
                     <button
                       type="button"
                       onClick={() => setPreFilterModalOpen(true)}
-                      className={`inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)] focus-visible:ring-offset-1 ${
+                      className={`inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) focus-visible:ring-offset-1 ${
                         isEmptyPreFilter(preFilterConfig)
-                          ? "text-[var(--app-ai-text,#1e40af)]/45 hover:bg-[var(--app-ai-soft,#eff6ff)]/80 hover:text-[var(--app-primary-hover,#0284c7)]"
-                          : "bg-[var(--app-ai-soft,#eff6ff)] text-[var(--app-primary-hover,#0284c7)] ring-1 ring-[var(--app-ai-border,rgba(59,130,246,0.2))]"
+                          ? "text-(--app-ai-text)/45 hover:bg-(--app-ai-soft)/80 hover:text-(--app-primary-hover)"
+                          : "bg-(--app-ai-soft) text-(--app-primary-hover) ring-1 ring-(--app-ai-border)"
                       }`}
                     >
                       <Filter className="h-3.5 w-3.5" aria-hidden />
                       筛选条件
                       {!isEmptyPreFilter(preFilterConfig) && (
                         <span
-                          className="ml-0.5 h-1.5 w-1.5 rounded-full bg-[var(--app-primary,#0ea5e9)]"
+                          className="ml-0.5 h-1.5 w-1.5 rounded-full bg-(--app-primary)"
                           aria-hidden
                         />
                       )}
                     </button>
-                    <span className="shrink-0 tabular-nums text-[11px] font-medium text-[var(--app-ai-text,#1e40af)]/45">
+                    <span className="shrink-0 tabular-nums text-[11px] font-medium text-(--app-ai-text)/45">
                       {filteredResumes.length} 条
                     </span>
                   </div>
                 </div>
                 <div className="relative">
                   <Search
-                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--app-primary,#0ea5e9)]/70"
+                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--app-primary)/70"
                     aria-hidden
                   />
                   <input
@@ -891,14 +891,14 @@ export function AiScreening() {
                     placeholder="搜索姓名或邮箱…"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-9 w-full rounded-lg border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)] pl-9 pr-3 text-sm text-[var(--app-ai-text,#1e40af)] placeholder:text-[var(--app-ai-text,#1e40af)]/35 shadow-sm transition focus:border-[var(--app-primary,#0ea5e9)] focus:outline-none focus:ring-2 focus:ring-[var(--app-ai-border,rgba(59,130,246,0.2))]"
+                    className="h-9 w-full rounded-lg border border-(--app-ai-border) bg-(--app-surface) pl-9 pr-3 text-sm text-(--app-ai-text) placeholder:text-(--app-ai-text)/35 shadow-sm transition focus:border-(--app-primary) focus:outline-none focus:ring-2 focus:ring-(--app-ai-border)"
                     aria-label="搜索候选人"
                   />
                 </div>
               </div>
 
               <div
-                className="shrink-0 border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface,#fff)]/30 px-3 py-2"
+                className="shrink-0 border-b border-(--app-ai-border)/90 bg-(--app-surface)/30 px-3 py-2"
                 role="group"
                 aria-label="按状态筛选"
               >
@@ -930,8 +930,8 @@ export function AiScreening() {
                       onClick={() => setStatusFilter(key)}
                       className={`shrink-0 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                         statusFilter === key
-                          ? "bg-[var(--app-primary,#0ea5e9)] text-white shadow-sm"
-                          : "text-[var(--app-ai-text,#1e40af)]/50 hover:bg-[var(--app-ai-soft,#eff6ff)]/80 hover:text-[var(--app-primary-hover,#0284c7)]"
+                          ? "bg-(--app-primary) text-white shadow-sm"
+                          : "text-(--app-ai-text)/50 hover:bg-(--app-ai-soft)/80 hover:text-(--app-primary-hover)"
                       }`}
                     >
                       {color && (
@@ -956,12 +956,12 @@ export function AiScreening() {
                     aria-label="加载中"
                   >
                     <table className="w-full min-w-[640px] border-collapse">
-                      <thead className="border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface-raised,#fafafa)]/95 text-[var(--app-text-secondary,#52525b)]">
+                      <thead className="border-b border-(--app-ai-border)/90 bg-(--app-surface-raised)/95 text-(--app-text-secondary)">
                         <tr className="text-[11px] font-semibold uppercase tracking-wide">
                           <th className="px-3 py-2.5 pl-4 text-left">候选人</th>
                           <th className="px-3 py-2.5 text-left normal-case">
                             <span className="block leading-tight">匹配分</span>
-                            <span className="mt-0.5 block text-[10px] font-normal tracking-normal text-[var(--app-text-muted,#a1a1aa)]">
+                            <span className="mt-0.5 block text-[10px] font-normal tracking-normal text-(--app-text-muted)">
                               状态
                             </span>
                           </th>
@@ -974,9 +974,9 @@ export function AiScreening() {
                       </thead>
                       <tbody>
                         {Array.from({ length: 6 }).map((_, i) => (
-                          <tr key={i} className="border-b border-[var(--app-ai-soft,#eff6ff)]/80">
+                          <tr key={i} className="border-b border-(--app-ai-soft)/80">
                             <td colSpan={5} className="px-3 py-3">
-                              <div className="h-12 animate-pulse rounded-lg bg-linear-to-r from-[var(--app-ai-soft,#eff6ff)]/40 via-[var(--app-ai-soft,#eff6ff)]/60 to-[var(--app-ai-soft,#eff6ff)]/30" />
+                              <div className="h-12 animate-pulse rounded-lg bg-linear-to-r from-(--app-ai-soft)/40 via-(--app-ai-soft)/60 to-(--app-ai-soft)/30" />
                             </td>
                           </tr>
                         ))}
@@ -985,18 +985,18 @@ export function AiScreening() {
                   </div>
                 ) : filteredResumes.length === 0 ? (
                   <div className="flex flex-col items-center justify-center px-5 py-14 text-center">
-                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--app-ai-soft,#eff6ff)]/60 ring-1 ring-[var(--app-ai-border,rgba(59,130,246,0.2))]">
+                    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-(--app-ai-soft)/60 ring-1 ring-(--app-ai-border)">
                       <FileText
-                        className="h-7 w-7 text-[var(--app-primary,#0ea5e9)]"
+                        className="h-7 w-7 text-(--app-primary)"
                         strokeWidth={1.5}
                       />
                     </div>
-                    <p className="text-sm font-bold text-[var(--app-ai-text,#1e40af)]">
+                    <p className="text-sm font-bold text-(--app-ai-text)">
                       {resumes.length === 0
                         ? "还没有简历"
                         : "没有符合条件的候选人"}
                     </p>
-                    <p className="mt-1 max-w-56 text-xs leading-relaxed text-[var(--app-ai-text,#1e40af)]/50">
+                    <p className="mt-1 max-w-56 text-xs leading-relaxed text-(--app-ai-text)/50">
                       {resumes.length === 0
                         ? "上传后即可在此用 AI 初筛"
                         : "调整搜索、状态或筛选条件试试"}
@@ -1004,7 +1004,7 @@ export function AiScreening() {
                     {resumes.length === 0 && (
                       <Link
                         to="/app/resumes"
-                        className="mt-5 inline-flex items-center rounded-xl bg-[var(--app-primary,#0ea5e9)] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[var(--app-primary-hover,#0284c7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)] focus-visible:ring-offset-2"
+                        className="mt-5 inline-flex items-center rounded-xl bg-(--app-primary) px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-(--app-primary-hover) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) focus-visible:ring-offset-2"
                       >
                         前往简历管理
                       </Link>
@@ -1025,8 +1025,8 @@ export function AiScreening() {
               </div>
 
               {!loading && filteredResumes.length > 0 && (
-                <div className="flex shrink-0 items-center justify-between gap-2 border-t border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface,#fff)]/90 px-3 py-2.5 backdrop-blur-sm">
-                  <span className="text-[11px] tabular-nums text-[var(--app-ai-text,#1e40af)]/45">
+                <div className="flex shrink-0 items-center justify-between gap-2 border-t border-(--app-ai-border)/90 bg-(--app-surface)/90 px-3 py-2.5 backdrop-blur-sm">
+                  <span className="text-[11px] tabular-nums text-(--app-ai-text)/45">
                     {listTotalPages > 1
                       ? `第 ${listPage} / ${listTotalPages} 页 · ${filteredResumes.length} 条`
                       : `${filteredResumes.length} 条`}
@@ -1037,7 +1037,7 @@ export function AiScreening() {
                         type="button"
                         onClick={() => setListPage((p) => Math.max(1, p - 1))}
                         disabled={listPage <= 1}
-                        className="rounded-lg border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)] p-1.5 text-[var(--app-primary,#0ea5e9)] transition-colors hover:bg-[var(--app-ai-soft,#eff6ff)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)] disabled:pointer-events-none disabled:opacity-30"
+                        className="rounded-lg border border-(--app-ai-border) bg-(--app-surface) p-1.5 text-(--app-primary) transition-colors hover:bg-(--app-ai-soft) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) disabled:pointer-events-none disabled:opacity-30"
                         aria-label="上一页"
                       >
                         <ChevronLeft className="h-3.5 w-3.5" />
@@ -1048,7 +1048,7 @@ export function AiScreening() {
                           setListPage((p) => Math.min(listTotalPages, p + 1))
                         }
                         disabled={listPage >= listTotalPages}
-                        className="rounded-lg border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)] p-1.5 text-[var(--app-primary,#0ea5e9)] transition-colors hover:bg-[var(--app-ai-soft,#eff6ff)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)] disabled:pointer-events-none disabled:opacity-30"
+                        className="rounded-lg border border-(--app-ai-border) bg-(--app-surface) p-1.5 text-(--app-primary) transition-colors hover:bg-(--app-ai-soft) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) disabled:pointer-events-none disabled:opacity-30"
                         aria-label="下一页"
                       >
                         <ChevronRight className="h-3.5 w-3.5" />
@@ -1075,11 +1075,11 @@ export function AiScreening() {
                 </DrawerHeader>
                 {selectedResume ? (
                   <>
-                    <div className="sticky top-0 z-10 shrink-0 border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)]/80 px-4 py-4 pr-14 shadow-[var(--app-shadow-sm)] backdrop-blur-md sm:px-6 sm:pr-14">
+                    <div className="sticky top-0 z-10 shrink-0 border-b border-(--app-ai-border) bg-(--app-surface)/80 px-4 py-4 pr-14 shadow-(--app-shadow-sm) backdrop-blur-md sm:px-6 sm:pr-14">
                       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <h2 className="text-lg font-semibold tracking-tight text-[var(--app-text-primary,#18181b)] sm:text-xl">
+                            <h2 className="text-lg font-semibold tracking-tight text-(--app-text-primary) sm:text-xl">
                               {selectedResume.name}
                             </h2>
                             <span
@@ -1088,7 +1088,7 @@ export function AiScreening() {
                               {listStatusLabels[selectedResume.status]}
                             </span>
                           </div>
-                          <p className="mt-1 text-xs text-[var(--app-text-secondary,#52525b)] sm:text-sm">
+                          <p className="mt-1 text-xs text-(--app-text-secondary) sm:text-sm">
                             导入时间 {formatDateShort(selectedResume.createdAt)}
                           </p>
                         </div>
@@ -1099,9 +1099,9 @@ export function AiScreening() {
                               onClick={() =>
                                 openResumeInNewWindow(selectedResume)
                               }
-                              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--app-surface,#fff)]/70 bg-[var(--app-surface,#fff)]/35 px-3 py-2 text-sm font-medium text-[var(--app-primary-hover,#0284c7)] shadow-[var(--app-shadow-primary)] backdrop-blur-xl transition-all hover:bg-[var(--app-surface,#fff)]/50 hover:border-[var(--app-ai-border,rgba(59,130,246,0.2))]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)]"
+                              className="inline-flex items-center gap-1.5 rounded-xl border border-(--app-surface)/70 bg-(--app-surface)/35 px-3 py-2 text-sm font-medium text-(--app-primary-hover) shadow-(--app-shadow-primary) backdrop-blur-xl transition-all hover:bg-(--app-surface)/50 hover:border-(--app-ai-border)/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary)"
                             >
-                              <ExternalLink className="h-4 w-4 text-[var(--app-primary,#0ea5e9)]" />
+                              <ExternalLink className="h-4 w-4 text-(--app-primary)" />
                               打开简历
                             </button>
                           )}
@@ -1120,7 +1120,7 @@ export function AiScreening() {
                                   ? "请先在「岗位与 AI 配置」中填写岗位要求"
                                   : undefined
                               }
-                              className="inline-flex items-center gap-1.5 rounded-xl bg-[var(--app-primary,#0ea5e9)] px-3.5 py-2 text-sm font-semibold text-white shadow-[var(--app-shadow)] transition-all hover:bg-[var(--app-primary-hover,#0284c7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-45"
+                              className="inline-flex items-center gap-1.5 rounded-xl bg-(--app-primary) px-3.5 py-2 text-sm font-semibold text-white shadow-(--app-shadow) transition-all hover:bg-(--app-primary-hover) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-45"
                             >
                               {screeningResumeId === selectedResumeId ? (
                                 <Loader2
@@ -1138,22 +1138,22 @@ export function AiScreening() {
                     </div>
                     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 sm:px-6">
                       <div className="mx-auto max-w-3xl space-y-5">
-                        <div className="min-w-0 rounded-2xl border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-ai-soft,#eff6ff)]/40 p-5 shadow-sm backdrop-blur-sm">
-                          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--app-ai-text,#1e40af)]">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--app-surface,#fff)] ring-1 ring-[var(--app-ai-border,rgba(59,130,246,0.2))]">
-                              <BarChart3 className="h-4 w-4 text-[var(--app-primary,#0ea5e9)]" />
+                        <div className="min-w-0 rounded-2xl border border-(--app-ai-border) bg-(--app-ai-soft)/40 p-5 shadow-sm backdrop-blur-sm">
+                          <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-(--app-ai-text)">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-(--app-surface) ring-1 ring-(--app-ai-border)">
+                              <BarChart3 className="h-4 w-4 text-(--app-primary)" />
                             </span>
                             匹配度
                           </h3>
                           {selectedResult ? (
                             <div className="flex flex-col gap-4">
-                              <div className="space-y-1 border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/80 pb-3 text-center sm:text-left">
-                                <p className="text-xs font-medium uppercase tracking-wide text-[var(--app-primary,#0ea5e9)]">
+                              <div className="space-y-1 border-b border-(--app-ai-border)/80 pb-3 text-center sm:text-left">
+                                <p className="text-xs font-medium uppercase tracking-wide text-(--app-primary)">
                                   {selectedResult.dimensions
                                     ? "简历关键点（模型分项）"
                                     : "简历关键点（参考分布）"}
                                 </p>
-                                <p className="text-[11px] leading-relaxed text-[var(--app-primary,#0ea5e9)]/85">
+                                <p className="text-[11px] leading-relaxed text-(--app-primary)/85">
                                   {selectedResult.dimensions
                                     ? "七项对应简历常见关键板块，由本次 AI 依据简历与岗位要求打分；与下方评估理由一致，悬停顶点查看分值"
                                     : "尚无模型分项：以下为按综合分生成的参考图形，重新运行「AI 筛选」可生成分项"}
@@ -1175,37 +1175,37 @@ export function AiScreening() {
                             </div>
                           ) : (
                             <div className="flex flex-col items-center py-6 text-center">
-                              <p className="text-sm text-[var(--app-primary,#0ea5e9)]">
+                              <p className="text-sm text-(--app-primary)">
                                 尚未生成匹配分
                               </p>
-                              <p className="mt-1 text-xs text-[var(--app-primary,#0ea5e9)]/40">
+                              <p className="mt-1 text-xs text-(--app-primary)/40">
                                 点击右上角「AI 筛选」运行模型
                               </p>
                             </div>
                           )}
                         </div>
 
-                        <div className="overflow-hidden rounded-2xl border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)]/80 shadow-sm backdrop-blur-sm">
+                        <div className="overflow-hidden rounded-2xl border border-(--app-ai-border) bg-(--app-surface)/80 shadow-sm backdrop-blur-sm">
                           <button
                             type="button"
                             onClick={() => setReasoningOpen((v) => !v)}
                             aria-expanded={reasoningOpen ? true : undefined}
-                            className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-[var(--app-ai-soft,#eff6ff)]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--app-primary,#0ea5e9)]"
+                            className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-(--app-ai-soft)/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--app-primary)"
                           >
-                            <span className="flex items-center gap-2 text-sm font-semibold text-[var(--app-ai-text,#1e40af)]">
-                              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--app-ai-soft,#eff6ff)]">
-                                <MessageSquare className="h-3.5 w-3.5 shrink-0 text-[var(--app-primary,#0ea5e9)]" />
+                            <span className="flex items-center gap-2 text-sm font-semibold text-(--app-ai-text)">
+                              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--app-ai-soft)">
+                                <MessageSquare className="h-3.5 w-3.5 shrink-0 text-(--app-primary)" />
                               </span>
                               AI 评估理由
                             </span>
                             {reasoningOpen ? (
-                              <ChevronUp className="h-4 w-4 shrink-0 text-[var(--app-primary,#0ea5e9)]/40" />
+                              <ChevronUp className="h-4 w-4 shrink-0 text-(--app-primary)/40" />
                             ) : (
-                              <ChevronDown className="h-4 w-4 shrink-0 text-[var(--app-primary,#0ea5e9)]/40" />
+                              <ChevronDown className="h-4 w-4 shrink-0 text-(--app-primary)/40" />
                             )}
                           </button>
                           {reasoningOpen && (
-                            <div className="border-t border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-ai-soft,#eff6ff)]/30 px-4 py-4">
+                            <div className="border-t border-(--app-ai-border) bg-(--app-ai-soft)/30 px-4 py-4">
                               <AiReasoningContent
                                 text={(selectedResult?.reasoning ?? "").trim()}
                               />
@@ -1214,13 +1214,13 @@ export function AiScreening() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)]/80 px-4 py-3 shadow-[var(--app-shadow-sm)] backdrop-blur-md sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:px-6">
+                    <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-(--app-ai-border) bg-(--app-surface)/80 px-4 py-3 shadow-(--app-shadow-sm) backdrop-blur-md sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:px-6">
                       <button
                         type="button"
                         onClick={() =>
                           handleUpdateStatus(selectedResume.id, "pending")
                         }
-                        className="rounded-xl border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)] px-4 py-2.5 text-sm font-semibold text-[var(--app-primary,#0ea5e9)] shadow-sm transition-all hover:bg-[var(--app-ai-soft,#eff6ff)] hover:border-[var(--app-primary,#0ea5e9)]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)]"
+                        className="rounded-xl border border-(--app-ai-border) bg-(--app-surface) px-4 py-2.5 text-sm font-semibold text-(--app-primary) shadow-sm transition-all hover:bg-(--app-ai-soft) hover:border-(--app-primary)/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary)"
                       >
                         待定
                       </button>
@@ -1229,7 +1229,7 @@ export function AiScreening() {
                         onClick={() =>
                           handleUpdateStatus(selectedResume.id, "rejected")
                         }
-                        className="rounded-xl border border-[var(--app-ai-border,rgba(59,130,246,0.2))] bg-[var(--app-surface,#fff)] px-5 py-2.5 text-sm font-semibold text-[var(--app-primary,#0ea5e9)] shadow-sm transition-all hover:bg-[var(--app-ai-soft,#eff6ff)] hover:text-[var(--app-primary,#0ea5e9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)]"
+                        className="rounded-xl border border-(--app-ai-border) bg-(--app-surface) px-5 py-2.5 text-sm font-semibold text-(--app-primary) shadow-sm transition-all hover:bg-(--app-ai-soft) hover:text-(--app-primary) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary)"
                       >
                         拒绝
                       </button>
@@ -1238,7 +1238,7 @@ export function AiScreening() {
                         onClick={() =>
                           handleUpdateStatus(selectedResume.id, "passed")
                         }
-                        className="rounded-xl bg-[var(--app-primary,#0ea5e9)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--app-shadow)] transition-all hover:bg-[var(--app-primary-hover,#0284c7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-primary,#0ea5e9)] focus-visible:ring-offset-2"
+                        className="rounded-xl bg-(--app-primary) px-5 py-2.5 text-sm font-semibold text-white shadow-(--app-shadow) transition-all hover:bg-(--app-primary-hover) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--app-primary) focus-visible:ring-offset-2"
                       >
                         通过
                       </button>

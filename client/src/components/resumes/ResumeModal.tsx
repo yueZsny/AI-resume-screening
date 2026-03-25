@@ -71,11 +71,11 @@ const DropZone = ({ selectedFile, onFileChange }: DropZoneProps) => {
   };
 
   const getFileGradient = () => {
-    if (!selectedFile) return "from-[var(--app-skeleton,#f4f4f6)] to-[var(--app-border,#e4e4e7)]";
+    if (!selectedFile) return "from-(--app-skeleton) to-(--app-border)";
     const ext = selectedFile.name.split(".").pop()?.toLowerCase();
-    if (ext === "pdf") return "from-[var(--app-danger,#ef4444)] to-[var(--app-danger,#ef4444)]";
-    if (ext === "docx" || ext === "doc") return "from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary,#0ea5e9)]";
-    return "from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary,#0ea5e9)]";
+    if (ext === "pdf") return "from-(--app-danger) to-(--app-danger)";
+    if (ext === "docx" || ext === "doc") return "from-(--app-primary) to-(--app-primary)";
+    return "from-(--app-primary) to-(--app-primary)";
   };
 
   const inputId = "resume-upload-input";
@@ -96,8 +96,8 @@ const DropZone = ({ selectedFile, onFileChange }: DropZoneProps) => {
         onDragOver={handleDragOver}
         className={`
           block overflow-hidden rounded-2xl border-2 border-dashed
-          ${selectedFile ? "border-[var(--app-primary,#0ea5e9)]/20 bg-[var(--app-primary-soft,rgba(14,165,233,0.1))]/40" : "border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)]/30"}
-          ${onFileChange ? "cursor-pointer transition-colors hover:border-[var(--app-border-strong,#d4d4d8)] hover:bg-[var(--app-surface-raised,#fafafa)]/50" : ""}
+          ${selectedFile ? "border-(--app-primary)/20 bg-(--app-primary-soft)/40" : "border-(--app-border) bg-(--app-surface-raised)/30"}
+          ${onFileChange ? "cursor-pointer transition-colors hover:border-(--app-border-strong) hover:bg-(--app-surface-raised)/50" : ""}
         `}
       >
         <div className="p-6 text-center">
@@ -116,10 +116,10 @@ const DropZone = ({ selectedFile, onFileChange }: DropZoneProps) => {
               <>
                 {/* File Info */}
                 <div>
-                  <p className="text-sm font-semibold text-[var(--app-text-primary,#18181b)] mb-0.5 truncate max-w-[20rem]">
+                  <p className="text-sm font-semibold text-(--app-text-primary) mb-0.5 truncate max-w-[20rem]">
                     {selectedFile.name}
                   </p>
-                  <p className="text-xs text-[var(--app-text-secondary,#52525b)]">
+                  <p className="text-xs text-(--app-text-secondary)">
                     {formatFileSize(selectedFile.size)}
                   </p>
                 </div>
@@ -127,10 +127,10 @@ const DropZone = ({ selectedFile, onFileChange }: DropZoneProps) => {
             ) : (
               /* Empty state */
               <div>
-                <p className="text-sm font-semibold text-[var(--app-text-primary,#18181b)] mb-1">
+                <p className="text-sm font-semibold text-(--app-text-primary) mb-1">
                   点击或拖拽文件到此处
                 </p>
-                <p className="text-xs text-[var(--app-text-muted,#a1a1aa)]">
+                <p className="text-xs text-(--app-text-muted)">
                   支持 PDF、Word 文档，最大 10MB
                 </p>
               </div>
@@ -162,7 +162,7 @@ const ImportSection = ({
   if (loadingConfigs) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary,#0ea5e9)] shadow-[var(--app-shadow-primary)]">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-(--app-primary) to-(--app-primary) shadow-(--app-shadow-primary)">
           <Loader2 className="h-7 w-7 animate-spin text-white" />
         </div>
       </div>
@@ -174,15 +174,15 @@ const ImportSection = ({
       <div className="space-y-6 py-6 text-center">
         {/* Empty State */}
         <div className="flex justify-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--app-skeleton,#f4f4f6)] to-[var(--app-border,#e4e4e7)] shadow-inner">
-            <Inbox className="h-10 w-10 text-[var(--app-text-muted,#a1a1aa)]" />
+          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-(--app-skeleton) to-(--app-border) shadow-inner">
+            <Inbox className="h-10 w-10 text-(--app-text-muted)" />
           </div>
         </div>
         <div>
-          <h3 className="mb-2 text-lg font-semibold text-[var(--app-text-primary,#18181b)]">
+          <h3 className="mb-2 text-lg font-semibold text-(--app-text-primary)">
             暂无邮箱配置
           </h3>
-          <p className="text-sm text-[var(--app-text-secondary,#52525b)]">
+          <p className="text-sm text-(--app-text-secondary)">
             请先在设置中添加邮箱配置后再导入简历
           </p>
         </div>
@@ -194,8 +194,8 @@ const ImportSection = ({
     <div className="space-y-6">
       {/* Email Config Selection */}
       <div className="space-y-3">
-        <label className="flex items-center gap-2 text-sm font-semibold text-[var(--app-text-secondary,#52525b)]">
-          <Mail className="h-4 w-4 text-[var(--app-primary,#0ea5e9)]" />
+        <label className="flex items-center gap-2 text-sm font-semibold text-(--app-text-secondary)">
+          <Mail className="h-4 w-4 text-(--app-primary)" />
           选择邮箱账号
         </label>
         <div className="relative">
@@ -204,11 +204,11 @@ const ImportSection = ({
             value={selectedConfigId || ""}
             onChange={(e) => onConfigChange(Number(e.target.value) || null)}
             className="
-              w-full appearance-none rounded-xl border border-[var(--app-border,#e4e4e7)]
-              bg-[var(--app-surface,#fff)] px-4 py-3 pr-10 text-sm text-[var(--app-text-primary,#18181b)]
-              focus:border-[var(--app-primary,#0ea5e9)] focus:outline-none focus:ring-2
-              focus:ring-[var(--app-ring,#rgba(14,165,233,0.2))] transition-all
-              cursor-pointer hover:border-[var(--app-primary,#0ea5e9)]/20
+              w-full appearance-none rounded-xl border border-(--app-border)
+              bg-(--app-surface) px-4 py-3 pr-10 text-sm text-(--app-text-primary)
+              focus:border-(--app-primary) focus:outline-none focus:ring-2
+              focus:ring-(--app-ring) transition-all
+              cursor-pointer hover:border-(--app-primary)/20
             "
           >
             <option value="">请选择邮箱</option>
@@ -238,20 +238,20 @@ const ImportSection = ({
       </div>
 
       {/* Info Card */}
-      <div className="relative overflow-hidden rounded-2xl border border-[var(--app-primary,#0ea5e9)]/10 bg-gradient-to-br from-[var(--app-primary-soft,rgba(14,165,233,0.1))]/90 to-[var(--app-primary-soft,rgba(14,165,233,0.1))]/80 p-5">
-        <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-[var(--app-primary,#0ea5e9)]/10" />
+      <div className="relative overflow-hidden rounded-2xl border border-(--app-primary)/10 bg-gradient-to-br from-(--app-primary-soft)/90 to-(--app-primary-soft)/80 p-5">
+        <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-(--app-primary)/10" />
 
         <div className="relative flex gap-4">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--app-primary,#0ea5e9)]/10">
-            <AlertCircle className="h-5 w-5 text-[var(--app-primary,#0ea5e9)]" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--app-primary)/10">
+            <AlertCircle className="h-5 w-5 text-(--app-primary)" />
           </div>
           <div>
-            <h4 className="mb-1 text-sm font-semibold text-[var(--app-text-primary,#18181b)]">
+            <h4 className="mb-1 text-sm font-semibold text-(--app-text-primary)">
               导入说明
             </h4>
-            <p className="text-sm leading-relaxed text-[var(--app-text-secondary,#52525b)]">
+            <p className="text-sm leading-relaxed text-(--app-text-secondary)">
               系统将自动扫描该邮箱最近{" "}
-              <span className="font-semibold text-[var(--app-primary,#0ea5e9)]">7 天</span>{" "}
+              <span className="font-semibold text-(--app-primary)">7 天</span>{" "}
               的邮件，查找包含 PDF 或 Word 格式简历附件的邮件并导入。
             </p>
           </div>
@@ -260,24 +260,24 @@ const ImportSection = ({
 
       {/* Selected Config Preview */}
       {selectedConfigId && (
-        <div className="rounded-xl bg-[var(--app-surface-raised,#fafafa)] p-4">
+        <div className="rounded-xl bg-(--app-surface-raised) p-4">
           {(() => {
             const config = emailConfigs.find((c) => c.id === selectedConfigId);
             if (!config) return null;
             return (
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary,#0ea5e9)] shadow-[var(--app-shadow-sm)]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-(--app-primary) to-(--app-primary) shadow-(--app-shadow-sm)">
                   <Mail className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-[var(--app-text-primary,#18181b)]">
+                  <p className="text-sm font-medium text-(--app-text-primary)">
                     {config.email}
                   </p>
-                  <p className="text-xs text-[var(--app-text-secondary,#52525b)]">
+                  <p className="text-xs text-(--app-text-secondary)">
                     将从此邮箱导入简历附件
                   </p>
                 </div>
-                <CheckCircle2 className="ml-auto h-5 w-5 text-[var(--app-success,#22c55e)]" />
+                <CheckCircle2 className="ml-auto h-5 w-5 text-(--app-success)" />
               </div>
             );
           })()}
@@ -319,19 +319,19 @@ export function ResumeModal({
     if (isUpload) {
       return (
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary,#0ea5e9)] shadow-[var(--app-shadow-sm)]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-(--app-primary) to-(--app-primary) shadow-(--app-shadow-sm)">
             <Upload className="h-4 w-4 text-white" />
           </div>
-          <span className="text-sm font-semibold text-[var(--app-text-primary,#18181b)]">上传简历</span>
+          <span className="text-sm font-semibold text-(--app-text-primary)">上传简历</span>
         </div>
       );
     }
     return (
       <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[var(--app-primary,#0ea5e9)] to-[var(--app-primary,#0ea5e9)] shadow-[var(--app-shadow-sm)]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-(--app-primary) to-(--app-primary) shadow-(--app-shadow-sm)">
             <Mail className="h-4 w-4 text-white" />
           </div>
-          <span className="text-sm font-semibold text-[var(--app-text-primary,#18181b)]">从邮箱导入</span>
+          <span className="text-sm font-semibold text-(--app-text-primary)">从邮箱导入</span>
       </div>
     );
   };
@@ -368,9 +368,9 @@ export function ResumeModal({
           <button
             onClick={handleClose}
             className="
-              rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-4 py-2
-              text-sm font-medium text-[var(--app-text-secondary,#52525b)]
-              hover:bg-[var(--app-surface-raised,#fafafa)] hover:border-[var(--app-border-strong,#d4d4d8)]
+              rounded-xl border border-(--app-border) bg-(--app-surface) px-4 py-2
+              text-sm font-medium text-(--app-text-secondary)
+              hover:bg-(--app-surface-raised) hover:border-(--app-border-strong)
               transition-all disabled:opacity-50
             "
           >
@@ -381,9 +381,9 @@ export function ResumeModal({
             disabled={isSubmitDisabled}
             className="
               flex items-center gap-1.5 rounded-xl
-              bg-[var(--app-primary,#0ea5e9)] px-4 py-2 text-sm font-medium text-white
-              shadow-[var(--app-shadow-sm)] hover:bg-[var(--app-primary-hover,#0284c7)]
-              transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[var(--app-primary,#0ea5e9)]
+              bg-(--app-primary) px-4 py-2 text-sm font-medium text-white
+              shadow-(--app-shadow-sm) hover:bg-(--app-primary-hover)
+              transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-(--app-primary)
             "
           >
             {getSubmitButtonContent()}

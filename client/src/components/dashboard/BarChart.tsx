@@ -36,11 +36,11 @@ const CustomTooltip = ({
 }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]/95 px-3.5 py-2.5 text-sm shadow-[var(--app-shadow)] backdrop-blur-sm">
-      <p className="text-xs font-medium text-[var(--app-text-muted,#a1a1aa)]">{label}</p>
-      <p className="text-base font-semibold tabular-nums text-[var(--app-primary,#0ea5e9)]">
+    <div className="rounded-xl border border-(--app-border) bg-(--app-surface)/95 px-3.5 py-2.5 text-sm shadow-(--app-shadow) backdrop-blur-sm">
+      <p className="text-xs font-medium text-(--app-text-muted)">{label}</p>
+      <p className="text-base font-semibold tabular-nums text-(--app-primary)">
         {payload[0].value}{" "}
-        <span className="text-xs font-normal text-[var(--app-text-muted,#a1a1aa)]">份</span>
+        <span className="text-xs font-normal text-(--app-text-muted)">份</span>
       </p>
     </div>
   );
@@ -56,25 +56,25 @@ export function WeeklyBarChart({ data }: WeeklyBarChartProps) {
   const allZero = chartData.every((d) => d.count === 0);
 
   return (
-    <div className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] shadow-[var(--app-shadow-sm)] ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--app-border,#e4e4e7)]/80 px-5 py-4 sm:px-6">
+    <div className="flex h-full min-h-[300px] flex-col overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface) shadow-(--app-shadow-sm) ring-1 ring-(--app-border-subtle)">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-(--app-border)/80 px-5 py-4 sm:px-6">
         <div>
-          <h2 className="text-base font-semibold tracking-tight text-[var(--app-text-primary,#18181b)]">
+          <h2 className="text-base font-semibold tracking-tight text-(--app-text-primary)">
             本周简历趋势
           </h2>
-          <p className="mt-0.5 text-xs text-[var(--app-text-secondary,#52525b)]">
+          <p className="mt-0.5 text-xs text-(--app-text-secondary)">
             按创建时间统计的每日新增
           </p>
         </div>
         {allZero ? (
-          <span className="rounded-full border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface-raised,#fafafa)] px-2.5 py-1 text-[11px] font-medium text-[var(--app-text-secondary,#52525b)]">
+          <span className="rounded-full border border-(--app-border) bg-(--app-surface-raised) px-2.5 py-1 text-[11px] font-medium text-(--app-text-secondary)">
             本周暂无新增
           </span>
         ) : null}
       </div>
 
       <div className="flex flex-1 flex-col px-3 pb-4 pt-2 sm:px-5">
-        <div className="relative flex-1 rounded-2xl bg-[var(--app-surface-raised,#fafafa)] p-3 ring-1 ring-inset ring-[var(--app-border-subtle,rgba(0,0,0,0.04))] sm:p-4">
+        <div className="relative flex-1 rounded-2xl bg-(--app-surface-raised) p-3 ring-1 ring-inset ring-(--app-border-subtle) sm:p-4">
           <div className="h-[200px] w-full sm:h-[220px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart

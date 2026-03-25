@@ -14,29 +14,29 @@ const statConfig = [
     key: "total" as const,
     label: "总候选人",
     icon: Users,
-    colorClass: "text-[var(--app-text-secondary)]",
-    bgClass: "bg-[var(--app-surface-raised)]",
+    colorClass: "text-(--app-text-secondary)",
+    bgClass: "bg-(--app-surface-raised)",
   },
   {
     key: "passed" as const,
     label: "通过",
     icon: CheckCircle,
-    colorClass: "text-[var(--app-success)]",
-    bgClass: "bg-[var(--app-success-soft)]",
+    colorClass: "text-(--app-success)",
+    bgClass: "bg-(--app-success-soft)",
   },
   {
     key: "failed" as const,
     label: "淘汰",
     icon: XCircle,
-    colorClass: "text-[var(--app-danger)]",
-    bgClass: "bg-[var(--app-danger-soft)]",
+    colorClass: "text-(--app-danger)",
+    bgClass: "bg-(--app-danger-soft)",
   },
   {
     key: "pending" as const,
     label: "待评估",
     icon: Clock,
-    colorClass: "text-[var(--app-warning)]",
-    bgClass: "bg-[var(--app-warning-soft)]",
+    colorClass: "text-(--app-warning)",
+    bgClass: "bg-(--app-warning-soft)",
   },
 ];
 
@@ -54,13 +54,13 @@ export const StatsBar: React.FC<StatsBarProps> = ({
       {statConfig.map(({ key, label, icon: Icon, colorClass, bgClass }) => (
         <div
           key={key}
-          className="flex items-center gap-3 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] px-4 py-3 shadow-[var(--app-shadow-sm)] transition-shadow duration-200 hover:shadow-[var(--app-shadow)]"
+          className="flex items-center gap-3 rounded-xl border border-(--app-border) bg-(--app-surface) px-4 py-3 shadow-(--app-shadow-sm) transition-shadow duration-200 hover:shadow-(--app-shadow)"
         >
           <div className={`rounded-lg p-2 ${bgClass}`}>
             <Icon className={`h-4 w-4 ${colorClass}`} />
           </div>
           <div>
-            <p className="mb-1 text-xs leading-none text-[var(--app-text-muted)]">
+            <p className="mb-1 text-xs leading-none text-(--app-text-muted)">
               {label}
             </p>
             <p className={`text-xl font-bold leading-none ${colorClass}`}>
@@ -70,7 +70,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({
         </div>
       ))}
 
-      <div className="flex items-center gap-3 rounded-xl border border-[var(--app-primary)]/30 bg-[var(--app-primary)] px-4 py-3 shadow-[var(--app-shadow-sm)]">
+      <div className="flex items-center gap-3 rounded-xl border border-(--app-primary)/30 bg-(--app-primary) px-4 py-3 shadow-(--app-shadow-sm)">
         <div className="rounded-lg bg-white/15 p-2">
           <TrendingUp className="h-4 w-4 text-white" aria-hidden />
         </div>

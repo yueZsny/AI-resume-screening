@@ -50,20 +50,20 @@ export function StatCardList({ stats }: { stats: DashboardStats }) {
             key={m.field}
             className={`
               group relative flex flex-col rounded-2xl border
-              bg-[var(--app-surface,#fff)]
-              border-[var(--app-border,#e4e4e7)]
+              bg-(--app-surface)
+              border-(--app-border)
               px-5 py-5
-              shadow-[var(--app-shadow-sm)]
-              ring-1 ring-[var(--app-border-subtle,rgba(0,0,0,0.04))]
+              shadow-(--app-shadow-sm)
+              ring-1 ring-(--app-border-subtle)
               transition-all duration-300 ease-out
               hover:-translate-y-0.5
-              hover:shadow-[var(--app-shadow)]
+              hover:shadow-(--app-shadow)
               hover:ring-2 sm:px-6 sm:py-6
               ${m.bar} border-t-[3px] ${m.hoverRing}
             `}
           >
             <div className="mb-4 flex items-start justify-between gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--app-text-muted,#a1a1aa)]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-(--app-text-muted)">
                 {m.desc}
               </span>
               <div
@@ -72,7 +72,7 @@ export function StatCardList({ stats }: { stats: DashboardStats }) {
                 <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
               </div>
             </div>
-            <p className="text-3xl font-semibold tabular-nums tracking-tight text-[var(--app-text-primary,#18181b)] lg:text-[2rem]">
+            <p className="text-3xl font-semibold tabular-nums tracking-tight text-(--app-text-primary) lg:text-[2rem]">
               {stats[m.field].toLocaleString()}
             </p>
           </div>

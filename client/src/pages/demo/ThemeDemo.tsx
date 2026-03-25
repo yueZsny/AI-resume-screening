@@ -55,8 +55,8 @@ function ColorPaletteSection() {
     <section className="space-y-5">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {colorGroups.map((group) => (
-          <div key={group.label} className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-5">
-            <h3 className="mb-4 text-sm font-semibold text-[var(--color-demo-text-primary)]">{group.label}</h3>
+          <div key={group.label} className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-5">
+            <h3 className="mb-4 text-sm font-semibold text-(--color-demo-text-primary)">{group.label}</h3>
             <div className="grid grid-cols-2 gap-3">
               {group.items.map((item) => (
                 <div
@@ -82,8 +82,8 @@ function ColorPaletteSection() {
 
 function TypographySection() {
   return (
-    <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-      <h3 className="mb-6 text-sm font-semibold text-[var(--color-demo-text-primary)]">字体层级</h3>
+    <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+      <h3 className="mb-6 text-sm font-semibold text-(--color-demo-text-primary)">字体层级</h3>
       <div className="space-y-5">
         {[
           { size: "text-4xl", weight: "font-bold", sample: "H1 · 大标题", sub: "text-4xl / font-bold / tracking-tight" },
@@ -91,12 +91,12 @@ function TypographySection() {
           { size: "text-2xl", weight: "font-semibold", sample: "H3 · 卡片标题", sub: "text-2xl / font-semibold" },
           { size: "text-xl", weight: "font-medium", sample: "H4 · 小节标题", sub: "text-xl / font-medium" },
           { size: "text-base", weight: "font-normal", sample: "正文内容 · 辅助说明文字", sub: "text-base / font-normal" },
-          { size: "text-sm", weight: "font-normal", sample: "次要描述 · 备注信息", sub: "text-sm / text-[var(--color-demo-text-secondary)]" },
+          { size: "text-sm", weight: "font-normal", sample: "次要描述 · 备注信息", sub: "text-sm / text-(--color-demo-text-secondary)" },
           { size: "text-xs", weight: "font-medium", sample: "标签 · 徽章 · 辅助标注", sub: "text-xs / font-medium" },
         ].map((row) => (
-          <div key={row.sub} className="flex items-baseline justify-between gap-4 border-b border-[var(--color-demo-border-subtle)] pb-4 last:border-0 last:pb-0">
-            <p className={`${row.size} ${row.weight} text-[var(--color-demo-text-primary)] leading-tight`}>{row.sample}</p>
-            <p className="shrink-0 text-right text-[11px] text-[var(--color-demo-text-muted)]">{row.sub}</p>
+          <div key={row.sub} className="flex items-baseline justify-between gap-4 border-b border-(--color-demo-border-subtle) pb-4 last:border-0 last:pb-0">
+            <p className={`${row.size} ${row.weight} text-(--color-demo-text-primary) leading-tight`}>{row.sample}</p>
+            <p className="shrink-0 text-right text-[11px] text-(--color-demo-text-muted)">{row.sub}</p>
           </div>
         ))}
       </div>
@@ -107,26 +107,26 @@ function TypographySection() {
 // ─── 2. 按钮 + 徽章 ────────────────────────────────────────────
 
 const badgeItems = [
-  { label: "默认", cls: "bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-secondary)] border border-[var(--color-demo-border)]" },
-  { label: "主色", cls: "bg-[var(--color-demo-accent-soft)] text-[var(--color-demo-accent)] border border-[var(--color-demo-accent-soft)]" },
-  { label: "成功", cls: "bg-[var(--color-demo-success-soft)] text-[var(--color-demo-success)] border border-[var(--color-demo-success-soft)]" },
-  { label: "警告", cls: "bg-[var(--color-demo-warning-soft)] text-[var(--color-demo-warning)] border border-[var(--color-demo-warning-soft)]" },
-  { label: "危险", cls: "bg-[var(--color-demo-danger-soft)] text-[var(--color-demo-danger)] border border-[var(--color-demo-danger-soft)]" },
-  { label: "紫色", cls: "bg-[var(--color-demo-purple-soft)] text-[var(--color-demo-purple)] border border-[var(--color-demo-purple-soft)]" },
+  { label: "默认", cls: "bg-(--color-demo-surface-raised) text-(--color-demo-text-secondary) border border-(--color-demo-border)" },
+  { label: "主色", cls: "bg-(--color-demo-accent-soft) text-(--color-demo-accent) border border-(--color-demo-accent-soft)" },
+  { label: "成功", cls: "bg-(--color-demo-success-soft) text-(--color-demo-success) border border-(--color-demo-success-soft)" },
+  { label: "警告", cls: "bg-(--color-demo-warning-soft) text-(--color-demo-warning) border border-(--color-demo-warning-soft)" },
+  { label: "危险", cls: "bg-(--color-demo-danger-soft) text-(--color-demo-danger) border border-(--color-demo-danger-soft)" },
+  { label: "紫色", cls: "bg-(--color-demo-purple-soft) text-(--color-demo-purple) border border-(--color-demo-purple-soft)" },
 ];
 
 function ButtonSection() {
   return (
     <section className="space-y-5">
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">按钮</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">按钮</h3>
         <div className="space-y-5">
           <div className="flex flex-wrap items-center gap-3">
             {[
-              { label: "主要按钮", cls: "bg-[var(--color-demo-accent)] text-white hover:bg-[var(--color-demo-accent-hover)]" },
-              { label: "次要按钮", cls: "bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-primary)] border border-[var(--color-demo-border)] hover:bg-[var(--color-demo-border)]" },
-              { label: "幽灵按钮", cls: "text-[var(--color-demo-accent)] hover:bg-[var(--color-demo-accent-soft)]" },
-              { label: "危险按钮", cls: "bg-[var(--color-demo-danger)] text-white hover:brightness-110" },
+              { label: "主要按钮", cls: "bg-(--color-demo-accent) text-white hover:bg-(--color-demo-accent-hover)" },
+              { label: "次要按钮", cls: "bg-(--color-demo-surface-raised) text-(--color-demo-text-primary) border border-(--color-demo-border) hover:bg-(--color-demo-border)" },
+              { label: "幽灵按钮", cls: "text-(--color-demo-accent) hover:bg-(--color-demo-accent-soft)" },
+              { label: "危险按钮", cls: "bg-(--color-demo-danger) text-white hover:brightness-110" },
               { label: "禁用态", cls: "opacity-40 cursor-not-allowed", disabled: true },
             ].map((b) => (
               <button key={b.label} type="button" disabled={b.disabled} className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold shadow-sm transition-all duration-150 ${b.cls}`}>
@@ -136,10 +136,10 @@ function ButtonSection() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {[
-              { label: "主要", cls: "bg-[var(--color-demo-accent)] text-white", icon: <Star className="size-4" /> },
-              { label: "成功", cls: "bg-[var(--color-demo-success)] text-white", icon: <Check className="size-4" /> },
-              { label: "警告", cls: "bg-[var(--color-demo-warning)] text-white", icon: <Zap className="size-4" /> },
-              { label: "危险", cls: "bg-[var(--color-demo-danger)] text-white", icon: <Heart className="size-4" /> },
+              { label: "主要", cls: "bg-(--color-demo-accent) text-white", icon: <Star className="size-4" /> },
+              { label: "成功", cls: "bg-(--color-demo-success) text-white", icon: <Check className="size-4" /> },
+              { label: "警告", cls: "bg-(--color-demo-warning) text-white", icon: <Zap className="size-4" /> },
+              { label: "危险", cls: "bg-(--color-demo-danger) text-white", icon: <Heart className="size-4" /> },
             ].map((b) => (
               <button key={b.label} type="button" title={b.label} className={`inline-flex size-10 items-center justify-center rounded-xl shadow-sm transition-all duration-150 hover:scale-105 active:scale-95 ${b.cls}`}>
                 {b.icon}
@@ -147,24 +147,24 @@ function ButtonSection() {
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <button type="button" className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-demo-accent)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--color-demo-accent-hover)]">
+            <button type="button" className="inline-flex items-center gap-2 rounded-xl bg-(--color-demo-accent) px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-(--color-demo-accent-hover)">
               <Plus className="size-4" /> 新建
             </button>
-            <button type="button" className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2.5 text-sm font-medium text-[var(--color-demo-text-primary)] shadow-sm transition-all hover:bg-[var(--color-demo-border)]">
+            <button type="button" className="inline-flex items-center gap-2 rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2.5 text-sm font-medium text-(--color-demo-text-primary) shadow-sm transition-all hover:bg-(--color-demo-border)">
               <Eye className="size-4" /> 查看
             </button>
-            <button type="button" className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-demo-danger-soft)] bg-[var(--color-demo-danger-soft)] px-4 py-2.5 text-sm font-medium text-[var(--color-demo-danger)] shadow-sm transition-all hover:brightness-95">
+            <button type="button" className="inline-flex items-center gap-2 rounded-xl border border-(--color-demo-danger-soft) bg-(--color-demo-danger-soft) px-4 py-2.5 text-sm font-medium text-(--color-demo-danger) shadow-sm transition-all hover:brightness-95">
               <Trash2 className="size-4" /> 删除
             </button>
-            <button type="button" disabled className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2.5 text-sm font-medium text-[var(--color-demo-text-primary)] opacity-50">
+            <button type="button" disabled className="inline-flex items-center gap-2 rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2.5 text-sm font-medium text-(--color-demo-text-primary) opacity-50">
               <Loader2 className="size-4 animate-spin" /> 加载中…
             </button>
           </div>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">徽章</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">徽章</h3>
         <div className="flex flex-wrap gap-2">
           {badgeItems.map((b) => (
             <span key={b.label} className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${b.cls}`}>
@@ -182,48 +182,48 @@ function ButtonSection() {
 function FormSection() {
   return (
     <section className="space-y-5">
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">表单元素</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">表单元素</h3>
         <div className="max-w-lg space-y-5">
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--color-demo-text-primary)]">文本输入框</label>
-            <input type="text" placeholder="请输入内容…" className="w-full rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2.5 text-sm text-[var(--color-demo-text-primary)] placeholder:text-[var(--color-demo-text-muted)] transition-colors focus:border-[var(--color-demo-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-demo-accent-ring)]" />
+            <label className="text-sm font-medium text-(--color-demo-text-primary)">文本输入框</label>
+            <input type="text" placeholder="请输入内容…" className="w-full rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2.5 text-sm text-(--color-demo-text-primary) placeholder:text-(--color-demo-text-muted) transition-colors focus:border-(--color-demo-accent) focus:outline-none focus:ring-2 focus:ring-(--color-demo-accent-ring)" />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--color-demo-text-primary)]">密码输入框</label>
+            <label className="text-sm font-medium text-(--color-demo-text-primary)">密码输入框</label>
             <div className="relative">
-              <input type="password" defaultValue="Demo@1234" placeholder="请输入密码" className="w-full rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2.5 pr-10 text-sm text-[var(--color-demo-text-primary)] transition-colors focus:border-[var(--color-demo-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-demo-accent-ring)]" />
-              <button type="button" aria-label="显示密码" className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-demo-text-muted)] hover:text-[var(--color-demo-text-secondary)]">
+              <input type="password" defaultValue="Demo@1234" placeholder="请输入密码" className="w-full rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2.5 pr-10 text-sm text-(--color-demo-text-primary) transition-colors focus:border-(--color-demo-accent) focus:outline-none focus:ring-2 focus:ring-(--color-demo-accent-ring)" />
+              <button type="button" aria-label="显示密码" className="absolute right-3 top-1/2 -translate-y-1/2 text-(--color-demo-text-muted) hover:text-(--color-demo-text-secondary)">
                 <Eye className="size-4" />
               </button>
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--color-demo-text-primary)]">选择框</label>
-            <select aria-label="选择框示例" className="w-full rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2.5 text-sm text-[var(--color-demo-text-primary)] transition-colors focus:border-[var(--color-demo-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-demo-accent-ring)]">
+            <label className="text-sm font-medium text-(--color-demo-text-primary)">选择框</label>
+            <select aria-label="选择框示例" className="w-full rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2.5 text-sm text-(--color-demo-text-primary) transition-colors focus:border-(--color-demo-accent) focus:outline-none focus:ring-2 focus:ring-(--color-demo-accent-ring)">
               <option>选项一</option>
               <option>选项二</option>
               <option>选项三</option>
             </select>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--color-demo-text-primary)]">多行文本</label>
-            <textarea rows={3} placeholder="请输入多行文本…" className="w-full resize-y rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2.5 text-sm text-[var(--color-demo-text-primary)] placeholder:text-[var(--color-demo-text-muted)] transition-colors focus:border-[var(--color-demo-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-demo-accent-ring)]" />
+            <label className="text-sm font-medium text-(--color-demo-text-primary)">多行文本</label>
+            <textarea rows={3} placeholder="请输入多行文本…" className="w-full resize-y rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2.5 text-sm text-(--color-demo-text-primary) placeholder:text-(--color-demo-text-muted) transition-colors focus:border-(--color-demo-accent) focus:outline-none focus:ring-2 focus:ring-(--color-demo-accent-ring)" />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--color-demo-text-primary)]">错误状态</label>
-            <input type="text" defaultValue="invalid input" placeholder="邮箱地址" className="w-full rounded-xl border border-[var(--color-demo-danger)] bg-[var(--color-demo-danger-soft)] px-4 py-2.5 text-sm text-[var(--color-demo-danger)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-demo-danger)]" />
-            <p className="text-xs text-[var(--color-demo-danger)]">请输入有效的邮箱地址</p>
+            <label className="text-sm font-medium text-(--color-demo-text-primary)">错误状态</label>
+            <input type="text" defaultValue="invalid input" placeholder="邮箱地址" className="w-full rounded-xl border border-(--color-demo-danger) bg-(--color-demo-danger-soft) px-4 py-2.5 text-sm text-(--color-demo-danger) transition-colors focus:outline-none focus:ring-2 focus:ring-(--color-demo-danger)" />
+            <p className="text-xs text-(--color-demo-danger)">请输入有效的邮箱地址</p>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-[var(--color-demo-text-primary)]">复选框 & 单选框</label>
+            <label className="text-sm font-medium text-(--color-demo-text-primary)">复选框 & 单选框</label>
             <div className="flex flex-wrap gap-6">
               {[
                 { label: "复选框", type: "checkbox" as const },
                 { label: "单选框", type: "radio" as const, name: "demo-radio" },
               ].map((item) => (
-                <label key={item.label} className="flex items-center gap-2.5 text-sm text-[var(--color-demo-text-primary)] cursor-pointer">
-                  <span className={`relative flex h-5 w-5 items-center justify-center rounded-md border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] transition-colors ${item.type === "radio" ? "rounded-full" : ""}`}>
+                <label key={item.label} className="flex items-center gap-2.5 text-sm text-(--color-demo-text-primary) cursor-pointer">
+                  <span className={`relative flex h-5 w-5 items-center justify-center rounded-md border border-(--color-demo-border) bg-(--color-demo-surface-raised) transition-colors ${item.type === "radio" ? "rounded-full" : ""}`}>
                     <input type={item.type} name={item.name} className="sr-only" />
                   </span>
                   {item.label}
@@ -232,8 +232,8 @@ function FormSection() {
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-[var(--color-demo-text-primary)]">Toggle 开关</label>
-            <button type="button" role="switch" aria-checked="true" aria-label="开关" className="relative inline-flex h-6 w-11 items-center rounded-full bg-[var(--color-demo-accent)] transition-colors">
+            <label className="text-sm font-medium text-(--color-demo-text-primary)">Toggle 开关</label>
+            <button type="button" role="switch" aria-checked="true" aria-label="开关" className="relative inline-flex h-6 w-11 items-center rounded-full bg-(--color-demo-accent) transition-colors">
               <span className="inline-block h-4 w-4 translate-x-6 rounded-full bg-white shadow-sm transition-transform" />
             </button>
           </div>
@@ -253,29 +253,29 @@ const demoStats = [
 ];
 
 const statColorMap = {
-  accent: { icon: "text-[var(--color-demo-accent)]" },
-  warning: { icon: "text-[var(--color-demo-warning)]" },
-  success: { icon: "text-[var(--color-demo-success)]" },
-  danger: { icon: "text-[var(--color-demo-danger)]" },
+  accent: { icon: "text-(--color-demo-accent)" },
+  warning: { icon: "text-(--color-demo-warning)" },
+  success: { icon: "text-(--color-demo-success)" },
+  danger: { icon: "text-(--color-demo-danger)" },
 };
 
 const demoCards = [
   {
     title: "AI 智能筛选", desc: "基于大语言模型对简历内容进行深度语义理解与评分排序，精准识别优质候选人。",
-    tag: "AI 能力", tagClass: "bg-[var(--color-demo-accent-soft)] text-[var(--color-demo-accent)] border-[var(--color-demo-accent-soft)]",
-    icon: <Zap className="size-5 text-[var(--color-demo-accent)]" />,
+    tag: "AI 能力", tagClass: "bg-(--color-demo-accent-soft) text-(--color-demo-accent) border-(--color-demo-accent-soft)",
+    icon: <Zap className="size-5 text-(--color-demo-accent)" />,
     stats: [{ label: "准确率", value: "96.8%" }, { label: "日处理", value: "1,200+" }],
   },
   {
     title: "安全可靠", desc: "全程数据加密传输与存储，严格权限控制，确保候选人隐私与商业机密安全。",
-    tag: "安全合规", tagClass: "bg-[var(--color-demo-success-soft)] text-[var(--color-demo-success)] border-[var(--color-demo-success-soft)]",
-    icon: <Shield className="size-5 text-[var(--color-demo-success)]" />,
+    tag: "安全合规", tagClass: "bg-(--color-demo-success-soft) text-(--color-demo-success) border-(--color-demo-success-soft)",
+    icon: <Shield className="size-5 text-(--color-demo-success)" />,
     stats: [{ label: "安全等级", value: "AES-256" }, { label: "合规认证", value: "ISO 27001" }],
   },
   {
     title: "实时分析", desc: "流式输出 AI 筛选结果，随时查看处理进度与中间推理过程，过程透明可追溯。",
-    tag: "实时能力", tagClass: "bg-[var(--color-demo-purple-soft)] text-[var(--color-demo-purple)] border-[var(--color-demo-purple-soft)]",
-    icon: <Activity className="size-5 text-[var(--color-demo-purple)]" />,
+    tag: "实时能力", tagClass: "bg-(--color-demo-purple-soft) text-(--color-demo-purple) border-(--color-demo-purple-soft)",
+    icon: <Activity className="size-5 text-(--color-demo-purple)" />,
     stats: [{ label: "延迟", value: "<200ms" }, { label: "可用性", value: "99.9%" }],
   },
 ];
@@ -288,13 +288,13 @@ function CardSection() {
         {demoStats.map((s) => {
           const c = statColorMap[s.color as keyof typeof statColorMap];
           return (
-            <div key={s.label} className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-5">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-demo-surface-raised)] shadow-sm ring-1 ring-[var(--color-demo-border)]">
+            <div key={s.label} className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-5">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-(--color-demo-surface-raised) shadow-sm ring-1 ring-(--color-demo-border)">
                 <span className={c.icon}>{s.icon}</span>
               </div>
-              <p className="text-2xl font-bold text-[var(--color-demo-text-primary)]">{s.value}</p>
-              <p className="mt-1 text-xs text-[var(--color-demo-text-muted)]">{s.label}</p>
-              <p className={`mt-1 text-xs font-semibold ${s.change.startsWith("+") ? "text-[var(--color-demo-success)]" : "text-[var(--color-demo-danger)]"}`}>
+              <p className="text-2xl font-bold text-(--color-demo-text-primary)">{s.value}</p>
+              <p className="mt-1 text-xs text-(--color-demo-text-muted)">{s.label}</p>
+              <p className={`mt-1 text-xs font-semibold ${s.change.startsWith("+") ? "text-(--color-demo-success)" : "text-(--color-demo-danger)"}`}>
                 {s.change} 较上周
               </p>
             </div>
@@ -305,22 +305,22 @@ function CardSection() {
       {/* 功能卡片 */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {demoCards.map((card) => (
-          <article key={card.title} className="group flex flex-col rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
+          <article key={card.title} className="group flex flex-col rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
             <div className="mb-4 flex items-start justify-between">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-[var(--color-demo-surface-raised)] shadow-sm ring-1 ring-[var(--color-demo-border)]">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-(--color-demo-surface-raised) shadow-sm ring-1 ring-(--color-demo-border)">
                 {card.icon}
               </div>
               <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${card.tagClass}`}>
                 {card.tag}
               </span>
             </div>
-            <h4 className="mb-2 text-base font-bold text-[var(--color-demo-text-primary)]">{card.title}</h4>
-            <p className="mb-4 flex-1 text-sm leading-relaxed text-[var(--color-demo-text-secondary)]">{card.desc}</p>
-            <div className="mt-auto flex gap-4 border-t border-[var(--color-demo-border)] pt-4">
+            <h4 className="mb-2 text-base font-bold text-(--color-demo-text-primary)">{card.title}</h4>
+            <p className="mb-4 flex-1 text-sm leading-relaxed text-(--color-demo-text-secondary)">{card.desc}</p>
+            <div className="mt-auto flex gap-4 border-t border-(--color-demo-border) pt-4">
               {card.stats.map((s) => (
                 <div key={s.label}>
-                  <p className="text-xs text-[var(--color-demo-text-muted)]">{s.label}</p>
-                  <p className="mt-0.5 text-sm font-bold text-[var(--color-demo-text-primary)]">{s.value}</p>
+                  <p className="text-xs text-(--color-demo-text-muted)">{s.label}</p>
+                  <p className="mt-0.5 text-sm font-bold text-(--color-demo-text-primary)">{s.value}</p>
                 </div>
               ))}
             </div>
@@ -341,17 +341,17 @@ function FeedbackSection() {
     { status: "error", label: "连接失败", icon: <AlertCircle className="size-4" /> },
   ];
   const bannerStyle: Record<string, string> = {
-    idle: "bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-secondary)] border border-[var(--color-demo-border)]",
-    testing: "bg-[var(--color-demo-accent-soft)] text-[var(--color-demo-accent)] border border-[var(--color-demo-accent-soft)]",
-    success: "bg-[var(--color-demo-success-soft)] text-[var(--color-demo-success)] border border-[var(--color-demo-success-soft)]",
-    error: "bg-[var(--color-demo-danger-soft)] text-[var(--color-demo-danger)] border border-[var(--color-demo-danger-soft)]",
+    idle: "bg-(--color-demo-surface-raised) text-(--color-demo-text-secondary) border border-(--color-demo-border)",
+    testing: "bg-(--color-demo-accent-soft) text-(--color-demo-accent) border border-(--color-demo-accent-soft)",
+    success: "bg-(--color-demo-success-soft) text-(--color-demo-success) border border-(--color-demo-success-soft)",
+    error: "bg-(--color-demo-danger-soft) text-(--color-demo-danger) border border-(--color-demo-danger-soft)",
   };
 
   return (
     <section className="space-y-5">
       {/* 状态 Banner */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">状态反馈 Banner</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">状态反馈 Banner</h3>
         <div className="space-y-3">
           {states.map((s) => (
             <div key={s.status} className={`flex items-center gap-3 rounded-xl px-4 py-3 ${bannerStyle[s.status]}`}>
@@ -368,44 +368,44 @@ function FeedbackSection() {
       </div>
 
       {/* 加载状态 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">加载状态</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">加载状态</h3>
         <div className="mb-5 flex items-center gap-3">
           <button
             type="button"
             aria-label="模拟加载"
             onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 2000); }}
-            className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-demo-accent)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--color-demo-accent-hover)]"
+            className="inline-flex items-center gap-2 rounded-xl bg-(--color-demo-accent) px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-(--color-demo-accent-hover)"
           >
             {loading ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <RefreshCw className="size-4" aria-hidden />}
             {loading ? "加载中…" : "模拟加载"}
           </button>
-          {loading && <Loader2 className="size-6 animate-spin text-[var(--color-demo-accent)]" />}
+          {loading && <Loader2 className="size-6 animate-spin text-(--color-demo-accent)" />}
         </div>
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-3 border-b border-[var(--color-demo-border-subtle)] pb-4 last:border-0 last:pb-0">
-              <div className="h-10 w-10 shrink-0 animate-pulse rounded-xl bg-[var(--color-demo-surface-raised)]" />
+            <div key={i} className="flex items-center gap-3 border-b border-(--color-demo-border-subtle) pb-4 last:border-0 last:pb-0">
+              <div className="h-10 w-10 shrink-0 animate-pulse rounded-xl bg-(--color-demo-surface-raised)" />
               <div className="flex-1 space-y-2">
-                <div className="h-3 w-32 animate-pulse rounded bg-[var(--color-demo-surface-raised)]" />
-                <div className="h-3 w-20 animate-pulse rounded bg-[var(--color-demo-surface-raised)]" />
+                <div className="h-3 w-32 animate-pulse rounded bg-(--color-demo-surface-raised)" />
+                <div className="h-3 w-20 animate-pulse rounded bg-(--color-demo-surface-raised)" />
               </div>
-              <div className="h-8 w-8 animate-pulse rounded-lg bg-[var(--color-demo-surface-raised)]" />
+              <div className="h-8 w-8 animate-pulse rounded-lg bg-(--color-demo-surface-raised)" />
             </div>
           ))}
         </div>
       </div>
 
       {/* 空状态 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">空状态</h3>
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-[var(--color-demo-surface-raised)] px-6 py-12 text-center ring-1 ring-inset ring-[var(--color-demo-border)]">
-          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-demo-surface)] shadow-sm ring-1 ring-[var(--color-demo-border)]">
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">空状态</h3>
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-(--color-demo-surface-raised) px-6 py-12 text-center ring-1 ring-inset ring-(--color-demo-border)">
+          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-(--color-demo-surface) shadow-sm ring-1 ring-(--color-demo-border)">
             <FileText className="h-7 w-7 text-zinc-300" strokeWidth={1.25} />
           </div>
-          <p className="text-sm font-medium text-[var(--color-demo-text-secondary)]">暂无简历数据</p>
-          <p className="mt-1 max-w-[240px] text-xs text-[var(--color-demo-text-muted)]">上传简历或从邮箱导入，开始智能筛选候选人</p>
-          <button type="button" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[var(--color-demo-accent)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--color-demo-accent-hover)]">
+          <p className="text-sm font-medium text-(--color-demo-text-secondary)">暂无简历数据</p>
+          <p className="mt-1 max-w-[240px] text-xs text-(--color-demo-text-muted)">上传简历或从邮箱导入，开始智能筛选候选人</p>
+          <button type="button" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-(--color-demo-accent) px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-(--color-demo-accent-hover)">
             <Plus className="size-4" /> 上传简历
           </button>
         </div>
@@ -437,33 +437,33 @@ function PopupSection() {
   const removeToast = (id: number) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
   const toastStyle = {
-    success: { icon: <CheckCircle2 className="size-5 text-[var(--color-demo-success)]" />, bg: "border-[var(--color-demo-success-soft)]" },
-    error: { icon: <XCircle className="size-5 text-[var(--color-demo-danger)]" />, bg: "border-[var(--color-demo-danger-soft)]" },
-    info: { icon: <Bell className="size-5 text-[var(--color-demo-accent)]" />, bg: "border-[var(--color-demo-accent-soft)]" },
-    warning: { icon: <AlertCircle className="size-5 text-[var(--color-demo-warning)]" />, bg: "border-[var(--color-demo-warning-soft)]" },
+    success: { icon: <CheckCircle2 className="size-5 text-(--color-demo-success)" />, bg: "border-(--color-demo-success-soft)" },
+    error: { icon: <XCircle className="size-5 text-(--color-demo-danger)" />, bg: "border-(--color-demo-danger-soft)" },
+    info: { icon: <Bell className="size-5 text-(--color-demo-accent)" />, bg: "border-(--color-demo-accent-soft)" },
+    warning: { icon: <AlertCircle className="size-5 text-(--color-demo-warning)" />, bg: "border-(--color-demo-warning-soft)" },
   };
 
   return (
     <section className="space-y-5">
       {/* 弹窗触发 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">模态框</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">模态框</h3>
         <div className="flex flex-wrap gap-3">
-          <button type="button" onClick={() => setAlertOpen(true)} className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-demo-accent)] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--color-demo-accent-hover)]">
+          <button type="button" onClick={() => setAlertOpen(true)} className="inline-flex items-center gap-2 rounded-xl bg-(--color-demo-accent) px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-(--color-demo-accent-hover)">
             <AlertCircle className="size-4" /> 提示弹窗
           </button>
-          <button type="button" onClick={() => setConfirmOpen(true)} className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-demo-danger-soft)] bg-[var(--color-demo-danger-soft)] px-4 py-2.5 text-sm font-medium text-[var(--color-demo-danger)] shadow-sm transition-all hover:brightness-95">
+          <button type="button" onClick={() => setConfirmOpen(true)} className="inline-flex items-center gap-2 rounded-xl border border-(--color-demo-danger-soft) bg-(--color-demo-danger-soft) px-4 py-2.5 text-sm font-medium text-(--color-demo-danger) shadow-sm transition-all hover:brightness-95">
             <Trash2 className="size-4" /> 确认删除
           </button>
         </div>
       </div>
 
       {/* Toast 通知 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">Toast 通知</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">Toast 通知</h3>
         <div className="flex flex-wrap gap-2">
           {(["success", "error", "info", "warning"] as const).map((t) => (
-            <button key={t} type="button" onClick={() => addToast(t)} className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2 text-sm font-medium text-[var(--color-demo-text-primary)] transition-all hover:bg-[var(--color-demo-border)]">
+            <button key={t} type="button" onClick={() => addToast(t)} className="inline-flex items-center gap-2 rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2 text-sm font-medium text-(--color-demo-text-primary) transition-all hover:bg-(--color-demo-border)">
               {toastStyle[t].icon} {t === "success" ? "成功" : t === "error" ? "错误" : t === "info" ? "通知" : "警告"}
             </button>
           ))}
@@ -473,14 +473,14 @@ function PopupSection() {
       {/* Alert Modal */}
       {alertOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setAlertOpen(false)}>
-          <div className="mx-4 w-full max-w-sm rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-demo-accent-soft)] shadow-sm">
-              <AlertCircle className="size-6 text-[var(--color-demo-accent)]" />
+          <div className="mx-4 w-full max-w-sm rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-(--color-demo-accent-soft) shadow-sm">
+              <AlertCircle className="size-6 text-(--color-demo-accent)" />
             </div>
-            <h2 className="text-base font-semibold text-[var(--color-demo-text-primary)]">操作提示</h2>
-            <p className="mt-2 text-sm text-[var(--color-demo-text-secondary)]">已成功保存当前配置。</p>
+            <h2 className="text-base font-semibold text-(--color-demo-text-primary)">操作提示</h2>
+            <p className="mt-2 text-sm text-(--color-demo-text-secondary)">已成功保存当前配置。</p>
             <div className="mt-6 flex justify-end gap-2">
-              <button type="button" onClick={() => setAlertOpen(false)} className="rounded-xl bg-[var(--color-demo-accent)] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-[var(--color-demo-accent-hover)]">知道了</button>
+              <button type="button" onClick={() => setAlertOpen(false)} className="rounded-xl bg-(--color-demo-accent) px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-(--color-demo-accent-hover)">知道了</button>
             </div>
           </div>
         </div>
@@ -489,15 +489,15 @@ function PopupSection() {
       {/* Confirm Modal */}
       {confirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setConfirmOpen(false)}>
-          <div className="mx-4 w-full max-w-sm rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-demo-danger-soft)] shadow-sm">
-              <AlertCircle className="size-6 text-[var(--color-demo-danger)]" />
+          <div className="mx-4 w-full max-w-sm rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-(--color-demo-danger-soft) shadow-sm">
+              <AlertCircle className="size-6 text-(--color-demo-danger)" />
             </div>
-            <h2 className="text-base font-semibold text-[var(--color-demo-text-primary)]">确认删除</h2>
-            <p className="mt-2 text-sm text-[var(--color-demo-text-secondary)]">确定要删除简历「张伟.pdf」吗？此操作不可恢复。</p>
+            <h2 className="text-base font-semibold text-(--color-demo-text-primary)">确认删除</h2>
+            <p className="mt-2 text-sm text-(--color-demo-text-secondary)">确定要删除简历「张伟.pdf」吗？此操作不可恢复。</p>
             <div className="mt-6 flex justify-end gap-2">
-              <button type="button" onClick={() => setConfirmOpen(false)} className="rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] px-4 py-2 text-sm font-medium text-[var(--color-demo-text-primary)] transition-all hover:bg-[var(--color-demo-border)]">取消</button>
-              <button type="button" onClick={() => setConfirmOpen(false)} className="rounded-xl bg-[var(--color-demo-danger)] px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-red-600">删除</button>
+              <button type="button" onClick={() => setConfirmOpen(false)} className="rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) px-4 py-2 text-sm font-medium text-(--color-demo-text-primary) transition-all hover:bg-(--color-demo-border)">取消</button>
+              <button type="button" onClick={() => setConfirmOpen(false)} className="rounded-xl bg-(--color-demo-danger) px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-red-600">删除</button>
             </div>
           </div>
         </div>
@@ -508,13 +508,13 @@ function PopupSection() {
         {toasts.map((toast) => {
           const s = toastStyle[toast.type];
           return (
-            <div key={toast.id} className={`flex items-start gap-3 rounded-xl border bg-[var(--color-demo-surface)] p-4 shadow-lg ring-1 ring-[var(--color-demo-border)] ${s.bg}`}>
+            <div key={toast.id} className={`flex items-start gap-3 rounded-xl border bg-(--color-demo-surface) p-4 shadow-lg ring-1 ring-(--color-demo-border) ${s.bg}`}>
               {s.icon}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[var(--color-demo-text-primary)]">{toast.title}</p>
-                <p className="mt-0.5 text-xs text-[var(--color-demo-text-secondary)]">{toast.desc}</p>
+                <p className="text-sm font-semibold text-(--color-demo-text-primary)">{toast.title}</p>
+                <p className="mt-0.5 text-xs text-(--color-demo-text-secondary)">{toast.desc}</p>
               </div>
-              <button type="button" aria-label="关闭通知" onClick={() => removeToast(toast.id)} className="shrink-0 text-[var(--color-demo-text-muted)] hover:text-[var(--color-demo-text-secondary)]">
+              <button type="button" aria-label="关闭通知" onClick={() => removeToast(toast.id)} className="shrink-0 text-(--color-demo-text-muted) hover:text-(--color-demo-text-secondary)">
                 <X className="size-4" />
               </button>
             </div>
@@ -533,17 +533,17 @@ const tableRows = [
   { name: "王明", email: "wangming@example.com", phone: "136****9012", status: "rejected" },
 ];
 const statusStyle: Record<string, string> = {
-  passed: "bg-[var(--color-demo-success-soft)] text-[var(--color-demo-success)] border border-[var(--color-demo-success-soft)]",
-  pending: "bg-[var(--color-demo-warning-soft)] text-[var(--color-demo-warning)] border border-[var(--color-demo-warning-soft)]",
-  rejected: "bg-[var(--color-demo-danger-soft)] text-[var(--color-demo-danger)] border border-[var(--color-demo-danger-soft)]",
+  passed: "bg-(--color-demo-success-soft) text-(--color-demo-success) border border-(--color-demo-success-soft)",
+  pending: "bg-(--color-demo-warning-soft) text-(--color-demo-warning) border border-(--color-demo-warning-soft)",
+  rejected: "bg-(--color-demo-danger-soft) text-(--color-demo-danger) border border-(--color-demo-danger-soft)",
 };
 const statusLabel: Record<string, string> = { passed: "已通过", pending: "待筛选", rejected: "已拒绝" };
 
 const activities = [
-  { icon: <FileText className="size-4" />, iconBg: "bg-[var(--color-demo-accent-soft)]", iconColor: "text-[var(--color-demo-accent)]", kind: "上传", head: "张伟上传了简历", time: "3 分钟前" },
-  { icon: <Zap className="size-4" />, iconBg: "bg-[var(--color-demo-purple-soft)]", iconColor: "text-[var(--color-demo-purple)]", kind: "AI 筛选", head: "AI 筛选完成：推荐通过", time: "12 分钟前" },
-  { icon: <CheckCircle2 className="size-4" />, iconBg: "bg-[var(--color-demo-success-soft)]", iconColor: "text-[var(--color-demo-success)]", kind: "通过", head: "刘洋简历通过初筛", time: "1 小时前" },
-  { icon: <XCircle className="size-4" />, iconBg: "bg-[var(--color-demo-danger-soft)]", iconColor: "text-[var(--color-demo-danger)]", kind: "拒绝", head: "王明简历未通过筛选", time: "2 小时前" },
+  { icon: <FileText className="size-4" />, iconBg: "bg-(--color-demo-accent-soft)", iconColor: "text-(--color-demo-accent)", kind: "上传", head: "张伟上传了简历", time: "3 分钟前" },
+  { icon: <Zap className="size-4" />, iconBg: "bg-(--color-demo-purple-soft)", iconColor: "text-(--color-demo-purple)", kind: "AI 筛选", head: "AI 筛选完成：推荐通过", time: "12 分钟前" },
+  { icon: <CheckCircle2 className="size-4" />, iconBg: "bg-(--color-demo-success-soft)", iconColor: "text-(--color-demo-success)", kind: "通过", head: "刘洋简历通过初筛", time: "1 小时前" },
+  { icon: <XCircle className="size-4" />, iconBg: "bg-(--color-demo-danger-soft)", iconColor: "text-(--color-demo-danger)", kind: "拒绝", head: "王明简历未通过筛选", time: "2 小时前" },
 ];
 
 function DataSection() {
@@ -569,33 +569,33 @@ function DataSection() {
   return (
     <section className="space-y-5">
       {/* 分页条 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">分页条</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">分页条</h3>
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <span className="text-sm text-[var(--color-demo-text-muted)]">共 10 条 · 每页 10 条</span>
+          <span className="text-sm text-(--color-demo-text-muted)">共 10 条 · 每页 10 条</span>
           <div className="flex items-center gap-1">
-            <button type="button" aria-label="上一页" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="flex items-center gap-1 rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] p-2 text-[var(--color-demo-text-secondary)] transition-colors hover:bg-[var(--color-demo-border)] disabled:opacity-35 disabled:cursor-not-allowed">
+            <button type="button" aria-label="上一页" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="flex items-center gap-1 rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) p-2 text-(--color-demo-text-secondary) transition-colors hover:bg-(--color-demo-border) disabled:opacity-35 disabled:cursor-not-allowed">
               <ChevronLeft className="size-4" />
             </button>
             {buildPageItems(page, total).map((item, idx) =>
               item === "..." ? (
-                <span key={`ellipsis-${idx}`} className="px-2 text-sm text-[var(--color-demo-text-muted)]">…</span>
+                <span key={`ellipsis-${idx}`} className="px-2 text-sm text-(--color-demo-text-muted)">…</span>
               ) : (
-                <button key={item} type="button" onClick={() => setPage(item)} className={`size-10 rounded-xl text-sm font-medium transition-colors ${page === item ? "bg-[var(--color-demo-accent)] text-white shadow-sm" : "border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-secondary)] hover:bg-[var(--color-demo-border)]"}`}>
+                <button key={item} type="button" onClick={() => setPage(item)} className={`size-10 rounded-xl text-sm font-medium transition-colors ${page === item ? "bg-(--color-demo-accent) text-white shadow-sm" : "border border-(--color-demo-border) bg-(--color-demo-surface-raised) text-(--color-demo-text-secondary) hover:bg-(--color-demo-border)"}`}>
                   {item}
                 </button>
               )
             )}
-            <button type="button" aria-label="下一页" onClick={() => setPage((p) => Math.min(total, p + 1))} disabled={page >= total} className="flex items-center gap-1 rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] p-2 text-[var(--color-demo-text-secondary)] transition-colors hover:bg-[var(--color-demo-border)] disabled:opacity-35 disabled:cursor-not-allowed">
+            <button type="button" aria-label="下一页" onClick={() => setPage((p) => Math.min(total, p + 1))} disabled={page >= total} className="flex items-center gap-1 rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) p-2 text-(--color-demo-text-secondary) transition-colors hover:bg-(--color-demo-border) disabled:opacity-35 disabled:cursor-not-allowed">
               <ChevronRight className="size-4" />
             </button>
           </div>
         </div>
         <div className="mt-4 flex items-center justify-between gap-3">
-          <span className="text-sm text-[var(--color-demo-text-muted)]">每页显示：</span>
+          <span className="text-sm text-(--color-demo-text-muted)">每页显示：</span>
           <div className="flex items-center gap-1">
             {[10, 20, 50].map((size) => (
-              <button key={size} type="button" className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${size === 10 ? "bg-[var(--color-demo-accent-soft)] text-[var(--color-demo-accent)] border border-[var(--color-demo-accent-soft)]" : "border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-secondary)] hover:bg-[var(--color-demo-border)]"}`}>
+              <button key={size} type="button" className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${size === 10 ? "bg-(--color-demo-accent-soft) text-(--color-demo-accent) border border-(--color-demo-accent-soft)" : "border border-(--color-demo-border) bg-(--color-demo-surface-raised) text-(--color-demo-text-secondary) hover:bg-(--color-demo-border)"}`}>
                 {size} 条
               </button>
             ))}
@@ -604,10 +604,10 @@ function DataSection() {
       </div>
 
       {/* 表格 */}
-      <div className="overflow-hidden rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)]">
+      <div className="overflow-hidden rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface)">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] text-xs font-medium uppercase tracking-wide text-[var(--color-demo-text-muted)]">
+            <tr className="border-b border-(--color-demo-border) bg-(--color-demo-surface-raised) text-xs font-medium uppercase tracking-wide text-(--color-demo-text-muted)">
               <th className="px-5 py-3">候选人</th>
               <th className="px-4 py-3">邮箱</th>
               <th className="px-4 py-3">电话</th>
@@ -615,17 +615,17 @@ function DataSection() {
               <th className="px-5 py-3 pr-5 text-right">操作</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--color-demo-border-subtle)]">
+          <tbody className="divide-y divide-(--color-demo-border-subtle)">
             {tableRows.map((row) => (
-              <tr key={row.name} className="transition-colors hover:bg-[var(--color-demo-surface-raised)]">
+              <tr key={row.name} className="transition-colors hover:bg-(--color-demo-surface-raised)">
                 <td className="px-5 py-3.5">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-demo-accent-soft)] text-xs font-bold text-[var(--color-demo-accent)]">{row.name[0]}</div>
-                    <span className="font-medium text-[var(--color-demo-text-primary)]">{row.name}</span>
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-(--color-demo-accent-soft) text-xs font-bold text-(--color-demo-accent)">{row.name[0]}</div>
+                    <span className="font-medium text-(--color-demo-text-primary)">{row.name}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3.5 text-[var(--color-demo-text-secondary)]">{row.email}</td>
-                <td className="px-4 py-3.5 text-[var(--color-demo-text-secondary)] tabular-nums">{row.phone}</td>
+                <td className="px-4 py-3.5 text-(--color-demo-text-secondary)">{row.email}</td>
+                <td className="px-4 py-3.5 text-(--color-demo-text-secondary) tabular-nums">{row.phone}</td>
                 <td className="px-4 py-3.5">
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusStyle[row.status]}`}>
                     {statusLabel[row.status]}
@@ -633,10 +633,10 @@ function DataSection() {
                 </td>
                 <td className="px-5 py-3.5 pr-5 text-right">
                   <div className="inline-flex items-center gap-0.5">
-                    <button type="button" title="查看" className="rounded-md p-2 text-[var(--color-demo-text-muted)] transition-colors hover:bg-[var(--color-demo-border)] hover:text-[var(--color-demo-text-primary)]">
+                    <button type="button" title="查看" className="rounded-md p-2 text-(--color-demo-text-muted) transition-colors hover:bg-(--color-demo-border) hover:text-(--color-demo-text-primary)">
                       <Eye className="size-4" />
                     </button>
-                    <button type="button" title="删除" className="rounded-md p-2 text-[var(--color-demo-text-muted)] transition-colors hover:bg-[var(--color-demo-danger-soft)] hover:text-[var(--color-demo-danger)]">
+                    <button type="button" title="删除" className="rounded-md p-2 text-(--color-demo-text-muted) transition-colors hover:bg-(--color-demo-danger-soft) hover:text-(--color-demo-danger)">
                       <Trash2 className="size-4" />
                     </button>
                   </div>
@@ -648,20 +648,20 @@ function DataSection() {
       </div>
 
       {/* 时间线 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">活动时间线</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">活动时间线</h3>
         <div className="space-y-0">
           {activities.map((act, idx) => (
-            <div key={idx} className={`flex gap-4 ${idx !== activities.length - 1 ? "pb-4 border-b border-[var(--color-demo-border-subtle)]" : ""} ${idx !== 0 ? "pt-4" : ""}`}>
+            <div key={idx} className={`flex gap-4 ${idx !== activities.length - 1 ? "pb-4 border-b border-(--color-demo-border-subtle)" : ""} ${idx !== 0 ? "pt-4" : ""}`}>
               <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl shadow-sm ${act.iconBg}`}>
                 <span className={act.iconColor}>{act.icon}</span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-xs font-semibold text-[var(--color-demo-accent)]">{act.kind}</span>
-                  <span className="text-sm font-medium text-[var(--color-demo-text-primary)]">{act.head}</span>
+                  <span className="text-xs font-semibold text-(--color-demo-accent)">{act.kind}</span>
+                  <span className="text-sm font-medium text-(--color-demo-text-primary)">{act.head}</span>
                 </div>
-                <p className="mt-0.5 text-xs text-[var(--color-demo-text-muted)]">{act.time}</p>
+                <p className="mt-0.5 text-xs text-(--color-demo-text-muted)">{act.time}</p>
               </div>
             </div>
           ))}
@@ -671,20 +671,20 @@ function DataSection() {
       {/* 匹配分 + 步骤进度 */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {/* 匹配分圆环 */}
-        <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
+        <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
           <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-[var(--color-demo-text-primary)]">匹配分圆环</h3>
-            <input type="range" min={0} max={100} value={score} onChange={(e) => setScore(Number(e.target.value))} aria-label="匹配分滑块" className="w-28 accent-[var(--color-demo-accent)]" />
+            <h3 className="text-sm font-semibold text-(--color-demo-text-primary)">匹配分圆环</h3>
+            <input type="range" min={0} max={100} value={score} onChange={(e) => setScore(Number(e.target.value))} aria-label="匹配分滑块" className="w-28 accent-(--color-demo-accent)" />
           </div>
           <div className="flex items-center gap-6">
             <div className="relative flex h-24 w-24 shrink-0 items-center justify-center">
               <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r={R} fill="none" stroke="currentColor" strokeWidth="6" className="text-[var(--color-demo-surface-raised)]" />
-                <circle cx="50" cy="50" r={R} fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={dashOffset} className="text-[var(--color-demo-accent)] transition-[stroke-dashoffset] duration-700" />
+                <circle cx="50" cy="50" r={R} fill="none" stroke="currentColor" strokeWidth="6" className="text-(--color-demo-surface-raised)" />
+                <circle cx="50" cy="50" r={R} fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={dashOffset} className="text-(--color-demo-accent) transition-[stroke-dashoffset] duration-700" />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-[var(--color-demo-text-primary)]">{score}</span>
-                <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--color-demo-text-muted)]">匹配分</span>
+                <span className="text-2xl font-bold text-(--color-demo-text-primary)">{score}</span>
+                <span className="text-[9px] font-semibold uppercase tracking-widest text-(--color-demo-text-muted)">匹配分</span>
               </div>
             </div>
             <div className="space-y-2.5 flex-1">
@@ -695,11 +695,11 @@ function DataSection() {
               ].map((item) => (
                 <div key={item.label} className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="text-[var(--color-demo-text-secondary)]">{item.label}</span>
-                    <span className="text-[var(--color-demo-text-muted)]">{item.value}%</span>
+                    <span className="text-(--color-demo-text-secondary)">{item.label}</span>
+                    <span className="text-(--color-demo-text-muted)">{item.value}%</span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-demo-surface-raised)]">
-                    <div className="h-full rounded-full bg-[var(--color-demo-accent)] transition-all duration-700" style={{ width: `${item.value}%` }} />
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-(--color-demo-surface-raised)">
+                    <div className="h-full rounded-full bg-(--color-demo-accent) transition-all duration-700" style={{ width: `${item.value}%` }} />
                   </div>
                 </div>
               ))}
@@ -708,17 +708,17 @@ function DataSection() {
         </div>
 
         {/* 步骤进度 */}
-        <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-          <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">步骤进度条</h3>
+        <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+          <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">步骤进度条</h3>
           <div className="space-y-4">
             {(["配置模板", "预览发送", "确认发送"] as const).map((label, idx) => {
               const done = idx < score / 33;
               return (
                 <div key={label} className="flex items-center gap-3">
-                  <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-all ${done ? "bg-[var(--color-demo-success)] text-white" : "border-2 border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-muted)]"}`}>
+                  <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-all ${done ? "bg-(--color-demo-success) text-white" : "border-2 border-(--color-demo-border) bg-(--color-demo-surface-raised) text-(--color-demo-text-muted)"}`}>
                     {done ? <Check className="size-4" /> : idx + 1}
                   </div>
-                  <span className={`text-sm font-medium ${done ? "text-[var(--color-demo-success)]" : "text-[var(--color-demo-text-muted)]"}`}>{label}</span>
+                  <span className={`text-sm font-medium ${done ? "text-(--color-demo-success)" : "text-(--color-demo-text-muted)"}`}>{label}</span>
                 </div>
               );
             })}
@@ -744,25 +744,25 @@ function AdvanceSection() {
   return (
     <section className="space-y-5">
       {/* 搜索与过滤 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">搜索与过滤</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">搜索与过滤</h3>
         <div className="space-y-4">
           <div className="relative">
-            <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-demo-text-muted)]" />
-            <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="搜索候选人姓名或邮箱…" className="w-full rounded-xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] pl-10 pr-4 py-2.5 text-sm text-[var(--color-demo-text-primary)] placeholder:text-[var(--color-demo-text-muted)] transition-colors focus:border-[var(--color-demo-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-demo-accent-ring)]" />
+            <Filter className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--color-demo-text-muted)" />
+            <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="搜索候选人姓名或邮箱…" className="w-full rounded-xl border border-(--color-demo-border) bg-(--color-demo-surface-raised) pl-10 pr-4 py-2.5 text-sm text-(--color-demo-text-primary) placeholder:text-(--color-demo-text-muted) transition-colors focus:border-(--color-demo-accent) focus:outline-none focus:ring-2 focus:ring-(--color-demo-accent-ring)" />
           </div>
           <div className="flex flex-wrap gap-2">
             {filters.map((f) => (
-              <button key={f.key} type="button" onClick={() => setActiveFilter(f.key)} className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${activeFilter === f.key ? "bg-[var(--color-demo-accent)] text-white shadow-sm" : "border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-secondary)] hover:border-[var(--color-demo-accent)] hover:text-[var(--color-demo-accent)]"}`}>
+              <button key={f.key} type="button" onClick={() => setActiveFilter(f.key)} className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${activeFilter === f.key ? "bg-(--color-demo-accent) text-white shadow-sm" : "border border-(--color-demo-border) bg-(--color-demo-surface-raised) text-(--color-demo-text-secondary) hover:border-(--color-demo-accent) hover:text-(--color-demo-accent)"}`}>
                 {f.label}
-                <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${activeFilter === f.key ? "bg-white/20" : "bg-[var(--color-demo-surface)]"}`}>{f.count}</span>
+                <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${activeFilter === f.key ? "bg-white/20" : "bg-(--color-demo-surface)"}`}>{f.count}</span>
               </button>
             ))}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-[var(--color-demo-text-muted)]">排序：</span>
+            <span className="text-xs text-(--color-demo-text-muted)">排序：</span>
             {(["newest", "score", "name"] as const).map((s) => (
-              <button key={s} type="button" className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${s === "newest" ? "bg-[var(--color-demo-accent-soft)] text-[var(--color-demo-accent)] border border-[var(--color-demo-accent-soft)]" : "border border-[var(--color-demo-border)] bg-[var(--color-demo-surface-raised)] text-[var(--color-demo-text-secondary)] hover:bg-[var(--color-demo-border)]"}`}>
+              <button key={s} type="button" className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${s === "newest" ? "bg-(--color-demo-accent-soft) text-(--color-demo-accent) border border-(--color-demo-accent-soft)" : "border border-(--color-demo-border) bg-(--color-demo-surface-raised) text-(--color-demo-text-secondary) hover:bg-(--color-demo-border)"}`}>
                 <ArrowUpDown className="size-3" />
                 {s === "newest" ? "最新" : s === "score" ? "分数" : "姓名"}
               </button>
@@ -772,8 +772,8 @@ function AdvanceSection() {
       </div>
 
       {/* 头像 */}
-      <div className="rounded-2xl border border-[var(--color-demo-border)] bg-[var(--color-demo-surface)] p-6">
-        <h3 className="mb-5 text-sm font-semibold text-[var(--color-demo-text-primary)]">头像</h3>
+      <div className="rounded-2xl border border-(--color-demo-border) bg-(--color-demo-surface) p-6">
+        <h3 className="mb-5 text-sm font-semibold text-(--color-demo-text-primary)">头像</h3>
         <div className="flex flex-wrap items-center gap-6">
           {[
             { size: "h-8 w-8", text: "text-xs" },
@@ -781,13 +781,13 @@ function AdvanceSection() {
             { size: "h-14 w-14", text: "text-lg" },
             { size: "h-20 w-20", text: "text-2xl" },
           ].map((s, i) => (
-            <div key={i} className={`flex ${s.size} items-center justify-center rounded-xl bg-[var(--color-demo-accent)] font-bold text-white ring-2 ring-[var(--color-demo-accent)]/20 ${s.text}`}>
+            <div key={i} className={`flex ${s.size} items-center justify-center rounded-xl bg-(--color-demo-accent) font-bold text-white ring-2 ring-(--color-demo-accent)/20 ${s.text}`}>
               李
             </div>
           ))}
           <div className="relative">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--color-demo-accent)] text-lg font-bold text-white">王</div>
-            <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-demo-success)] ring-2 ring-[var(--color-demo-surface)]">
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-(--color-demo-accent) text-lg font-bold text-white">王</div>
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-(--color-demo-success) ring-2 ring-(--color-demo-surface)">
               <Check className="size-2.5 text-white" strokeWidth={3} />
             </span>
           </div>
@@ -805,7 +805,7 @@ function NavTab({ items, active, onChange }: {
   onChange: (id: string) => void;
 }) {
   return (
-    <div className="inline-flex rounded-xl bg-[var(--color-demo-surface)] p-1 ring-1 ring-[var(--color-demo-border)]">
+    <div className="inline-flex rounded-xl bg-(--color-demo-surface) p-1 ring-1 ring-(--color-demo-border)">
       {items.map((item) => (
         <button
           key={item.id}
@@ -813,8 +813,8 @@ function NavTab({ items, active, onChange }: {
           onClick={() => onChange(item.id)}
           className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
             active === item.id
-              ? "bg-[var(--color-demo-accent)] text-white shadow-sm"
-              : "text-[var(--color-demo-text-secondary)] hover:text-[var(--color-demo-text-primary)] hover:bg-[var(--color-demo-surface-raised)]"
+              ? "bg-(--color-demo-accent) text-white shadow-sm"
+              : "text-(--color-demo-text-secondary) hover:text-(--color-demo-text-primary) hover:bg-(--color-demo-surface-raised)"
           }`}
         >
           {item.icon}
@@ -859,9 +859,9 @@ export default function ThemeDemo() {
 
       <div className="mx-auto max-w-[1360px] px-4 pb-16 pt-6 sm:px-6 lg:px-8 theme-demo-scroll">
         <header className="mb-8">
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--color-demo-text-muted)]">Demo</p>
-          <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-demo-text-primary)]">主题系统 & 组件库</h1>
-          <p className="mt-1 text-sm text-[var(--color-demo-text-secondary)]">浅色 / 深色主题切换，完整组件演示。</p>
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-(--color-demo-text-muted)">Demo</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-(--color-demo-text-primary)">主题系统 & 组件库</h1>
+          <p className="mt-1 text-sm text-(--color-demo-text-secondary)">浅色 / 深色主题切换，完整组件演示。</p>
         </header>
 
         <div className="mb-8 overflow-x-auto pb-1">

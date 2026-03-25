@@ -11,15 +11,15 @@ import toast from "../../utils/toast";
 
 function SkeletonStrip() {
   return (
-    <div className="animate-pulse overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
-      <div className="grid grid-cols-2 divide-x divide-y divide-[var(--app-border,#e4e4e7)] lg:grid-cols-4 lg:divide-y-0">
+    <div className="animate-pulse overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface)">
+      <div className="grid grid-cols-2 divide-x divide-y divide-(--app-border) lg:grid-cols-4 lg:divide-y-0">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="p-6">
             <div className="mb-4 flex justify-between">
-              <div className="h-3 w-16 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-              <div className="h-9 w-9 rounded-xl bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-3 w-16 rounded bg-(--app-skeleton)" />
+              <div className="h-9 w-9 rounded-xl bg-(--app-skeleton)" />
             </div>
-            <div className="h-9 w-20 rounded-lg bg-[var(--app-skeleton,#f4f4f6)]" />
+            <div className="h-9 w-20 rounded-lg bg-(--app-skeleton)" />
           </div>
         ))}
       </div>
@@ -29,17 +29,17 @@ function SkeletonStrip() {
 
 function SkeletonChart() {
   return (
-    <div className="flex min-h-[300px] animate-pulse flex-col overflow-hidden rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
-      <div className="border-b border-[var(--app-border,#e4e4e7)] px-6 py-4">
-        <div className="h-4 w-32 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-        <div className="mt-2 h-3 w-48 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+    <div className="flex min-h-[300px] animate-pulse flex-col overflow-hidden rounded-3xl border border-(--app-border) bg-(--app-surface)">
+      <div className="border-b border-(--app-border) px-6 py-4">
+        <div className="h-4 w-32 rounded bg-(--app-skeleton)" />
+        <div className="mt-2 h-3 w-48 rounded bg-(--app-skeleton)" />
       </div>
-      <div className="m-4 flex flex-1 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]/80 p-4">
+      <div className="m-4 flex flex-1 rounded-2xl bg-(--app-skeleton)/80 p-4">
         <div className="flex flex-1 items-end gap-2">
           {[35, 55, 40, 70, 50, 65, 45].map((h, i) => (
             <div
               key={i}
-              className="flex-1 rounded-t-lg bg-[var(--app-border-strong,#d4d4d8)]/90"
+              className="flex-1 rounded-t-lg bg-(--app-border-strong)/90"
               style={{ height: `${h}%` }}
             />
           ))}
@@ -51,18 +51,18 @@ function SkeletonChart() {
 
 function SkeletonActivity() {
   return (
-    <div className="flex min-h-[300px] animate-pulse flex-col rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)]">
-      <div className="border-b border-[var(--app-border,#e4e4e7)] px-6 py-4">
-        <div className="h-4 w-24 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-        <div className="mt-2 h-3 w-32 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+    <div className="flex min-h-[300px] animate-pulse flex-col rounded-3xl border border-(--app-border) bg-(--app-surface)">
+      <div className="border-b border-(--app-border) px-6 py-4">
+        <div className="h-4 w-24 rounded bg-(--app-skeleton)" />
+        <div className="mt-2 h-3 w-32 rounded bg-(--app-skeleton)" />
       </div>
       <div className="flex flex-1 flex-col gap-4 p-5">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="flex gap-3">
-            <div className="h-7 w-7 shrink-0 rounded-full bg-[var(--app-skeleton,#f4f4f6)]" />
+            <div className="h-7 w-7 shrink-0 rounded-full bg-(--app-skeleton)" />
             <div className="flex-1 space-y-2 pt-0.5">
-              <div className="h-3 w-full max-w-xs rounded bg-[var(--app-skeleton,#f4f4f6)]" />
-              <div className="h-2.5 w-20 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+              <div className="h-3 w-full max-w-xs rounded bg-(--app-skeleton)" />
+              <div className="h-2.5 w-20 rounded bg-(--app-skeleton)" />
             </div>
           </div>
         ))}
@@ -73,11 +73,11 @@ function SkeletonActivity() {
 
 function SkeletonQuick() {
   return (
-    <div className="animate-pulse rounded-3xl border border-[var(--app-border,#e4e4e7)] bg-[var(--app-surface,#fff)] px-6 py-5">
-      <div className="mb-4 h-3 w-20 rounded bg-[var(--app-skeleton,#f4f4f6)]" />
+    <div className="animate-pulse rounded-3xl border border-(--app-border) bg-(--app-surface) px-6 py-5">
+      <div className="mb-4 h-3 w-20 rounded bg-(--app-skeleton)" />
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3 xl:grid-cols-6">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-24 rounded-2xl bg-[var(--app-skeleton,#f4f4f6)]" />
+          <div key={i} className="h-24 rounded-2xl bg-(--app-skeleton)" />
         ))}
       </div>
     </div>
@@ -132,18 +132,18 @@ export default function Dashboard() {
       <div className="mx-auto max-w-[1360px] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--app-text-muted,#a1a1aa)]">
+            <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-(--app-text-muted)">
               Overview
             </p>
-            <h1 className="text-2xl font-semibold tracking-tight text-[var(--app-text-primary,#18181b)] sm:text-[1.75rem]">
+            <h1 className="text-2xl font-semibold tracking-tight text-(--app-text-primary) sm:text-[1.75rem]">
               {greeting}
-              <span className="font-normal text-[var(--app-text-secondary,#52525b)]">，</span>
+              <span className="font-normal text-(--app-text-secondary)">，</span>
               工作台
             </h1>
           </div>
           <time
             dateTime={now.toISOString()}
-            className="text-sm tabular-nums text-[var(--app-text-secondary,#52525b)]"
+            className="text-sm tabular-nums text-(--app-text-secondary)"
           >
             {dateStr}
           </time>

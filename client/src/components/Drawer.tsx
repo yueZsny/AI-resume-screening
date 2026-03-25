@@ -31,14 +31,14 @@ const DrawerContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed z-50 gap-4 bg-[var(--app-surface,#fff)] p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 right-0 h-full w-full max-w-2xl border-l border-[var(--app-border,#e4e4e7)] data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+        "fixed z-50 gap-4 bg-(--app-surface) p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 right-0 h-full w-full max-w-2xl border-l border-(--app-border) data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
         className
       )}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-[var(--app-primary,#0ea5e9)] focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-[var(--app-surface-raised,#fafafa)]">
-        <X className="h-4 w-4 text-[var(--app-text-secondary,#52525b)]" />
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-(--app-primary) focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-(--app-surface-raised)">
+        <X className="h-4 w-4 text-(--app-text-secondary)" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -66,7 +66,7 @@ const DrawerTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-lg font-semibold text-[var(--app-text-primary,#18181b)]", className)}
+    className={cn("text-lg font-semibold text-(--app-text-primary)", className)}
     {...props}
   />
 ));
@@ -78,7 +78,7 @@ const DrawerDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-[var(--app-text-secondary,#52525b)]", className)}
+    className={cn("text-sm text-(--app-text-secondary)", className)}
     {...props}
   />
 ));
