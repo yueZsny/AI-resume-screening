@@ -18,17 +18,20 @@ const STATUS_ROW: Record<
 > = {
   pending: {
     label: "待筛选",
-    badge: "bg-amber-50 text-amber-900/90 border border-amber-200/90",
+    badge:
+      "bg-[var(--app-warning-soft)] text-[var(--app-warning)] border border-[var(--app-border)]",
     Icon: Clock,
   },
   passed: {
     label: "已通过",
-    badge: "bg-blue-50 text-blue-800 border border-blue-200",
+    badge:
+      "bg-[var(--app-primary-soft)] text-[var(--app-primary)] border border-[var(--app-border)]",
     Icon: CheckCircle2,
   },
   rejected: {
     label: "已拒绝",
-    badge: "bg-slate-50 text-slate-600 border border-slate-200",
+    badge:
+      "bg-[var(--app-surface-raised)] text-[var(--app-text-secondary)] border border-[var(--app-border)]",
     Icon: XCircle,
   },
 };
@@ -40,9 +43,9 @@ function getInitials(name: string) {
 }
 
 function scoreDisplayClass(score: number) {
-  if (score >= 80) return "text-blue-700";
-  if (score >= 60) return "text-blue-600";
-  return "text-slate-500";
+  if (score >= 80) return "text-[var(--app-primary,#0ea5e9)]";
+  if (score >= 60) return "text-[var(--app-ai-text,#1e40af)]";
+  return "text-[var(--app-text-muted,#a1a1aa)]";
 }
 
 interface ScreeningCandidateTableProps {
@@ -66,12 +69,12 @@ export function ScreeningCandidateTable({
   return (
     <div className="min-h-0 min-w-0 flex-1 overflow-auto">
       <table className="w-full min-w-[640px] border-collapse text-left text-sm">
-        <thead className="sticky top-0 z-10 border-b border-blue-100/90 bg-slate-100/95 backdrop-blur-sm">
-          <tr className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <thead className="sticky top-0 z-10 border-b border-[var(--app-ai-border,rgba(59,130,246,0.2))]/90 bg-[var(--app-surface-raised,#fafafa)]/95 backdrop-blur-sm">
+          <tr className="text-[11px] font-semibold uppercase tracking-wide text-[var(--app-text-muted,#a1a1aa)]">
             <th className="whitespace-nowrap px-3 py-2.5 pl-4">候选人</th>
             <th className="whitespace-nowrap px-3 py-2.5 normal-case">
               <span className="block leading-tight">匹配分</span>
-              <span className="mt-0.5 block text-[10px] font-normal tracking-normal text-slate-400">
+              <span className="mt-0.5 block text-[10px] font-normal tracking-normal text-[var(--app-text-muted,#a1a1aa)]">
                 状态
               </span>
             </th>
@@ -82,7 +85,7 @@ export function ScreeningCandidateTable({
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-blue-100/80 bg-white/60">
+        <tbody className="divide-y divide-[var(--app-ai-border,rgba(59,130,246,0.2))]/80 bg-[var(--app-surface,#fff)]/50">
           {resumes.map((resume) => {
             const selected = selectedResumeId === resume.id;
             const meta = STATUS_ROW[resume.status];
@@ -94,7 +97,7 @@ export function ScreeningCandidateTable({
                 key={resume.id}
                 id={`candidate-${resume.id}`}
                 tabIndex={0}
-                aria-selected={selected ? true : false}
+                aria-selected={selected ? "true" : "false"}
                 onClick={() => onSelect(resume.id)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
@@ -102,9 +105,9 @@ export function ScreeningCandidateTable({
                     onSelect(resume.id);
                   }
                 }}
-                className={`cursor-pointer transition-colors hover:bg-blue-50/50 ${
+                className={`cursor-pointer transition-colors hover:bg-[var(--app-primary-soft)]/60 ${
                   selected
-                    ? "bg-blue-50/40 ring-1 ring-inset ring-blue-200/60"
+                    ? "bg-[var(--app-primary-soft)]/50 ring-1 ring-inset ring-[var(--app-ai-border,rgba(59,130,246,0.2))]"
                     : ""
                 }`}
               >
@@ -113,14 +116,14 @@ export function ScreeningCandidateTable({
                     <div
                       className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${
                         selected
-                          ? "bg-blue-600 text-white"
-                          : "bg-slate-100 text-slate-600 ring-1 ring-slate-200/80"
+                          ? "bg-[var(--app-primary,#0ea5e9)] text-white"
+                          : "bg-[var(--app-surface-raised,#fafafa)] text-[var(--app-text-secondary,#52525b)] ring-1 ring-[var(--app-border)]"
                       }`}
                       aria-hidden
                     >
                       {getInitials(resume.name)}
                     </div>
-                    <span className="font-semibold text-slate-900">
+                    <span className="font-semibold text-[var(--app-text-primary,#18181b)]">
                       {resume.name}
                     </span>
                   </div>
@@ -133,13 +136,13 @@ export function ScreeningCandidateTable({
                         title="AI 匹配分"
                       >
                         {scoreVal}
-                        <span className="ml-0.5 text-[9px] font-bold text-slate-400">
+                        <span className="ml-0.5 text-[9px] font-bold text-[var(--app-text-muted,#a1a1aa)]">
                           分
                         </span>
                       </span>
                     ) : (
                       <span
-                        className="text-xs font-semibold tabular-nums text-slate-300"
+                        className="text-xs font-semibold tabular-nums text-[var(--app-text-muted,#a1a1aa)]/50"
                         title="尚未生成匹配分"
                       >
                         —
@@ -157,27 +160,27 @@ export function ScreeningCandidateTable({
                   </div>
                 </td>
                 <td className="align-middle px-3 py-3">
-                  <div className="flex flex-col gap-1 text-[11px] text-slate-600">
+                  <div className="flex flex-col gap-1 text-[11px] text-[var(--app-text-secondary,#52525b)]">
                     <span className="flex min-w-0 items-center gap-1.5">
                       <Mail
-                        className="h-3.5 w-3.5 shrink-0 text-slate-400"
+                        className="h-3.5 w-3.5 shrink-0 text-[var(--app-text-muted,#a1a1aa)]"
                         aria-hidden
                       />
                       <span className="truncate">{resume.email || "—"}</span>
                     </span>
                     <span className="flex min-w-0 items-center gap-1.5">
                       <Phone
-                        className="h-3.5 w-3.5 shrink-0 text-slate-400"
+                        className="h-3.5 w-3.5 shrink-0 text-[var(--app-text-muted,#a1a1aa)]"
                         aria-hidden
                       />
                       <span className="truncate">{resume.phone || "—"}</span>
                     </span>
                   </div>
                 </td>
-                <td className="align-middle whitespace-nowrap px-3 py-3 text-[11px] tabular-nums text-slate-500">
+                <td className="align-middle whitespace-nowrap px-3 py-3 text-[11px] tabular-nums text-[var(--app-text-secondary,#52525b)]">
                   <span className="inline-flex items-center gap-1.5">
                     <Calendar
-                      className="h-3.5 w-3.5 shrink-0 text-slate-400"
+                      className="h-3.5 w-3.5 shrink-0 text-[var(--app-text-muted,#a1a1aa)]"
                       aria-hidden
                     />
                     {formatDateShort(resume.createdAt)}
@@ -187,7 +190,7 @@ export function ScreeningCandidateTable({
                   <div className="inline-flex items-center justify-end gap-0.5">
                     <button
                       type="button"
-                      className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-blue-100/80 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                      className="rounded-lg p-2 text-[var(--app-text-secondary,#52525b)] transition-colors hover:bg-[var(--app-primary-soft)] hover:text-[var(--app-primary,#0ea5e9)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-ring)]"
                       aria-label={`查看 ${resume.name}`}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -198,7 +201,7 @@ export function ScreeningCandidateTable({
                     </button>
                     <button
                       type="button"
-                      className="rounded-lg p-2 text-slate-500 transition-colors hover:bg-rose-50 hover:text-rose-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+                      className="rounded-lg p-2 text-[var(--app-text-secondary,#52525b)] transition-colors hover:bg-[var(--app-danger-soft)] hover:text-[var(--app-danger,#ef4444)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--app-danger,#ef4444)]/40"
                       aria-label={`删除 ${resume.name}`}
                       onClick={(e) => {
                         e.stopPropagation();
