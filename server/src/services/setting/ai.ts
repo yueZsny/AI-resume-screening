@@ -421,7 +421,11 @@ function normalizeDimensions(
   overallScore: number,
 ): AiDimensionScores | undefined {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
-  const o = raw as Record<string, unknown>;
+  const o = { ...(raw as Record<string, unknown>) };
+  // 旧版 JSON 分项字段 stability → campus
+  if (o.campus == null && typeof o.stability === "number" && !Number.isNaN(o.stability)) {
+    o.campus = o.stability;
+  }
   const out: Partial<AiDimensionScores> = {};
   let any = false;
   for (const k of DIMENSION_KEYS) {
@@ -744,25 +748,30 @@ function parseMarkdownResponse(
 
   const score = Math.min(100, Math.max(0, parseInt(scoreMatch[1])));
 
-  const dimPatterns: Array<[string, keyof AiDimensionScores]> = [
-    ["专业技能", "skills"],
-    ["项目经验", "projects"],
-    ["工作经历", "experience"],
-    ["教育背景", "education"],
-    ["岗位匹配", "fit"],
-    ["沟通协作", "communication"],
-    ["在校经历", "campus"],
+  const dimPatterns: Array<[string, keyof AiDimensionScores][]> = [
+    [["专业技能", "skills"]],
+    [["项目经验", "projects"]],
+    [["工作经历", "experience"]],
+    [["教育背景", "education"]],
+    [["岗位匹配", "fit"]],
+    [["沟通协作", "communication"]],
+    // 新标签 + 旧模型仍可能输出「履历稳定」
+    [
+      ["在校经历", "campus"],
+      ["履历稳定", "campus"],
+    ],
   ];
 
   const dimensions: Partial<AiDimensionScores> = {};
   let dimsFound = 0;
-  for (const [label, key] of dimPatterns) {
-    const m = raw.match(
-      new RegExp(`${label}[：:]\\s*(\\d{1,3})`, "i"),
-    );
-    if (m) {
-      dimensions[key] = Math.min(100, Math.max(0, parseInt(m[1]))) as never;
-      dimsFound++;
+  for (const alternatives of dimPatterns) {
+    for (const [label, key] of alternatives) {
+      const m = raw.match(new RegExp(`${label}[：:]\\s*(\\d{1,3})`, "i"));
+      if (m) {
+        dimensions[key] = Math.min(100, Math.max(0, parseInt(m[1]))) as never;
+        dimsFound++;
+        break;
+      }
     }
   }
 
@@ -772,11 +781,14 @@ function parseMarkdownResponse(
     ? reasoningMatch[1].trim()
     : raw.replace(/^推荐[：:].*/m, "").replace(/^综合[分评分][：:].*/m, "").replace(/^维度评分\n/, "").replace(/^[-*]\s*.+\n?/gm, "").trim();
 
+  const normalized =
+    dimsFound > 0 ? normalizeDimensions(dimensions, score) : undefined;
+
   return {
     recommendation,
     score,
     reasoning,
-    ...(dimsFound > 0 ? { dimensions: dimensions as AiDimensionScores } : {}),
+    ...(normalized ? { dimensions: normalized } : {}),
   };
 }
 

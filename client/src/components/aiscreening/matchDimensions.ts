@@ -16,8 +16,12 @@ function clampPercent(n: number): number {
 }
 
 function isCompleteDimensions(o: Record<string, unknown>): boolean {
+  const merged =
+    o.campus == null && typeof o.stability === "number" && !Number.isNaN(o.stability)
+      ? { ...o, campus: o.stability }
+      : o;
   return RADAR_ORDER.every(({ key }) => {
-    const v = o[key];
+    const v = merged[key];
     return typeof v === "number" && !Number.isNaN(v);
   });
 }
@@ -36,7 +40,11 @@ export function parseStoredDimensionScores(
     }
   }
   if (typeof raw !== "object" || Array.isArray(raw)) return undefined;
-  const o = raw as Record<string, unknown>;
+  const rawO = raw as Record<string, unknown>;
+  const o =
+    rawO.campus == null && typeof rawO.stability === "number" && !Number.isNaN(rawO.stability)
+      ? { ...rawO, campus: rawO.stability }
+      : rawO;
   if (!isCompleteDimensions(o)) return undefined;
   return {
     skills: clampPercent(Number(o.skills)),
@@ -69,6 +77,6 @@ export function buildFallbackRadarRows(overallScore: number): MatchRadarRow[] {
     { dimension: "教育背景", value: clampPercent(s - 18) },
     { dimension: "岗位匹配", value: clampPercent(s + 3) },
     { dimension: "沟通协作", value: clampPercent(s - 10) },
-    { dimension: "履历稳定", value: clampPercent(s - 7) },
+    { dimension: "在校经历", value: clampPercent(s - 7) },
   ];
 }

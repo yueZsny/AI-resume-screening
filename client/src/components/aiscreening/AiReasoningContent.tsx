@@ -1,170 +1,151 @@
-import { useMemo } from "react";
+import type { Components } from "react-markdown";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-/** 常见 AI 评估小节标题，用于在缺少换行时切分段落 */
-const SECTION_HEADS =
-  "技术面试需重点考察|教育背景评分|工作经历评分|技能匹配度评分|技能匹配评分|项目经验评分|综合评分|候选人评级|招聘建议|风险点";
-
-function normalizeSections(raw: string): string {
-  let t = raw.trim();
-  if (!t) return "";
-  const headAlt = SECTION_HEADS;
-  t = t.replace(new RegExp(`([。；])\\s*(?=(${headAlt})[：:])`, "g"), "$1\n\n");
-  t = t.replace(new RegExp(`(?<!^)\\s+(?=(${headAlt})[：:])`, "g"), "\n\n");
-  return t.replace(/\n{3,}/g, "\n\n").trim();
-}
-
-const SCORE_LINE = /^(.+?)[：:]\s*(\d+)\s*\/\s*(\d+)\s*(.*)$/;
-
-type ParsedBlock =
-  | {
-      kind: "score";
-      title: string;
-      num: number;
-      den: number;
-      body: string;
-    }
-  | { kind: "labeled"; title: string; value: string; rest: string }
-  | { kind: "text"; content: string };
-
-function parseOneBlock(paragraph: string): ParsedBlock {
-  const lines = paragraph
-    .split(/\n/)
-    .map((l) => l.trim())
-    .filter(Boolean);
-  const first = lines[0] ?? "";
-
-  const scoreM = first.match(SCORE_LINE);
-  if (scoreM) {
-    const tail = scoreM[4]?.trim() ?? "";
-    const body = [tail, ...lines.slice(1)].filter(Boolean).join("\n");
-    return {
-      kind: "score",
-      title: scoreM[1].trim(),
-      num: Number(scoreM[2]),
-      den: Math.max(1, Number(scoreM[3])),
-      body,
-    };
-  }
-
-  const labelM = first.match(/^(.+?)[：:]\s*(.+)$/);
-  if (labelM) {
-    const value = labelM[2].trim();
-    const rest = lines.slice(1).join("\n");
-    if (value.length <= 160) {
-      return {
-        kind: "labeled",
-        title: labelM[1].trim(),
-        value,
-        rest,
-      };
-    }
-  }
-
-  return { kind: "text", content: paragraph };
-}
-
-function parseBlocks(raw: string): ParsedBlock[] {
-  const normalized = normalizeSections(raw);
-  return normalized
-    .split(/\n\s*\n+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .map(parseOneBlock);
-}
-
-function ScoreSection({
-  title,
-  num,
-  den,
-  body,
-}: {
-  title: string;
-  num: number;
-  den: number;
-  body: string;
-}) {
-  const pct = Math.min(100, Math.max(0, Math.round((num / den) * 100)));
-  return (
-    <section className="rounded-xl border border-zinc-200/80 bg-white px-4 py-3 shadow-sm">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h4 className="text-sm font-semibold text-zinc-900">{title}</h4>
-        <span className="tabular-nums text-sm font-medium text-violet-600">
-          {num}/{den}
-        </span>
-      </div>
-      <div
-        className="mt-2 h-2 overflow-hidden rounded-full bg-zinc-100"
-        aria-hidden
-      >
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-500 transition-[width] duration-300"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      {body ? <ReasoningBody text={body} /> : null}
-    </section>
-  );
-}
-
-function LabeledRow({
-  title,
-  value,
-  rest,
-}: {
-  title: string;
-  value: string;
-  rest: string;
-}) {
-  return (
-    <section className="rounded-xl border border-zinc-200/80 bg-white px-4 py-3 shadow-sm">
-      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <h4 className="text-sm font-semibold text-zinc-900">{title}</h4>
-        <span className="text-sm font-medium text-zinc-800">{value}</span>
-      </div>
-      {rest ? <ReasoningBody text={rest} /> : null}
-    </section>
-  );
-}
-
-function ReasoningBody({ text }: { text: string }) {
-  const clauses = text
-    .split(/[；;]/)
-    .map((c) => c.trim())
-    .filter(Boolean);
-
-  if (clauses.length >= 3) {
-    return (
-      <ul className="mt-3 list-inside list-disc space-y-1.5 text-sm leading-relaxed text-zinc-600 marker:text-zinc-400">
-        {clauses.map((c, i) => (
-          <li key={i} className="pl-0.5">
-            {c}
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  return (
-    <p className="mt-3 text-sm leading-relaxed text-zinc-600 whitespace-pre-wrap">
-      {text}
+/** 与抽屉内「评估理由」区域配色一致，便于阅读模型返回的 Markdown */
+const mdComponents: Components = {
+  h1: ({ children, ...props }) => (
+    <h3
+      className="mt-4 mb-2 text-base font-bold tracking-tight text-zinc-900 first:mt-0"
+      {...props}
+    >
+      {children}
+    </h3>
+  ),
+  h2: ({ children, ...props }) => (
+    <h3
+      className="mt-4 mb-2 border-b border-blue-100 pb-1 text-sm font-bold text-blue-950 first:mt-0"
+      {...props}
+    >
+      {children}
+    </h3>
+  ),
+  h3: ({ children, ...props }) => (
+    <h4 className="mt-3 mb-1.5 text-sm font-semibold text-zinc-900" {...props}>
+      {children}
+    </h4>
+  ),
+  h4: ({ children, ...props }) => (
+    <h5 className="mt-2 mb-1 text-sm font-semibold text-zinc-800" {...props}>
+      {children}
+    </h5>
+  ),
+  p: ({ children, ...props }) => (
+    <p className="mb-3 text-sm leading-relaxed text-zinc-700 last:mb-0" {...props}>
+      {children}
     </p>
-  );
-}
-
-function TextBlock({ content }: { content: string }) {
-  return (
-    <div className="rounded-xl border border-dashed border-zinc-200/90 bg-zinc-50/50 px-4 py-3">
-      <p className="text-sm leading-relaxed text-zinc-700 whitespace-pre-wrap">
-        {content}
-      </p>
+  ),
+  ul: ({ children, ...props }) => (
+    <ul
+      className="mb-3 list-disc space-y-1.5 pl-5 text-sm text-zinc-700"
+      {...props}
+    >
+      {children}
+    </ul>
+  ),
+  ol: ({ children, ...props }) => (
+    <ol
+      className="mb-3 list-decimal space-y-1.5 pl-5 text-sm text-zinc-700"
+      {...props}
+    >
+      {children}
+    </ol>
+  ),
+  li: ({ children, ...props }) => (
+    <li className="leading-relaxed marker:text-zinc-400" {...props}>
+      {children}
+    </li>
+  ),
+  strong: ({ children, ...props }) => (
+    <strong className="font-semibold text-zinc-900" {...props}>
+      {children}
+    </strong>
+  ),
+  em: ({ children, ...props }) => (
+    <em className="italic text-zinc-800" {...props}>
+      {children}
+    </em>
+  ),
+  code: ({ className, children, ...props }) => {
+    const isFenced = Boolean(className?.startsWith("language-"));
+    if (isFenced) {
+      return (
+        <code
+          className={`block font-mono text-xs leading-relaxed text-zinc-100 ${className ?? ""}`}
+          {...props}
+        >
+          {children}
+        </code>
+      );
+    }
+    return (
+      <code
+        className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-[0.8125rem] text-violet-800"
+        {...props}
+      >
+        {children}
+      </code>
+    );
+  },
+  pre: ({ children, ...props }) => (
+    <pre
+      className="mb-3 overflow-x-auto rounded-lg bg-zinc-900 p-3"
+      {...props}
+    >
+      {children}
+    </pre>
+  ),
+  blockquote: ({ children, ...props }) => (
+    <blockquote
+      className="mb-3 border-l-4 border-blue-200 bg-blue-50/40 py-2 pl-4 text-sm text-zinc-700"
+      {...props}
+    >
+      {children}
+    </blockquote>
+  ),
+  a: ({ href, children, ...props }) => (
+    <a
+      href={href}
+      className="font-medium text-blue-600 underline-offset-2 hover:underline"
+      target="_blank"
+      rel="noopener noreferrer"
+      {...props}
+    >
+      {children}
+    </a>
+  ),
+  hr: () => <hr className="my-4 border-zinc-200" />,
+  table: ({ children, ...props }) => (
+    <div className="mb-3 overflow-x-auto rounded-lg border border-zinc-200">
+      <table className="min-w-full border-collapse text-sm" {...props}>
+        {children}
+      </table>
     </div>
-  );
-}
+  ),
+  thead: ({ children, ...props }) => (
+    <thead className="bg-zinc-100" {...props}>
+      {children}
+    </thead>
+  ),
+  th: ({ children, ...props }) => (
+    <th
+      className="border-b border-zinc-200 px-3 py-2 text-left font-semibold text-zinc-800"
+      {...props}
+    >
+      {children}
+    </th>
+  ),
+  td: ({ children, ...props }) => (
+    <td className="border-b border-zinc-100 px-3 py-2 text-zinc-700" {...props}>
+      {children}
+    </td>
+  ),
+};
 
 export function AiReasoningContent({ text }: { text: string }) {
-  const blocks = useMemo(() => parseBlocks(text), [text]);
+  const trimmed = text.trim();
 
-  if (blocks.length === 0) {
+  if (!trimmed) {
     return (
       <p className="text-sm text-zinc-500">
         暂无评估内容。完成 AI 筛选后将在此展示模型结论。
@@ -173,26 +154,10 @@ export function AiReasoningContent({ text }: { text: string }) {
   }
 
   return (
-    <div className="space-y-3">
-      {blocks.map((b, i) => {
-        if (b.kind === "score") {
-          return (
-            <ScoreSection
-              key={i}
-              title={b.title}
-              num={b.num}
-              den={b.den}
-              body={b.body}
-            />
-          );
-        }
-        if (b.kind === "labeled") {
-          return (
-            <LabeledRow key={i} title={b.title} value={b.value} rest={b.rest} />
-          );
-        }
-        return <TextBlock key={i} content={b.content} />;
-      })}
+    <div className="ai-reasoning-markdown text-left [&_a]:break-all">
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
+        {trimmed}
+      </ReactMarkdown>
     </div>
   );
 }
