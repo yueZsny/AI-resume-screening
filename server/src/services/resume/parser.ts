@@ -8,7 +8,7 @@ interface ParseResult {
 }
 
 /**
- * 解析 PDF 文件（纯 JS 实现，兼容 Serverless）
+ * 解析 PDF 文件（纯 Node.js 实现，兼容 Serverless）
  */
 async function parsePdf(filePath: string): Promise<ParseResult> {
   try {
@@ -21,32 +21,12 @@ async function parsePdf(filePath: string): Promise<ParseResult> {
       return { content: '', error: 'PDF 文件为空' };
     }
 
-    const { getDocument } = await import('pdfjs-dist/build/pdf.mjs');
-    const loadingTask = getDocument({
-      data: new Uint8Array(dataBuffer),
-      useSystemFonts: true,
-    });
-    const pdfDocument = await loadingTask.promise;
+    const pdfParse = (await import('pdf-parse')).default;
+    const pdfData = await pdfParse(dataBuffer);
 
-    const textParts: string[] = [];
-    const numPages = pdfDocument.numPages;
+    const fullText = pdfData.text?.trim() || '';
 
-    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-      const page = await pdfDocument.getPage(pageNum);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item: { str?: string }) => item.str || '')
-        .join(' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-      if (pageText) {
-        textParts.push(pageText);
-      }
-    }
-
-    const fullText = textParts.join('\n');
-
-    if (!fullText || fullText.trim().length === 0) {
+    if (!fullText) {
       return { content: '', error: 'PDF 中没有可提取的文本内容（可能是图片扫描件）' };
     }
 
