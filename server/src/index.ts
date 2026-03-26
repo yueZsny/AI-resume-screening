@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express, { Application, Request, Response, NextFunction } from "express";
-import path from "path";
 import { testConnection } from "./db/index.js";
+import { getUploadsRoot } from "./utils/uploadPaths.js";
 
 import loginRouter from "./routes/login.js";
 import settingRouter from "./routes/setting.js";
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // 静态文件服务 - 提供简历文件访问
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use("/uploads", express.static(getUploadsRoot()));
 
 // route
 app.use("/v1", loginRouter);

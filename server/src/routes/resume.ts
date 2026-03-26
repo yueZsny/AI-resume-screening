@@ -7,6 +7,7 @@ import { parseDocument, getFileType } from "../services/resume/parser.js";
 import { eq, desc, inArray, and, or, gte, lte, like } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 import { extractContactInfo, upload } from "../utils/resume.js";
+import { getUploadsRoot } from "../utils/uploadPaths.js";
 import { authenticate } from "../middleware/auth.js";
 import {
   fetchEmailsWithAttachments,
@@ -274,7 +275,7 @@ router.delete("/resume/:id", authenticate, async (req: Request, res: Response) =
 
     // 删除磁盘文件（安全检查：仅允许删除 uploads 目录下的文件）
     if (resume.resumeFile) {
-      const uploadsDir = path.join(process.cwd(), "uploads");
+      const uploadsDir = getUploadsRoot();
       const resolvedFile = path.resolve(resume.resumeFile);
       if (resolvedFile.startsWith(uploadsDir)) {
         try {

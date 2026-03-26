@@ -7,6 +7,7 @@ import { db } from '../../db/index.js';
 import { emailConfigs } from '../../db/schema.js';
 import { eq } from 'drizzle-orm';
 import { decrypt } from '../../utils/crypto';
+import { ensureResumeUploadDir, getResumeUploadDir } from '../../utils/uploadPaths.js';
 
 export interface EmailMessage {
   from: string;
@@ -271,12 +272,8 @@ export function saveAttachmentToResume(
   filename: string,
   userId: number
 ): { filePath: string; originalFileName: string } {
-  // 创建上传目录（如果不存在）
-  const uploadDir = path.join(process.cwd(), 'uploads', 'resumes');
-  
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
+  ensureResumeUploadDir();
+  const uploadDir = getResumeUploadDir();
 
   // 解码文件名（处理 URL 编码的中文文件名）
   let decodedFilename = filename;

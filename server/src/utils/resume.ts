@@ -1,7 +1,7 @@
 import path from 'path';
-import fs from 'fs';
 import multer, { FileFilterCallback } from 'multer';
 import express from 'express';
+import { ensureResumeUploadDir, getResumeUploadDir } from './uploadPaths.js';
 
 /**
  * 从解析内容中提取姓名、邮箱和电话
@@ -37,16 +37,15 @@ export function extractContactInfo(content: string): { name: string; email: stri
   return { name, email, phone };
 }
 
-// 确保上传目录存在
-const uploadDir = path.join(process.cwd(), 'uploads', 'resumes');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// 配置 multer 存储
+// 配置 multer 存储（目录在每次写入前创建，避免 Serverless 在 import 阶段 mkdir 失败）
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    try {
+      ensureResumeUploadDir();
+      cb(null, getResumeUploadDir());
+    } catch (err) {
+      cb(err as Error, getResumeUploadDir());
+    }
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
