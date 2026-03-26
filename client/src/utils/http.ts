@@ -2,8 +2,16 @@ import axios, { type AxiosInstance, type AxiosError, type InternalAxiosRequestCo
 import { refreshToken as refreshTokenApi } from "../api/login";
 import { useLoginStore } from "../store/Login";
 
-// 1. 基础配置（从环境变量取基础URL，兜底本地服务）
-const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+// 1. 基础配置（Vercel 环境使用 / 相对路径代理，或直接使用后端地址）
+const getBaseURL = () => {
+  // Vercel 部署环境
+  if (import.meta.env.VITE_SERVER_URL) {
+    return import.meta.env.VITE_SERVER_URL;
+  }
+  // 本地开发环境
+  return "http://localhost:3000";
+};
+const baseURL = getBaseURL();
 
 // 2. 创建Axios实例
 const request: AxiosInstance = axios.create({

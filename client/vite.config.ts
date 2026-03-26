@@ -9,4 +9,14 @@ export default defineConfig({
   optimizeDeps: {
     include: ['recharts'],
   },
+  // Vercel 部署配置
+  base: process.env.VERCEL ? '/client/' : '/',
+  server: {
+    proxy: {
+      '/v1': {
+        target: process.env.VERCEL ? 'https://' + process.env.VERCEL_BRANCH_URL : 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
 })

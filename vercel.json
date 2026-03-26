@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "workspaces": [
+    {
+      "packagePath": "./client",
+      "buildCommand": "pnpm run build",
+      "devCommand": "pnpm run dev",
+      "installCommand": "pnpm install"
+    },
+    {
+      "packagePath": "./server",
+      "buildCommand": "pnpm run build",
+      "devCommand": "pnpm run dev",
+      "installCommand": "pnpm install"
+    }
+  ]
+}

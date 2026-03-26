@@ -10,8 +10,8 @@ import emailRouter from './routes/emailTemplate.js';
 import resumeRouter from './routes/resume.js';
 import dashboardRouter from './routes/dashboard.js';
 import templateRouter from './routes/screeningTemplate.js';
+
 const app: Application = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -21,13 +21,13 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // route
-
 app.use('/v1', loginRouter);
 app.use('/v1', settingRouter);
 app.use('/v1', emailRouter);
 app.use('/v1', resumeRouter);
 app.use('/v1', dashboardRouter);
 app.use('/v1', templateRouter);
+
 // Express 全局错误处理中间件
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   // 1. 处理 JWT Token 验证失败（401 未授权）
@@ -45,15 +45,20 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-// Start server
-app.listen(PORT, async () => {
-  console.log(`后端服务已启动: http://localhost:${PORT}`);
-  const dbConnected = await testConnection();
-  if (dbConnected) {
-    console.log('数据库连接成功');
-  } else {
-    console.error('数据库连接失败');
-  }
-});
+// Vercel Serverless 导出
+const vercelHandler = app;
+export default vercelHandler;
 
-export default app;
+// 本地开发启动（Vercel 环境不执行此代码）
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, async () => {
+    console.log(`后端服务已启动: http://localhost:${PORT}`);
+    const dbConnected = await testConnection();
+    if (dbConnected) {
+      console.log('数据库连接成功');
+    } else {
+      console.error('数据库连接失败');
+    }
+  });
+}
