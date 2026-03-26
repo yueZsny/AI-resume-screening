@@ -1,6 +1,6 @@
 import React, { type ChangeEvent } from "react";
 import { Search, ChevronDown, SlidersHorizontal } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input } from "../../ui/input";
 
 export type FilterStatus = "all" | "passed" | "failed" | "pending";
 export type SortKey = "score" | "name" | "date";

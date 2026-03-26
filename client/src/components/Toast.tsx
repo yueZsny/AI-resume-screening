@@ -1,5 +1,5 @@
 import { CheckCircle, XCircle, AlertCircle, Info } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactElement } from "react";
 import { toastState } from "../utils/toast";
 import type { ToastItem, ToastType } from "../utils/toast";
 
@@ -33,7 +33,7 @@ export function ToastContainer() {
 }
 
 function ToastItem({ toast }: { toast: ToastItem }) {
-  const icons: Record<ToastType, JSX.Element> = {
+  const icons: Record<ToastType, ReactElement> = {
     success: <CheckCircle className="size-5 shrink-0 text-emerald-600" />,
     error: <XCircle className="size-5 shrink-0 text-rose-600" />,
     warning: <AlertCircle className="size-5 shrink-0 text-amber-600" />,

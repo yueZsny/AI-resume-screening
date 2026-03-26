@@ -1,6 +1,25 @@
-import axios, { type AxiosInstance, type AxiosError, type InternalAxiosRequestConfig } from "axios";
+import axios, {
+  type AxiosInstance,
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+  type AxiosResponse,
+} from "axios";
 import { refreshToken as refreshTokenApi } from "../api/login";
 import { useLoginStore } from "../store/Login";
+
+type ApiEnvelope<T = unknown> = {
+  code?: number;
+  message?: string;
+  data?: T;
+};
+
+function readMessageFromBody(data: unknown): string | undefined {
+  if (data && typeof data === "object" && "message" in data) {
+    const msg = (data as { message: unknown }).message;
+    return typeof msg === "string" ? msg : undefined;
+  }
+  return undefined;
+}
 
 // 1. 基础配置（Vercel 环境使用 / 相对路径代理，或直接使用后端地址）
 const getBaseURL = () => {
@@ -37,19 +56,22 @@ request.interceptors.request.use(
 request.interceptors.response.use(
     // 成功响应：只返回业务数据（适配常见的{code, message, data}结构）
     (res) => {
+        const body = res.data as ApiEnvelope;
         // 业务成功（code为0/200都算成功，可根据你的后端调整）
-        if ([0, 200,201].includes(res.data.code)) {
-            return res.data.data; // 只返回核心数据，简化业务层调用
+        if ([0, 200, 201].includes(body.code ?? -1)) {
+            // 运行时返回解包后的 data；Axios 拦截器类型仍声明为 AxiosResponse
+            return body.data as unknown as AxiosResponse;
         }
         // 业务失败：抛出错误（让业务层catch处理）
-        return Promise.reject(new Error(res.data.message || "请求失败"));
+        return Promise.reject(new Error(body.message || "请求失败"));
     },
     // 失败响应：分类处理HTTP错误
     async (err: AxiosError) => {
         const originalRequest = err.config as InternalAxiosRequestConfig & { _retry?: boolean };
         
         // 优先使用后端返回的错误信息
-        const backendMessage = err.response?.data?.message || err.message;
+        const backendMessage =
+            readMessageFromBody(err.response?.data) ?? err.message;
         let errorMsg = "网络异常，请稍后重试";
 
         // 401：token过期，尝试刷新token

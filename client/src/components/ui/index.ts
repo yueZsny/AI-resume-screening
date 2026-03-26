@@ -1,4 +1,5 @@
 // UI Components
+export { Input } from "./input";
 export { StatusFeedback } from "./StatusFeedback";
 export { LoadingState } from "./LoadingState";
 export { EmptyState } from "./EmptyState";
