@@ -1,33 +1,31 @@
-import mysql from 'mysql2/promise';
-import { drizzle } from 'drizzle-orm/mysql2';
-import 'dotenv/config';
+import "../loadEnv.js";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
+import * as schema from "./schema";
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '3306'),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
-  charset: 'utf8mb4',
+const tursoUrl = process.env.TURSO_DATABASE_URL?.trim();
+const tursoToken = process.env.TURSO_AUTH_TOKEN?.trim();
+
+if (!tursoUrl) {
+  throw new Error(
+    "TURSO_DATABASE_URL 未设置或 .env 未加载。请在 server/.env 中配置，并确保入口先执行 loadEnv（见 src/loadEnv.ts）。",
+  );
+}
+
+const client = createClient({
+  url: tursoUrl,
+  authToken: tursoToken,
 });
 
-// Drizzle ORM 实例
-export const db = drizzle(pool);
+export const db = drizzle(client, { schema });
 
-// 测试数据库连接
 export async function testConnection(): Promise<boolean> {
   try {
-    const connection = await pool.getConnection();
-    connection.release();
+    await client.execute("SELECT 1");
     return true;
   } catch {
     return false;
   }
 }
 
-export { pool };
+export { client };

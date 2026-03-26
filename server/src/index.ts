@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "./loadEnv.js";
 import express, { Application, Request, Response, NextFunction } from "express";
 import { testConnection } from "./db/index.js";
 import { getUploadsRoot } from "./utils/uploadPaths.js";

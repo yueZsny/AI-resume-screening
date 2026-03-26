@@ -1,57 +1,44 @@
 import {
-  mysqlTable,
-  serial,
-  varchar,
+  sqliteTable,
   text,
-  timestamp,
-  longtext,
-  int,
-  boolean,
+  integer,
   index,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 
 // 用户表
-export const users = mysqlTable(
-  "users",
-  {
-    id: int("id").autoincrement().primaryKey(),
-    username: varchar("username", { length: 255 }).notNull(),
-    email: varchar("email", { length: 255 }).notNull().unique(),
-    password: varchar("password", { length: 255 }).notNull(),
-    avatar: longtext("avatar"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  },
-  (users) => ({
-    emailIdx: index("email_idx").on(users.email),
-  }),
-);
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  username: text("username").notNull(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  avatar: text("avatar"),
+  createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
+  updatedAt: text("updated_at").notNull().default("CURRENT_TIMESTAMP"),
+});
 
 // 简历表
-export const resumes = mysqlTable(
+export const resumes = sqliteTable(
   "resumes",
   {
-    id: serial("id").primaryKey(),
-    userId: int("user_id")
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
       .notNull()
-      .references(() => users.id), // 关联用户
-    name: varchar("name", { length: 255 }).notNull(),
-    email: varchar("email", { length: 255 }),
-    phone: varchar("phone", { length: 50 }),
-    resumeFile: varchar("resume_file", { length: 500 }),
-    originalFileName: varchar("original_file_name", { length: 500 }), // 原始文件名
-    fileType: varchar("file_type", { length: 20 }), // 文件类型: pdf, docx, doc
-    fileSize: int("file_size"), // 文件大小（字节）
+      .references(() => users.id),
+    name: text("name").notNull(),
+    email: text("email"),
+    phone: text("phone"),
+    resumeFile: text("resume_file"),
+    originalFileName: text("original_file_name"),
+    fileType: text("file_type"),
+    fileSize: integer("file_size"),
     summary: text("summary"),
-    parsedContent: longtext("parsed_content"), // 解析后的文本内容
-    score: int("score"), // AI 筛选评分 (0-100)
-    /** AI 分项分 JSON（简历关键板块）：skills/projects/experience/education/fit/communication/campus，0–100 */
+    parsedContent: text("parsed_content"),
+    score: integer("score"),
     dimensionScores: text("dimension_scores"),
-    status: varchar("status", { length: 20 }).default("pending").notNull(), // 简历状态: pending(待筛选), rejected(拒绝), passed(通过)
-    /** 最近一次群发邮件发送成功的时间（用于「已发送」筛选与统计） */
-    lastEmailSentAt: timestamp("last_email_sent_at"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    status: text("status").default("pending").notNull(),
+    lastEmailSentAt: text("last_email_sent_at"),
+    createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
   },
   (resumes) => ({
     userIdIdx: index("resume_user_id_idx").on(resumes.userId),
@@ -60,36 +47,36 @@ export const resumes = mysqlTable(
 );
 
 // 邮箱配置表
-export const emailConfigs = mysqlTable("email_configs", {
-  id: serial("id").primaryKey(),
-  userId: int("user_id")
+export const emailConfigs = sqliteTable("email_configs", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id")
     .notNull()
     .references(() => users.id),
-  email: varchar("email", { length: 255 }).notNull(), // QQ 邮箱地址（明文）
-  authCode: varchar("auth_code", { length: 500 }).notNull(), // 16位授权码（AES加密后存储）
-  imapHost: varchar("imap_host", { length: 100 }).default("imap.qq.com"), // IMAP 服务器
-  imapPort: int("imap_port").default(993), // IMAP 端口
-  smtpHost: varchar("smtp_host", { length: 100 }).default("smtp.qq.com"), // SMTP 服务器
-  smtpPort: int("smtp_port").default(465), // SMTP 端口
-  isDefault: boolean("is_default").default(false), // 是否为默认发件邮箱
-  isDeleted: boolean("is_deleted").default(false), // 软删除
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  email: text("email").notNull(),
+  authCode: text("auth_code").notNull(),
+  imapHost: text("imap_host").default("imap.qq.com"),
+  imapPort: integer("imap_port").default(993),
+  smtpHost: text("smtp_host").default("smtp.qq.com"),
+  smtpPort: integer("smtp_port").default(465),
+  isDefault: integer("is_default").default(0),
+  isDeleted: integer("is_deleted").default(0),
+  createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
+  updatedAt: text("updated_at").notNull().default("CURRENT_TIMESTAMP"),
 });
 
 // 邮件模板表
-export const emailTemplates = mysqlTable(
+export const emailTemplates = sqliteTable(
   "email_templates",
   {
-    id: serial("id").primaryKey(),
-    userId: int("user_id")
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
       .notNull()
       .references(() => users.id),
-    name: varchar("name", { length: 255 }).notNull(), // 模板名称
-    subject: varchar("subject", { length: 500 }).notNull(), // 邮件主题
-    body: longtext("body").notNull(), // 邮件正文
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    name: text("name").notNull(),
+    subject: text("subject").notNull(),
+    body: text("body").notNull(),
+    createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
+    updatedAt: text("updated_at").notNull().default("CURRENT_TIMESTAMP"),
   },
   (emailTemplates) => ({
     userIdIdx: index("email_template_user_id_idx").on(emailTemplates.userId),
@@ -97,23 +84,21 @@ export const emailTemplates = mysqlTable(
 );
 
 // AI 配置表
-export const aiConfigs = mysqlTable(
+export const aiConfigs = sqliteTable(
   "ai_configs",
   {
-    id: serial("id").primaryKey(),
-    userId: int("user_id")
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
       .notNull()
       .references(() => users.id),
-    name: varchar("name", { length: 100 }).notNull().default("默认配置"), // 配置名称
-    model: varchar("model", { length: 100 }).notNull().default("gpt-4o"), // AI 模型
-    apiUrl: varchar("api_url", { length: 500 })
-      .notNull()
-      .default("https://api.openai.com/v1"), // API 地址
-    apiKey: varchar("api_key", { length: 500 }), // API Key（AES加密存储）
-    prompt: longtext("prompt"), // AI 提示词
-    isDefault: boolean("is_default").default(false), // 是否为默认配置
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    name: text("name").notNull().default("默认配置"),
+    model: text("model").notNull().default("gpt-4o"),
+    apiUrl: text("api_url").notNull().default("https://api.openai.com/v1"),
+    apiKey: text("api_key"),
+    prompt: text("prompt"),
+    isDefault: integer("is_default").default(0),
+    createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
+    updatedAt: text("updated_at").notNull().default("CURRENT_TIMESTAMP"),
   },
   (aiConfigs) => ({
     userIdIdx: index("ai_config_user_id_idx").on(aiConfigs.userId),
@@ -121,18 +106,18 @@ export const aiConfigs = mysqlTable(
 );
 
 // 活动日志表
-export const activities = mysqlTable(
+export const activities = sqliteTable(
   "activities",
   {
-    id: serial("id").primaryKey(),
-    userId: int("user_id")
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
       .notNull()
       .references(() => users.id),
-    type: varchar("type", { length: 50 }).notNull(), // activity 类型: upload(上传简历), screening(AI筛选), pass(通过筛选), reject(拒绝), interview(发送面试邀请)
-    resumeId: int("resume_id"), // 关联的简历ID
-    resumeName: varchar("resume_name", { length: 255 }), // 简历名称（冗余存储，避免删除后丢失）
-    description: longtext("description"), // 活动描述（支持 AI 生成的完整评估理由）
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    type: text("type").notNull(),
+    resumeId: integer("resume_id"),
+    resumeName: text("resume_name"),
+    description: text("description"),
+    createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
   },
   (activities) => ({
     userIdIdx: index("activity_user_id_idx").on(activities.userId),
@@ -184,19 +169,18 @@ export const activitiesRelations = relations(activities, ({ one }) => ({
 }));
 
 // 筛选模板表
-export const screeningTemplates = mysqlTable(
+export const screeningTemplates = sqliteTable(
   "screening_templates",
   {
-    id: serial("id").primaryKey(),
-    userId: int("user_id")
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    userId: integer("user_id")
       .notNull()
       .references(() => users.id),
-    name: varchar("name", { length: 255 }).notNull(),
-    /** 预筛选配置（JSON 字符串） */
-    config: longtext("config").notNull(),
-    isDefault: boolean("is_default").default(false).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    name: text("name").notNull(),
+    config: text("config").notNull(),
+    isDefault: integer("is_default").default(0).notNull(),
+    createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
+    updatedAt: text("updated_at").notNull().default("CURRENT_TIMESTAMP"),
   },
   (screeningTemplates) => ({
     userIdIdx: index("screening_template_user_id_idx").on(
