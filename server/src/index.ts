@@ -1,54 +1,53 @@
-import 'dotenv/config';
-import express, { Application, Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import path from 'path';
-import { testConnection } from './db/index.js';
+import "dotenv/config";
+import express, { Application, Request, Response, NextFunction } from "express";
+import cors from "cors";
+import path from "path";
+import { testConnection } from "./db/index.js";
 
-import loginRouter from './routes/login.js';
-import settingRouter from './routes/setting.js';
-import emailRouter from './routes/emailTemplate.js';
-import resumeRouter from './routes/resume.js';
-import dashboardRouter from './routes/dashboard.js';
-import templateRouter from './routes/screeningTemplate.js';
+import loginRouter from "./routes/login.js";
+import settingRouter from "./routes/setting.js";
+import emailRouter from "./routes/emailTemplate.js";
+import resumeRouter from "./routes/resume.js";
+import dashboardRouter from "./routes/dashboard.js";
+import templateRouter from "./routes/screeningTemplate.js";
 
 const app: Application = express();
 
 // Middleware
-// CORS 配置 - 允许前端域名访问
-const corsOptions: cors.CorsOptions = {
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
-app.use(cors(corsOptions));
+// CORS 配置 - 允许所有跨域请求
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+// 处理 OPTIONS 预检请求
+app.options('*', cors());
 app.use(express.json());
 
 // 静态文件服务 - 提供简历文件访问
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // route
-app.use('/v1', loginRouter);
-app.use('/v1', settingRouter);
-app.use('/v1', emailRouter);
-app.use('/v1', resumeRouter);
-app.use('/v1', dashboardRouter);
-app.use('/v1', templateRouter);
+app.use("/v1", loginRouter);
+app.use("/v1", settingRouter);
+app.use("/v1", emailRouter);
+app.use("/v1", resumeRouter);
+app.use("/v1", dashboardRouter);
+app.use("/v1", templateRouter);
 
 // Express 全局错误处理中间件
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   // 1. 处理 JWT Token 验证失败（401 未授权）
-  if (err.name === 'UnauthorizedError') {
+  if (err.name === "UnauthorizedError") {
     return res.status(401).json({
       code: 401,
-      message: 'Token验证失败，请重新登录'
+      message: "Token验证失败，请重新登录",
     });
   }
 
   // 2. 兜底处理所有其他错误（500 服务器错误）
   res.status(500).json({
     code: 500,
-    message: err.message || '服务器内部错误'
+    message: err.message || "服务器内部错误",
   });
 });
 
@@ -57,15 +56,15 @@ const vercelHandler = app;
 export default vercelHandler;
 
 // 本地开发启动（Vercel 环境不执行此代码）
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, async () => {
     console.log(`后端服务已启动: http://localhost:${PORT}`);
     const dbConnected = await testConnection();
     if (dbConnected) {
-      console.log('数据库连接成功');
+      console.log("数据库连接成功");
     } else {
-      console.error('数据库连接失败');
+      console.error("数据库连接失败");
     }
   });
 }
