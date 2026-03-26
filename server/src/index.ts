@@ -1,6 +1,5 @@
 import "dotenv/config";
 import express, { Application, Request, Response, NextFunction } from "express";
-import cors from "cors";
 import path from "path";
 import { testConnection } from "./db/index.js";
 
@@ -14,13 +13,19 @@ import templateRouter from "./routes/screeningTemplate.js";
 const app: Application = express();
 
 // Middleware
-// CORS 配置 - 允许所有跨域请求
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
-// 处理 OPTIONS 预检请求
-app.options('*', cors());
+// 强制允许所有跨域
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json());
 
 // 静态文件服务 - 提供简历文件访问
