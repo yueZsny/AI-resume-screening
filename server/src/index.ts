@@ -14,7 +14,14 @@ import templateRouter from './routes/screeningTemplate.js';
 const app: Application = express();
 
 // Middleware
-app.use(cors());
+// CORS 配置 - 允许前端域名访问
+const corsOptions: cors.CorsOptions = {
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // 静态文件服务 - 提供简历文件访问
