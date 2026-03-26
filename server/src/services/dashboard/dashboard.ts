@@ -68,30 +68,30 @@ export async function getDashboardStats(userId: number): Promise<DashboardStats>
   const todayCount = Number(todayResult?.count || 0);
 
   // 获取本周每日简历数量（周一 ~ 周日，按创建日期分组）
+  // 注意：线上使用 Turso (SQLite)，本地可能用 MySQL，故采用「应用层分组」而非数据库函数
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // 本周一 00:00
   weekStart.setHours(0, 0, 0, 0);
 
-  // MySQL：DAYOFWEEK 为 1=周日 … 7=周六，转成与 SQLite strftime('%w') 一致的 0=周日 … 6=周六
-  const weeklyRaw: { day: string; count: number }[] = await db
-    .select({
-      day: sql<string>`(DAYOFWEEK(${resumes.createdAt}) - 1)`,
-      count: sql<number>`count(*)`,
-    })
+  // 先查出本周的简历记录（不在数据库层分组，避免 SQL 语法差异）
+  const weekResumes = await db
+    .select({ createdAt: resumes.createdAt })
     .from(resumes)
     .where(and(
       eq(resumes.userId, userId),
       sql`${resumes.createdAt} >= ${weekStart.toISOString()}`,
-    ))
-    .groupBy(sql`(DAYOFWEEK(${resumes.createdAt}) - 1)`);
+    ));
 
-  const DAY_NAMES = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
-  // 构建「周索引 → 数量」映射，缺的天数补 0
+  // 在应用层按「星期几」分组统计
   const countByIdx: Record<number, number> = {};
-  for (const r of weeklyRaw) {
-    countByIdx[Number(r.day)] = Number(r.count);
+  for (const r of weekResumes) {
+    const date = new Date(r.createdAt as string);
+    const dayIndex = date.getDay(); // 0=周日, 1=周一, ..., 6=周六
+    countByIdx[dayIndex] = (countByIdx[dayIndex] ?? 0) + 1;
   }
+
   // 按 周一(1) ~ 周日(0) 顺序输出全部 7 天
+  const DAY_NAMES = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
   const weeklyData = [1, 2, 3, 4, 5, 6, 0].map((idx) => ({
     day: DAY_NAMES[idx],
     count: countByIdx[idx] ?? 0,
