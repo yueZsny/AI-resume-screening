@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import { getDocument } from 'pdfjs-dist/build/pdf.mjs';
 import mammoth from 'mammoth';
 
 interface ParseResult {
@@ -22,6 +21,7 @@ async function parsePdf(filePath: string): Promise<ParseResult> {
       return { content: '', error: 'PDF 文件为空' };
     }
 
+    const { getDocument } = await import('pdfjs-dist/build/pdf.mjs');
     const loadingTask = getDocument({
       data: new Uint8Array(dataBuffer),
       useSystemFonts: true,
