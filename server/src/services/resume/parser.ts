@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { PDFParse } from 'pdf-parse';
+import { getDocument } from 'pdfjs-dist/build/pdf.mjs';
 import mammoth from 'mammoth';
 
 interface ParseResult {
@@ -9,33 +9,48 @@ interface ParseResult {
 }
 
 /**
- * 解析 PDF 文件
+ * 解析 PDF 文件（纯 JS 实现，兼容 Serverless）
  */
 async function parsePdf(filePath: string): Promise<ParseResult> {
   try {
-    // 检查文件是否存在
     if (!fs.existsSync(filePath)) {
       return { content: '', error: '文件不存在' };
     }
 
     const dataBuffer = fs.readFileSync(filePath);
-    
-    // 检查文件是否为空
     if (!dataBuffer || dataBuffer.length === 0) {
       return { content: '', error: 'PDF 文件为空' };
     }
 
-    // 解析 PDF - 使用 v2 API
-    const parser = new PDFParse({
-      data: dataBuffer,
+    const loadingTask = getDocument({
+      data: new Uint8Array(dataBuffer),
+      useSystemFonts: true,
     });
-    const data = await parser.getText();
+    const pdfDocument = await loadingTask.promise;
 
-    if (!data.text || data.text.trim().length === 0) {
+    const textParts: string[] = [];
+    const numPages = pdfDocument.numPages;
+
+    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+      const page = await pdfDocument.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item: { str?: string }) => item.str || '')
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (pageText) {
+        textParts.push(pageText);
+      }
+    }
+
+    const fullText = textParts.join('\n');
+
+    if (!fullText || fullText.trim().length === 0) {
       return { content: '', error: 'PDF 中没有可提取的文本内容（可能是图片扫描件）' };
     }
 
-    return { content: data.text };
+    return { content: fullText };
   } catch (error: any) {
     const errorMessage = error?.message || 'PDF 解析失败';
     return { content: '', error: errorMessage };
