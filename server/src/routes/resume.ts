@@ -25,6 +25,7 @@ const router: Router = express.Router();
  */
 router.post(
   "/resume/upload",
+  authenticate,
   upload.single("file"),
   async (req: Request, res: Response) => {
     try {
@@ -33,6 +34,12 @@ router.post(
           code: 400,
           message: "请选择要上传的文件",
         });
+      }
+
+      // 获取用户ID
+      const userId = Number((req as any).user?.id);
+      if (!userId) {
+        return res.status(401).json({ code: 401, message: "未授权" });
       }
 
       const file = req.file;
@@ -70,9 +77,6 @@ router.post(
         originalFileName.replace(/\.(pdf|docx|doc)$/i, "");
       const email = req.body.email || extractedInfo.email || "";
       const phone = req.body.phone || extractedInfo.phone || "";
-
-      // 获取用户ID
-      const userId = Number((req as any).user?.id) || 1;
 
       // 插入数据库
       const createdAt = new Date().toISOString();
